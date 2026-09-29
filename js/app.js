@@ -105,15 +105,15 @@ class HercarChatApp {
             });
         }
 
-        const btnExportChat = document.getElementById('btn-export-chat');
-        if (btnExportChat) {
-            btnExportChat.addEventListener('click', () => this.exportarConversacion());
-        }
+        const exportBtns = document.querySelectorAll('.btn-export-chat');
+        exportBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.exportarConversacion());
+        });
 
-        const btnClearChat = document.getElementById('btn-clear-chat');
-        if (btnClearChat) {
-            btnClearChat.addEventListener('click', () => this.borrarConversacionConConfirmacion());
-        }
+        const clearBtns = document.querySelectorAll('.btn-clear-chat');
+        clearBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.borrarConversacionConConfirmacion());
+        });
 
         const btnClearHistoryAll = document.getElementById('btn-clear-history-all');
         if (btnClearHistoryAll) {
@@ -284,7 +284,7 @@ class HercarChatApp {
         this.scrollToBottom();
     }
 
-    addBotMessage(markdownText, autoSpeak = true) {
+    addBotMessage(markdownText, autoSpeak = true, spokenText = '') {
         this.activarAreaChat();
 
         const msgObj = { sender: 'bot', text: markdownText, timestamp: new Date() };
@@ -318,9 +318,11 @@ class HercarChatApp {
             </div>
         `;
 
+        const textoParaHablar = spokenText || markdownText;
+
         const btnSpeak = messageEl.querySelector('.btn-speak');
         btnSpeak.addEventListener('click', () => {
-            this.voiceEngine.hablar(markdownText);
+            this.voiceEngine.hablar(textoParaHablar);
         });
 
         const btnCopy = messageEl.querySelector('.btn-copy');
@@ -335,7 +337,7 @@ class HercarChatApp {
         this.scrollToBottom();
 
         if (autoSpeak) {
-            this.voiceEngine.hablar(markdownText);
+            this.voiceEngine.hablar(textoParaHablar);
         }
     }
 
@@ -768,7 +770,8 @@ Puedes verificar y descargar tu comprobante de pago electrónico en cualquier mo
 
 > ⚠️ *Advertencia de Seguridad:* Nunca realices depósitos a números de cuenta de personas particulares. Todos los abonos institucionales se realizan únicamente en las cuentas oficiales del Banco de la Nación.`;
 
-        this.addBotMessage(respuesta);
+        const voz = "Puedes pagar en el Banco de la Nación o mediante Págalo punto pe. Luego subes la foto de tu comprobante en la plataforma oficial de pagos. ¡Es muy sencillo y seguro!";
+        this.addBotMessage(respuesta, true, voz);
     }
 
     responderMatriculaYCostos() {
@@ -798,7 +801,8 @@ Puedes verificar y descargar tu comprobante de pago electrónico en cualquier mo
 2. Realizar el depósito semestral en el Banco de la Nación y registrar el comprobante en la plataforma de pagos.
 3. Confirmar la inscripción de unidades didácticas con su coordinación académica.`;
 
-        this.addBotMessage(respuesta);
+        const vozMatricula = "¡La educación en nuestro instituto es 100% pública y gratuita! No cobramos mensualidades privadas. Solo se cancela el derecho de matrícula por semestre. ¿Deseas conocer los requisitos para postular?";
+        this.addBotMessage(respuesta, true, vozMatricula);
     }
 
     responderAdmision() {
@@ -827,7 +831,8 @@ El instituto apertura sus procesos de admisión para sus **4 carreras profesiona
 
 ¿Te gustaría que te ayude a saber para qué carrera tienes mayor aptitud con nuestro **Test Vocacional**?`;
 
-        this.addBotMessage(respuesta);
+        const vozAdmision = "Contamos con examen de admisión ordinario, exoneración para primeros puestos y Beca 18, además de ingreso directo por nuestra academia preparatoria. ¿Te gustaría saber los requisitos de postulación?";
+        this.addBotMessage(respuesta, true, vozAdmision);
     }
 
     responderCarrerasGenerales() {
@@ -855,7 +860,8 @@ Todas nuestras carreras tienen una duración de **3 años (6 semestres académic
 <br>
 <button class="btn-action-primary" onclick="window.hercarTest.iniciar()">🎓 Iniciar Test Vocacional</button>`;
 
-        this.addBotMessage(respuesta);
+        const vozCarreras = "Ofrecemos 4 carreras profesionales técnicas de 3 años: Ápsti, Negocios Internacionales, Contabilidad y Desarrollo Pesquero. Todas otorgan título a Nombre de la Nación. ¿De cuál de ellas te gustaría conocer más?";
+        this.addBotMessage(respuesta, true, vozCarreras);
     }
 
     responderCarreraDetalle(carreraId) {
@@ -898,7 +904,19 @@ ${c.porQueEstudiar}
 
 ¿Te gustaría consultar los requisitos y fechas de matrícula para esta carrera o evaluar tu perfil con nuestro test vocacional?`;
 
-        this.addBotMessage(respuesta);
+        let voz = "";
+        if (carreraId === 'apsti') {
+            voz = "¡Hola! La carrera de Ápsti dura 3 años. Aprenderás desarrollo de aplicaciones web y móviles, servidores cloud y ciberseguridad, con certificaciones oficiales cada año. ¿Te gustaría saber los requisitos de matrícula?";
+        } else if (carreraId === 'ani') {
+            voz = "La carrera de Administración de Negocios Internacionales dura 3 años. Aprenderás comercio exterior, aduanas y logística portuaria con gran demanda en las empresas del puerto de Paita. ¿Te gustaría saber más?";
+        } else if (carreraId === 'contabilidad') {
+            voz = "La carrera de Contabilidad dura 3 años. Te formarás en gestión tributaria, finanzas y auditoría con amplia salida laboral en el sector público y privado. ¿Deseas los requisitos de admisión?";
+        } else if (carreraId === 'pesquera') {
+            voz = "La carrera de Desarrollo Pesquero dura 3 años. Contamos con nuestra propia embarcación con radar y visión nocturna para que realices prácticas reales en alta mar. ¿Te gustaría conocer el plan de estudios?";
+        } else {
+            voz = `La carrera de ${c.nombre} dura 3 años y otorga título profesional a Nombre de la Nación. ¿Deseas conocer los requisitos de matrícula?`;
+        }
+        this.addBotMessage(respuesta, true, voz);
     }
 
     responderContactoYUbicacion() {
@@ -921,7 +939,8 @@ El IESTP "Hermanos Cárcamo" te espera en su moderno campus en Paita:
 * **Consulta de Boletas Electrónicas:** [sistema.ieshercar.com/Consulta_Boletas](${i.boletasWeb})
 * **Biblioteca Virtual:** [biblioteca.ieshercar.edu.pe](${i.bibliotecaVirtual})`;
 
-        this.addBotMessage(respuesta);
+        const vozContacto = "Estamos ubicados en la Avenida Miguel Grau, Urbanización El Parque, en Paita. Atendemos de lunes a viernes de 8 de la mañana a 3 de la tarde. ¡Siempre eres bienvenido!";
+        this.addBotMessage(respuesta, true, vozContacto);
     }
 
     responderTramites() {
@@ -940,7 +959,8 @@ Para realizar gestiones documentarias no necesitas hacer colas físicas, puedes 
 
 *Nota:* Recuerda cancelar la tasa correspondiente en el Banco de la Nación y adjuntar el voucher en tu solicitud.`;
 
-        this.addBotMessage(respuesta);
+        const vozTramites = "A través de nuestra Mesa de Partes Virtual puedes tramitar constancias de estudio, certificados y récords de notas desde cualquier dispositivo sin hacer colas.";
+        this.addBotMessage(respuesta, true, vozTramites);
     }
 
     responderHistoriaEInstitucion() {
