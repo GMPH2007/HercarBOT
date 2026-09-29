@@ -285,16 +285,22 @@ add_bullet('Menú Responsivo de 3 Líneas: ', 'En pantallas de escritorio (Deskt
 add_bullet('Función Guardar Registro de Chat: ', 'Permite al usuario descargar con un solo clic un archivo formal (.txt) con la transcripción completa de su diálogo, fecha, hora y encabezados institucionales para su archivo personal.')
 add_bullet('Función Borrar Conversación: ', 'Botón con confirmación interactiva para limpiar la pantalla de chat, restablecer el estado del sistema y regresar a la portada de bienvenida.')
 add_bullet('Historial de Consultas Recientes: ', 'Almacenamiento persistente en localStorage que registra las preguntas formuladas y permite relanzarlas rápidamente desde la barra lateral.')
+add_bullet('Enlaces Directos a Plataformas Oficiales: ', 'Acceso inmediato en cabecera y portada a la Biblioteca Virtual (biblioteca.ieshercar.edu.pe), Portal Web Oficial (ieshercar.edu.pe), Sistema de Pagos y Vouchers (pagos.ieshercar.edu.pe), Mesa de Partes Virtual y Consulta de Boletas Electrónicas.')
+add_bullet('Optimización Táctil para Celulares: ', 'Adaptación del viewport (100dvh) para teléfonos móviles, cuadrícula responsiva a una sola columna y accesibilidad completa desde cualquier smartphone.')
 
 add_h2('Fase 6: Optimización, Pruebas y Despliegue en la Nube')
 add_bullet('Pruebas de Calidad de Interacción: ', 'Se evaluó la normalización de lenguaje eliminando tildes, signos de puntuación y admitiendo modismos frecuentes de los postulantes.')
 add_bullet('Despliegue Continuo en GitHub Pages: ', 'El repositorio se alojó en GitHub (https://github.com/GMPH2007/HercarBOT) y se configuró GitHub Pages para acceso inmediato vía HTTPS desde cualquier smartphone o computadora.')
 
 # 7. Manual y Enlaces
-add_h1('7. GUÍA DE INSTALACIÓN Y ACCESO')
+add_h1('7. GUÍA DE INSTALACIÓN Y ENLACES INSTITUCIONALES')
 add_p('HercarIA se distribuye en dos modalidades para facilidad de los usuarios:')
 add_bullet('Lanzador con 1 Clic (Local Windows): ', 'Doble clic en el archivo Iniciar_HercarBOT.bat para activar el servidor con síntesis de voz neural y abrir el navegador.')
 add_bullet('Sitio Web en Vivo (Nube): ', 'Disponible en cualquier dispositivo a través de https://gmph2007.github.io/HercarBOT/')
+add_bullet('Biblioteca Virtual Institucional: ', 'https://biblioteca.ieshercar.edu.pe/login.php')
+add_bullet('Plataforma de Pagos y Vouchers: ', 'https://pagos.ieshercar.edu.pe/')
+add_bullet('Mesa de Partes Virtual: ', 'https://sistema.ieshercar.edu.pe/registro-tramite/')
+add_bullet('Consulta de Boletas: ', 'https://sistema.ieshercar.com/Consulta_Boletas/index.php')
 
 # Guardar documento Word
 output_file = 'INFORME_TECNICO_HERCARBOT.docx'
