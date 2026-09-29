@@ -15,13 +15,13 @@ class VoiceEngineHercar {
         this.speechSynthesis = window.speechSynthesis || null;
         this.selectedBrowserVoice = null;
         
-        // Parámetros para voz femenina natural, fluida y clara
-        this.voiceSpeed = 1.0;
-        this.voicePitch = 1.0; // Tono natural sin distorsión
+        // Calibración acústica para voz dulce, suave, delicada y perfectamente inteligible
+        this.voiceSpeed = 0.94; // Cadencia suave, natural y sin prisas
+        this.voicePitch = 1.05; // Tono dulce, femenino, cálido y cristalino
         this.backendAvailable = true;
         
-        // Voz neural de chica por defecto: Camila (Chica Peruana - Dialecto Nacional Amable)
-        this.preferredNeuralVoice = 'es-PE-CamilaNeural';
+        // Voz neural de máxima dulzura y suavidad por defecto: Dalia (Latinoamericana dulce y suave)
+        this.preferredNeuralVoice = 'es-MX-DaliaNeural';
         this.lastHoverTime = 0;
 
         this.initBrowserVoices();
@@ -108,39 +108,70 @@ class VoiceEngineHercar {
         if (!this.speechSynthesis) return;
 
         const loadVoices = () => {
-            const voices = this.speechSynthesis.getVoices();
-            if (!voices || voices.length === 0) return;
-
-            // Filtrar estrictamente voces en español
-            const spanishVoices = voices.filter(v => v.lang.startsWith('es') || v.lang.includes('Spanish') || v.lang.includes('Castilian'));
-
-            // Buscar candidatas femeninas prioritarias en español
-            const femaleNames = ['camila', 'sabina', 'dalia', 'elvira', 'paulina', 'elena', 'laura', 'monica', 'lucia', 'penelope', 'rosa', 'marta', 'zira', 'hilda', 'paloma', 'jimena', 'sofia', 'esperanza'];
-            
-            // 1. Prioridad: Voz Femenina Natural u Online en español
-            let bestVoice = spanishVoices.find(v => 
-                femaleNames.some(name => v.name.toLowerCase().includes(name)) && 
-                (v.name.includes('Natural') || v.name.includes('Online'))
-            );
-
-            // 2. Prioridad: Cualquier voz femenina identificada por nombre
-            if (!bestVoice) {
-                bestVoice = spanishVoices.find(v => femaleNames.some(name => v.name.toLowerCase().includes(name)));
+            const voice = this.getBestBrowserVoice(this.preferredNeuralVoice);
+            if (voice) {
+                this.selectedBrowserVoice = voice;
+                console.log('[Voz Navegador Seleccionada]:', voice.name);
             }
-
-            // 3. Prioridad: Voz femenina de Google o marcada female
-            if (!bestVoice) {
-                bestVoice = spanishVoices.find(v => v.name.includes('Google') || v.name.toLowerCase().includes('female'));
-            }
-
-            this.selectedBrowserVoice = bestVoice || spanishVoices[0] || voices[0];
-            console.log('[Voz Femenina Navegador]:', this.selectedBrowserVoice?.name);
         };
 
         loadVoices();
         if (this.speechSynthesis.onvoiceschanged !== undefined) {
             this.speechSynthesis.onvoiceschanged = loadVoices;
         }
+    }
+
+    /**
+     * Selecciona inteligentemente la mejor voz femenina en español disponible en el navegador
+     * buscando coincidencias con voces dulces y naturales (Dalia, Camila, Salome, Elvira, etc.)
+     */
+    getBestBrowserVoice(preferredKey) {
+        if (!this.speechSynthesis) return null;
+        const voices = this.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return null;
+
+        // Filtrar estrictamente voces en español
+        const spanishVoices = voices.filter(v => 
+            v.lang && (v.lang.startsWith('es') || v.lang.includes('Spanish') || v.lang.includes('Castilian'))
+        );
+
+        if (spanishVoices.length === 0) return voices[0] || null;
+
+        // Si se especificó una voz favorita desde el selector
+        if (preferredKey) {
+            const keyLower = preferredKey.toLowerCase();
+            let sub = '';
+            if (keyLower.includes('dalia')) sub = 'dalia';
+            else if (keyLower.includes('camila')) sub = 'camila';
+            else if (keyLower.includes('salome')) sub = 'salome';
+            else if (keyLower.includes('elvira')) sub = 'elvira';
+
+            if (sub) {
+                const direct = spanishVoices.find(v => v.name.toLowerCase().includes(sub));
+                if (direct) return direct;
+            }
+        }
+
+        // Lista priorizada de voces dulces y naturales en español
+        const sweetNames = ['dalia', 'camila', 'salome', 'salomé', 'sabina', 'paloma', 'paulina', 'lucia', 'monica', 'mónica', 'elena', 'elvira', 'sofia', 'esperanza', 'marta', 'rosa'];
+
+        // 1. Prioridad: Voz Natural u Online con nombre dulce femenino
+        let candidate = spanishVoices.find(v => 
+            sweetNames.some(name => v.name.toLowerCase().includes(name)) && 
+            (v.name.includes('Natural') || v.name.includes('Online'))
+        );
+        if (candidate) return candidate;
+
+        // 2. Prioridad: Cualquier voz femenina identificada por nombre dulce
+        candidate = spanishVoices.find(v => sweetNames.some(name => v.name.toLowerCase().includes(name)));
+        if (candidate) return candidate;
+
+        // 3. Prioridad: Voz de Google en español o marcada female
+        candidate = spanishVoices.find(v => v.name.includes('Google') || v.name.toLowerCase().includes('female'));
+        if (candidate) return candidate;
+
+        // 4. Prioridad: Primera voz disponible en español
+        return spanishVoices[0];
     }
 
     initSpeechRecognition() {
@@ -232,6 +263,9 @@ class VoiceEngineHercar {
         } else {
             this.preferredNeuralVoice = vozKey;
         }
+        this.selectedBrowserVoice = this.getBestBrowserVoice(this.preferredNeuralVoice);
+        // Reproducir muestra sonora inmediata para apreciar la dulzura de la voz
+        this.probarVozDemostracion();
     }
 
     anunciarTitulo(titulo) {
@@ -240,27 +274,57 @@ class VoiceEngineHercar {
     }
 
     /**
-     * Extrae un resumen conciso, natural y fonéticamente amigable para la voz
-     * omitiendo tablas, links y detalles sobrecargados
+     * Extrae un resumen sumamente dulce, natural, fonéticamente armónico y fluido para la voz
+     * omitiendo tecnicismos secos, tablas y símbolos
      */
     limpiarTextoParaVoz(texto) {
         if (!texto) return '';
 
         let clean = texto;
 
-        // 1. Títulos en Markdown y encabezados en mayúsculas: asegurar que terminen en punto para que la voz los lea como título
+        // 1. Títulos en Markdown y encabezados: asegurar punto final para cadencia adecuada
         clean = clean
             .replace(/(\*\*[A-ZÁÉÍÓÚ\s\(\)]+\*\*)\s*\n+/g, '$1.\n')
             .replace(/#{1,6}\s*([^\n\r]+)/g, '$1.\n')
             .replace(/^\s*[\*\•\-]\s*(.*?)$/gm, '$1.');
 
-        // 2. Reemplazos fonéticos naturales para español peruano (Paita/Piura)
+        // 2. Números romanos en módulos y semestres para articulación natural
+        clean = clean
+            .replace(/\bMódulo\s+I\b/gi, 'Módulo uno')
+            .replace(/\bMódulo\s+II\b/gi, 'Módulo dos')
+            .replace(/\bMódulo\s+III\b/gi, 'Módulo tres')
+            .replace(/\bMódulo\s+IV\b/gi, 'Módulo cuatro')
+            .replace(/\bMódulo\s+V\b/gi, 'Módulo cinco')
+            .replace(/\bMódulo\s+VI\b/gi, 'Módulo seis')
+            .replace(/\bSemestre\s+I\b/gi, 'Semestre uno')
+            .replace(/\bSemestre\s+II\b/gi, 'Semestre dos')
+            .replace(/\bSemestre\s+III\b/gi, 'Semestre tres')
+            .replace(/\bSemestre\s+IV\b/gi, 'Semestre cuatro')
+            .replace(/\bSemestre\s+V\b/gi, 'Semestre cinco')
+            .replace(/\bSemestre\s+VI\b/gi, 'Semestre seis')
+            .replace(/\bCiclo\s+I\b/gi, 'Ciclo uno')
+            .replace(/\bCiclo\s+II\b/gi, 'Ciclo dos')
+            .replace(/\bCiclo\s+III\b/gi, 'Ciclo tres')
+            .replace(/\bCiclo\s+IV\b/gi, 'Ciclo cuatro')
+            .replace(/\bCiclo\s+V\b/gi, 'Ciclo cinco')
+            .replace(/\bCiclo\s+VI\b/gi, 'Ciclo seis');
+
+        // 3. Ordinales frecuentes
+        clean = clean
+            .replace(/\b1er\b/gi, 'primer')
+            .replace(/\b2do\b/gi, 'segundo')
+            .replace(/\b3er\b/gi, 'tercer')
+            .replace(/\b4to\b/gi, 'cuarto')
+            .replace(/\b5to\b/gi, 'quinto')
+            .replace(/\b6to\b/gi, 'sexto');
+
+        // 4. Reemplazos fonéticos naturales para español peruano y siglas institucionales
         clean = clean
             .replace(/\bI\.?E\.?S\.?T\.?P\.?\b/gi, 'Instituto')
             .replace(/\bIESTP\b/gi, 'Instituto')
             .replace(/\bHercarIA\b/gi, 'Hercaria')
             .replace(/S\/\.?\s*(\d+)/g, '$1 soles')
-            // Pronunciación de APSTI natural y clara
+            .replace(/\((APSTI|Ápsti)\)/gi, ', Ápsti,')
             .replace(/\bAPSTI\b/g, 'Ápsti')
             .replace(/\bANI\b/g, 'Ani')
             .replace(/\bDPA\b/g, 'D P A')
@@ -276,33 +340,43 @@ class VoiceEngineHercar {
             .replace(/\bpág\.\s*/gi, 'página ')
             .replace(/\bN°\s*/gi, 'número ');
 
-        // 3. Limpieza absoluta de asteriscos, guiones, sintaxis markdown, emojis y enlaces
+        // 5. Suprimir numeraciones secas de listas "1.", "2."
+        clean = clean.replace(/^\s*\d+[\.\)]\s*/gm, ' ');
+
+        // 6. Colones al final de título convertidos en punto, y colones internos en coma suave
+        clean = clean
+            .replace(/:\s*(\n|$)/g, '.\n')
+            .replace(/:/g, ', ');
+
+        // 7. Limpieza absoluta de markdown, asteriscos, guiones, corchetes, comillas y enlaces
         clean = clean
             .replace(/<[^>]*>/g, ' ')                          // HTML
-            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')          // Markdown links [Texto](url) -> Texto
+            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')          // Links Markdown [Texto](url) -> Texto
             .replace(/https?:\/\/\S+/g, '')                    // URLs sin texto
-            .replace(/[\*\_\#\~\`•\-–—]/g, ' ')                // ¡ELIMINAR TODOS LOS ASTERISCOS Y GUIONES!
-            .replace(/[💻🚢📊🐟🏆💡📝💳📖🔄⚙️🌍🌱📈🏢🌊⚓🌐🧠🤝📑🔬⚡📦🔍🛡️🚀🌸🇵🇪🇪🇸▶️🔊🔇🗑️💾↗️]/gu, '') // Emojis
+            .replace(/[\*\_\#\~\`•\-–—|]/g, ' ')               // ¡ELIMINAR TODOS LOS ASTERISCOS, GUIONES Y BARRAS!
+            .replace(/[()\[\]{}'\"«»“”„]/g, ' ')               // Paréntesis y comillas
+            // Limpieza exhaustiva de emojis y símbolos gráficos
+            .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
             .replace(/\s+/g, ' ')
             .trim();
 
-        // 4. Segmentación por oraciones completas
+        // 8. Segmentación por oraciones completas con cadencia armónica (sin cortar abruptamente)
         const matchOraciones = clean.match(/[^.!?]+[.!?]+/g);
         if (matchOraciones && matchOraciones.length > 0) {
             let resultado = '';
             for (let i = 0; i < matchOraciones.length; i++) {
                 const oracion = matchOraciones[i].trim();
-                if ((resultado + ' ' + oracion).length <= 340) {
-                    resultado = resultado ? resultado + ' ' + oracion : oracion;
+                if ((resultado + ' ' + oracion).length <= 360) {
+                    resultado = resultado ? (resultado + ' ' + oracion) : oracion;
                 } else {
                     break;
                 }
             }
-            clean = resultado || matchOraciones[0];
+            clean = resultado || matchOraciones[0].trim();
         }
 
-        if (clean.length > 340) {
-            clean = clean.substring(0, 335) + '...';
+        if (!/[.!?]$/.test(clean)) {
+            clean += '.';
         }
 
         return clean;
@@ -317,7 +391,7 @@ class VoiceEngineHercar {
 
         this.setSpeakingState(true);
 
-        // Si se seleccionó voz neural de estudio
+        // Si se seleccionó voz neural de estudio y el backend está disponible
         if (this.preferredNeuralVoice && this.backendAvailable) {
             try {
                 const url = `/api/tts?voice=${encodeURIComponent(this.preferredNeuralVoice)}&text=${encodeURIComponent(texto)}`;
@@ -330,7 +404,7 @@ class VoiceEngineHercar {
                 };
 
                 audio.onerror = (e) => {
-                    console.warn('[Voz Neural] Usando voz del navegador:', e);
+                    console.info('[Voz] Usando síntesis vocal del navegador');
                     this.backendAvailable = false;
                     this.hablarConNavegador(texto);
                 };
@@ -338,7 +412,7 @@ class VoiceEngineHercar {
                 await audio.play();
                 return;
             } catch (err) {
-                console.warn('[Voz Neural] Error al reproducir audio neural:', err);
+                console.info('[Voz] Conmutando a síntesis vocal local');
                 this.backendAvailable = false;
             }
         }
@@ -356,13 +430,17 @@ class VoiceEngineHercar {
         try {
             this.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(texto);
-            utterance.lang = 'es-ES';
-            utterance.rate = this.voiceSpeed;
-            utterance.pitch = this.voicePitch; // Tono femenino dulce
-
-            if (this.selectedBrowserVoice) {
-                utterance.voice = this.selectedBrowserVoice;
+            
+            const matchedVoice = this.getBestBrowserVoice(this.preferredNeuralVoice);
+            if (matchedVoice) {
+                utterance.voice = matchedVoice;
+                utterance.lang = matchedVoice.lang || 'es-PE';
+            } else {
+                utterance.lang = 'es-PE';
             }
+
+            utterance.rate = this.voiceSpeed;
+            utterance.pitch = this.voicePitch; // Tono dulce y suave
 
             utterance.onend = () => {
                 this.setSpeakingState(false);
@@ -399,7 +477,7 @@ class VoiceEngineHercar {
     }
 
     probarVozDemostracion() {
-        const textoDemo = "¡Hola! Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué carrera te gustaría consultar?";
+        const textoDemo = "¡Hola! Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué carrera te gustaría consultar hoy?";
         this.hablar(textoDemo);
     }
 
