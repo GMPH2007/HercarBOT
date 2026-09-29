@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Generador de Documento Word (.docx) Profesional
-Informe Técnico y Memoria Descriptiva de HercarIA
+Generador de Documento Word (.docx) Profesional de Alta Fidelidad
+Informe Técnico y Memoria Descriptiva Completa de HercarIA
 IESTP "Hermanos Cárcamo" - Paita, Piura
+Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
 """
 
 import os
@@ -16,25 +17,26 @@ from docx.oxml.ns import nsdecls, qn
 
 doc = Document()
 
-# Configurar márgenes de página (2.5 cm)
+# Configuración de márgenes estándar (1 pulgada / 2.54 cm)
 for section in doc.sections:
     section.top_margin = Inches(1)
     section.bottom_margin = Inches(1)
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
 
-# Paleta de Colores Corporativa
-COLOR_NAVY = RGBColor(19, 53, 123)     # #13357b
-COLOR_BLUE = RGBColor(37, 99, 235)     # #2563eb
-COLOR_GOLD = RGBColor(217, 119, 6)     # #d97706
-COLOR_GRAY = RGBColor(100, 116, 139)   # #64748b
+# Paleta de Colores Corporativa Oficial
+COLOR_NAVY = RGBColor(19, 53, 123)     # #13357b (Azul Institucional Primario)
+COLOR_BLUE = RGBColor(37, 99, 235)     # #2563eb (Azul Eléctrico Tecnológico)
+COLOR_GOLD = RGBColor(217, 119, 6)     # #d97706 (Ámbar Distintivo)
+COLOR_GRAY = RGBColor(100, 116, 139)   # #64748b (Gris Pizarra Técnico)
+COLOR_DARK = RGBColor(30, 41, 59)      # #1e293b (Texto Principal)
 
 def set_cell_background(cell, fill_hex):
     tcPr = cell._tc.get_or_add_tcPr()
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{fill_hex}"/>')
     tcPr.append(shd)
 
-def set_cell_margins(cell, top=120, bottom=120, left=150, right=150):
+def set_cell_margins(cell, top=130, bottom=130, left=160, right=160):
     tcPr = cell._tc.get_or_add_tcPr()
     tcMar = OxmlElement('w:tcMar')
     for m, val in [('w:top', top), ('w:bottom', bottom), ('w:left', left), ('w:right', right)]:
@@ -45,7 +47,7 @@ def set_cell_margins(cell, top=120, bottom=120, left=150, right=150):
     tcPr.append(tcMar)
 
 # ==========================================
-# PORTADA FORMAL Y ELEGANTE
+# PORTADA ACADÉMICA FORMAL Y ELEGANTE
 # ==========================================
 p_inst = doc.add_paragraph()
 p_inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -54,16 +56,16 @@ run_inst.font.name = 'Arial'
 run_inst.font.size = Pt(13)
 run_inst.font.bold = True
 run_inst.font.color.rgb = COLOR_NAVY
-p_inst.paragraph_format.space_after = Pt(25)
+p_inst.paragraph_format.space_after = Pt(20)
 
-# Insignia Oficial
+# Insignia Oficial Institucional
 if os.path.exists('assets/logo-crest.png'):
     p_logo = doc.add_paragraph()
     p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
     doc.add_picture('assets/logo-crest.png', width=Inches(2.2))
     p_logo_after = doc.paragraphs[-1]
     p_logo_after.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_logo_after.paragraph_format.space_after = Pt(25)
+    p_logo_after.paragraph_format.space_after = Pt(20)
 
 # Título Principal
 p_title = doc.add_paragraph()
@@ -73,38 +75,49 @@ run_title.font.name = 'Arial'
 run_title.font.size = Pt(22)
 run_title.font.bold = True
 run_title.font.color.rgb = COLOR_NAVY
-p_title.paragraph_format.space_after = Pt(10)
+p_title.paragraph_format.space_after = Pt(8)
 
 p_subtitle = doc.add_paragraph()
 p_subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
 run_sub = p_subtitle.add_run('Desarrollo e Implementación del Asistente Virtual Inteligente\ny Orientador Vocacional "HercarIA"')
 run_sub.font.name = 'Arial'
 run_sub.font.size = Pt(13.5)
+run_sub.font.bold = True
 run_sub.font.color.rgb = COLOR_BLUE
-p_subtitle.paragraph_format.space_after = Pt(45)
+p_subtitle.paragraph_format.space_after = Pt(25)
 
-# Bloque de Metadatos
+# Bloque de Metadatos del Proyecto
 p_meta = doc.add_paragraph()
 p_meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-r = p_meta.add_run('Autor / Desarrollador:\n')
+r = p_meta.add_run('CARRERA PROFESIONAL TÉCNICA:\n')
 r.font.bold = True
-r.font.size = Pt(11)
-r = p_meta.add_run('Gerson Misael Pintado Huamán (GMPH2007)\n\n')
-r.font.size = Pt(12)
-
-r = p_meta.add_run('Repositorio Oficial en GitHub:\n')
+r.font.size = Pt(10.5)
+r.font.color.rgb = COLOR_NAVY
+r = p_meta.add_run('Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)\n\n')
 r.font.bold = True
-r.font.size = Pt(10)
-r = p_meta.add_run('https://github.com/GMPH2007/HercarBOT\n\n')
-r.font.size = Pt(10)
+r.font.size = Pt(11.5)
 r.font.color.rgb = COLOR_BLUE
 
-r = p_meta.add_run('Despliegue Web en Vivo (GitHub Pages):\n')
+r = p_meta.add_run('AUTOR / DESARROLLADOR:\n')
 r.font.bold = True
-r.font.size = Pt(10)
+r.font.size = Pt(10.5)
+r = p_meta.add_run('Gerson Misael Pintado Huamán (GMPH2007)\n\n')
+r.font.size = Pt(12)
+r.font.bold = True
+
+r = p_meta.add_run('REPOSITORIO OFICIAL EN GITHUB:\n')
+r.font.bold = True
+r.font.size = Pt(9.5)
+r = p_meta.add_run('https://github.com/GMPH2007/HercarBOT\n\n')
+r.font.size = Pt(9.5)
+r.font.color.rgb = COLOR_BLUE
+
+r = p_meta.add_run('DESPLIEGUE WEB EN VIVO (GITHUB PAGES):\n')
+r.font.bold = True
+r.font.size = Pt(9.5)
 r = p_meta.add_run('https://gmph2007.github.io/HercarBOT/\n\n')
-r.font.size = Pt(10)
+r.font.size = Pt(9.5)
 r.font.color.rgb = COLOR_BLUE
 
 r = p_meta.add_run('Paita — Piura, Perú\n2026')
@@ -115,7 +128,7 @@ r.font.color.rgb = COLOR_GRAY
 doc.add_page_break()
 
 # ==========================================
-# FUNCIONES DE CONTENIDO
+# FUNCIONES AUXILIARES DE FORMATEO
 # ==========================================
 def add_h1(text):
     h = doc.add_paragraph()
@@ -123,7 +136,7 @@ def add_h1(text):
     h.paragraph_format.space_after = Pt(6)
     r = h.add_run(text)
     r.font.name = 'Arial'
-    r.font.size = Pt(15)
+    r.font.size = Pt(14)
     r.font.bold = True
     r.font.color.rgb = COLOR_NAVY
     return h
@@ -134,7 +147,7 @@ def add_h2(text):
     h.paragraph_format.space_after = Pt(4)
     r = h.add_run(text)
     r.font.name = 'Arial'
-    r.font.size = Pt(12.5)
+    r.font.size = Pt(12)
     r.font.bold = True
     r.font.color.rgb = COLOR_BLUE
     return h
@@ -146,6 +159,7 @@ def add_p(text):
     r = p.add_run(text)
     r.font.name = 'Arial'
     r.font.size = Pt(10.5)
+    r.font.color.rgb = COLOR_DARK
     return p
 
 def add_bullet(bold_prefix, text):
@@ -156,34 +170,112 @@ def add_bullet(bold_prefix, text):
     r1.font.name = 'Arial'
     r1.font.bold = True
     r1.font.size = Pt(10.5)
+    r1.font.color.rgb = COLOR_DARK
     r2 = p.add_run(text)
     r2.font.name = 'Arial'
     r2.font.size = Pt(10.5)
+    r2.font.color.rgb = COLOR_DARK
     return p
 
-# 1. Resumen Ejecutivo
+# ==========================================
+# 1. RESUMEN EJECUTIVO
+# ==========================================
 add_h1('1. RESUMEN EJECUTIVO')
-add_p('El presente documento técnico describe el diseño, arquitectura, desarrollo y puesta en producción de "HercarIA", el sistema interactivo de inteligencia artificial y orientación vocacional creado para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
-add_p('HercarIA proporciona atención continua y personalizada a postulantes, alumnos regulares y padres de familia a través de una interfaz moderna inspirada en ChatGPT, integrando capacidades de procesamiento de lenguaje natural (NLP), síntesis de voz femenina neural humana (es-ES-ElviraNeural), reconocimiento por micrófono (Speech-to-Text), un algoritmo de test vocacional de 6 reactivos y una base de conocimientos completa que resuelve dudas sobre admisiones, carreras técnicas, gratuidad educativa y registro digital de vouchers.')
+add_p('El presente informe técnico expone la concepción, fundamentación técnica, desarrollo e implementación del sistema "HercarIA", un asistente virtual conversacional inteligente dotado de síntesis de voz femenina neural humana y orientador vocacional psicométrico, concebido específicamente para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
+add_p('Desarrollado en el marco formativo de la Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), HercarIA solventa la brecha de orientación académica en la provincia de Paita y el norte peruano. Ofrece atención ininterrumpida las 24 horas del día, los 7 días de la semana, informando verazmente sobre la oferta formativa institucional (APSTI, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola), el principio de gratuidad de la enseñanza pública (sin mensualidades privadas), los protocolos de registro digital de vouchers del Banco de la Nación, requisitos de admisión y el trámite de documentos oficiales a través de la Mesa de Partes Virtual.')
+add_p('La solución se distingue por su arquitectura ligera y moderna inspirada en ChatGPT, con menú colapsable, controles ergonómicos en cabecera ("Guardar Chat" en archivo de texto formal y "Borrar Chat"), barra de píldoras de acceso rápido sobre el campo de escritura, y un avanzado motor de voz sintetizada dulce, natural y libre de lecturas robóticas de sintaxis Markdown.')
 
-# 2. Justificacion
-add_h1('2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN')
-add_p('En la provincia de Paita existe una alta demanda de profesionales técnicos calificados para los sectores pesquero, logístico-portuario, comercial y tecnológico. No obstante, los egresados de secundaria enfrentan barreras informativas críticas:')
-add_bullet('Indecisión Vocacional: ', 'Falta de un orientador vocacional accesible que guíe las aptitudes del postulante hacia una carrera técnica con inserción laboral real.')
-add_bullet('Horarios Restringidos de Atención: ', 'Las consultas presenciales en secretaría solo se realizan en horario diurno de lunes a viernes (8:00 AM a 3:00 PM), dejando sin soporte a quienes estudian o trabajan.')
-add_bullet('Confusión con Instituciones Privadas: ', 'Muchos aspirantes desconocen que el IESTP Hermanos Cárcamo es un instituto público estatal donde la enseñanza es 100% gratuita (sin pensiones mensuales privadas), requiriendo únicamente el abono de una tasa administrativa semestral.')
-add_bullet('Dificultades en el Registro de Pagos: ', 'El uso de la plataforma digital institucional (pagos.ieshercar.edu.pe) genera dudas sobre el registro de códigos de operación del Banco de la Nación y la descarga de boletas electrónicas.')
+# ==========================================
+# 2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN EN PAITA
+# ==========================================
+add_h1('2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN EN PAITA')
+add_p('La provincia de Paita constituye el segundo polo económico y comercial más relevante de la Región Piura, albergando el principal puerto marítimo del norte peruano (Terminal Portuario Euroandinos), una pujante industria pesquera y acuícola, centros logísticos aduaneros y agroexportadores. Pese a este entorno favorable, los egresados de educación secundaria y jóvenes de la región enfrentan serias dificultades al momento de decidir su formación superior:')
+add_bullet('Desinformación sobre la Gratuidad Pública: ', 'Gran parte de los postulantes y padres de familia confunden al instituto con una entidad privada lucrativa, asumiendo erróneamente que deberán afrontar costosas pensiones mensuales. HercarIA aclara permanentemente que el IESTP Hermanos Cárcamo es 100% público estatal y que solo se abona una tasa semestral mínima por concepto de TUPA.')
+add_bullet('Indecisión Vocacional y Deserción Prematura: ', 'Muchos aspirantes carecen de test vocacionales cercanos y accesibles, postulando a carreras que no concuerdan con sus habilidades reales. El test vocacional integrado de 6 reactivos orienta objetivamente el perfil del estudiante hacia las necesidades laborales reales de Paita.')
+add_bullet('Restricción Horaria en Mesa de Partes y Secretaría: ', 'La atención administrativa presencial concluye a las 3:00 PM de lunes a viernes, imposibilitando la resolución de dudas en horario vespertino, nocturno o fines de semana.')
+add_bullet('Complejidad en el Registro Virtual de Pagos: ', 'El uso de la plataforma digital institucional (pagos.ieshercar.edu.pe) suscita dudas continuas respecto a qué números consignar del voucher del Banco de la Nación, cómo adjuntar el comprobante y de qué forma descargar la boleta electrónica oficial.')
 
-# 3. Stack Tecnologico
-add_h1('3. STACK TECNOLÓGICO Y ARQUITECTURA')
-add_p('Se seleccionó una arquitectura desacoplada de alto rendimiento que no depende de frameworks pesados, garantizando tiempos de carga inferiores a 1 segundo:')
+# ==========================================
+# 3. MARCO NORMATIVO Y OFICIALIDAD INSTITUCIONAL
+# ==========================================
+add_h1('3. MARCO NORMATIVO Y OFICIALIDAD INSTITUCIONAL')
+add_p('HercarIA se diseñó alineado a las directrices de la legislación educativa técnica superior del Perú:')
+add_bullet('Ley de Institutos y Escuelas de Educación Superior N° 30512: ', 'Marco legal que regula el funcionamiento de los institutos tecnológicos del país, garantizando calidad académica, pertinencia formativa y titulación oficial.')
+add_bullet('Título Profesional Técnico a Nombre de la Nación: ', 'Todos los programas académicos concluidos con éxito en el IESTP Hermanos Cárcamo otorgan Título Profesional Técnico expedido directamente por el Ministerio de Educación (MINEDU), con validez nacional e internacional.')
+add_bullet('Convalidación Universitaria (SUNEDU): ', 'Los egresados titulados de las carreras técnicas de 3 años pueden convalidar sus créditos y cursos en universidades licenciadas por SUNEDU, completando el grado universitario de Bachiller y Licenciatura en menor tiempo.')
+add_bullet('Certificaciones Modulares Progresivas: ', 'Por cada año lectivo aprobado (2 semestres), el alumno recibe un certificado oficial modular técnico que le permite insertarse formalmente en el mercado laboral antes de titularse.')
+
+# ==========================================
+# 4. OFERTA FORMATIVA INSTITUCIONAL (LAS 4 CARRERAS TÉCNICAS)
+# ==========================================
+add_h1('4. OFERTA FORMATIVA INSTITUCIONAL')
+add_p('El IESTP Hermanos Cárcamo brinda 4 carreras profesionales técnicas de 3 años de duración lectiva (6 semestres académicos), con turno regular diurno y énfasis en talleres prácticos y laboratorios de cómputo:')
+
+table_c = doc.add_table(rows=1, cols=3)
+table_c.alignment = WD_TABLE_ALIGNMENT.CENTER
+for idx, title in enumerate(['Carrera Profesional', 'Enfoque Formativo y Módulos', 'Campo Laboral en Paita / Piura']):
+    c = table_c.rows[0].cells[idx]
+    c.text = title
+    set_cell_background(c, '13357B')
+    p = c.paragraphs[0]
+    p.runs[0].font.bold = True
+    p.runs[0].font.color.rgb = RGBColor(255, 255, 255)
+    set_cell_margins(c, 130, 130, 150, 150)
+
+carreras_data = [
+    ('Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)', 
+     'Desarrollo de software web y móvil, diseño de bases de datos relacionales y no relacionales, cableado estructurado, configuración de redes WAN/LAN, seguridad informática, administración de servidores Linux/Windows y despliegue en entornos Cloud.', 
+     'Desarrollador de software en agencias marítimas y de aduanas, administrador de servidores en empresas del Parque Industrial de Paita, soporte TI en entidades bancarias, instituciones de salud y teletrabajo internacional.'),
+    
+    ('Administración de Negocios Internacionales (ANI)', 
+     'Operaciones aduaneras, regímenes de importación y exportación, logística portuaria y de contenedores refrigerados, tratados comerciales internacionales, fletes marítimos e investigación de mercados exteriores.', 
+     'Operadores portuarios en el Terminal Portuario Euroandinos (TPE), agencias aduaneras, depósitos aduaneros autorizados, empresas agroexportadoras de mango, uva y banano orgánico, y procesadoras de pota y perico.'),
+    
+    ('Contabilidad', 
+     'Contabilidad comercial, de costos, gubernamental y de sociedades; registro de libros contables físicos y electrónicos (SIRE - SUNAT), liquidación de tributos (PDT, IGV, Renta), auditoría financiera y balances generales.', 
+     'Estudios contables independientes, áreas de tesorería y contabilidad de empresas pesqueras e industriales, agencias bancarias (Banco de la Nación, Cajas Piura/Sullana), municipios y entidades del Estado.'),
+    
+    ('Desarrollo Pesquero y Acuícola (DPA)', 
+     'Cultivo marino de conchas de abanico, langostinos y tilapias; artes y aparejos de pesca, navegación costera y de altura a bordo de la embarcación del instituto, procesamiento industrial y sistemas de inocuidad alimentaria (HACCP, BPM).', 
+     'Supervisores de aseguramiento de calidad (QA/QC) en plantas pesqueras congeladoras y conserveras de Paita, jefes de centros de maricultura en la bahía de Sechura y Paita, capitanes de pesca e inspectores de SANIPES.')
+]
+
+for c_row in carreras_data:
+    r_cells = table_c.add_row().cells
+    for idx, text in enumerate(c_row):
+        r_cells[idx].text = text
+        p = r_cells[idx].paragraphs[0]
+        p.runs[0].font.name = 'Arial'
+        p.runs[0].font.size = Pt(9.5)
+        set_cell_margins(r_cells[idx], 100, 100, 120, 120)
+
+# ==========================================
+# 5. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS
+# ==========================================
+add_h1('5. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS')
+add_h2('5.1. Gratuidad de la Enseñanza Pública')
+add_p('El IESTP Hermanos Cárcamo es un instituto tecnológico público tutelado por la Dirección Regional de Educación de Piura (DREP) y el MINEDU. La enseñanza es totalmente gratuita y no se abona ningún tipo de pensión mensual privada. El único pago corresponde a la tasa administrativa semestral estipulada en el TUPA institucional (S/ 150 a S/ 250 por semestre completo).')
+
+add_h2('5.2. Protocolo Paso a Paso de Registro de Vouchers BN')
+add_bullet('Paso 1 (Depósito Bancario): ', 'El postulante o estudiante regular acude a cualquier ventanilla o Agente MultiRed del Banco de la Nación para abonar la tasa institucional, conservando su váucher físico o comprobante digital.')
+add_bullet('Paso 2 (Acceso al Portal): ', 'Ingresa desde su celular o computadora al portal oficial: https://pagos.ieshercar.edu.pe/')
+add_bullet('Paso 3 (Autenticación): ', 'Digita su número de DNI para que el sistema identifique su legajo académico.')
+add_bullet('Paso 4 (Ingreso de Datos del Váucher): ', 'Selecciona el concepto correspondiente (Matrícula, Examen de Admisión o Trámite Administrativo) y transcribe cuidadosamente la Fecha, Monto exacto y Número de Operación impreso en el váucher.')
+add_bullet('Paso 5 (Carga de Comprobante): ', 'Adjunta una fotografía nítida o archivo PDF del comprobante y presiona "Registrar Pago".')
+add_bullet('Paso 6 (Descarga de Boleta Electrónica): ', 'Una vez validado el pago, el usuario ingresa a https://sistema.ieshercar.com/Consulta_Boletas/index.php con su DNI para visualizar y descargar su boleta electrónica con valor tributario.')
+
+# ==========================================
+# 6. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA
+# ==========================================
+add_h1('6. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA')
+add_p('HercarIA se construyó bajo principios de alto desempeño, desacoplamiento y cero dependencias complejas, garantizando que el sistema cargue instantáneamente incluso bajo conexiones móviles lentas en zonas periféricas de Paita:')
 
 table_tech = doc.add_table(rows=1, cols=3)
 table_tech.alignment = WD_TABLE_ALIGNMENT.CENTER
 hdr_cells = table_tech.rows[0].cells
-hdr_cells[0].text = 'Capa'
-hdr_cells[1].text = 'Tecnología'
-hdr_cells[2].text = 'Función en el Sistema'
+hdr_cells[0].text = 'Capa de Arquitectura'
+hdr_cells[1].text = 'Tecnología Empleada'
+hdr_cells[2].text = 'Función y Aporte al Sistema'
 for i, c in enumerate(hdr_cells):
     set_cell_background(c, '13357B')
     p = c.paragraphs[0]
@@ -192,13 +284,14 @@ for i, c in enumerate(hdr_cells):
     set_cell_margins(c, 120, 120, 150, 150)
 
 tech_rows = [
-    ('Frontend UI', 'HTML5 Semántico + CSS3 Avanzado', 'Interfaz responsiva en pantalla completa, diseño de portada, modo oscuro y animaciones ripple.'),
-    ('Lógica Conversacional', 'Vanilla JavaScript (ES6+)', 'Normalización de texto, motor NLP de intenciones, parsing de Markdown y gestión del DOM.'),
-    ('Iconografía', 'Inline SVG Vectors (Phosphor Standard)', 'Iconos vectoriales de trazo uniforme a 2px en lugar de emojis informales.'),
-    ('Test Vocacional', 'Algoritmo Polifactorial JS', 'Evaluación de 6 factores psicométricos con cálculo de compatibilidad porcentual.'),
-    ('Síntesis de Voz', 'Python edge-tts + Web Speech API', 'Generación de voz femenina neural de alta fidelidad (es-ES-ElviraNeural) y fallback nativo.'),
-    ('Reconocimiento Voz', 'Web Speech Recognition API', 'Dictado por micrófono en tiempo real con dialecto peruano (es-PE).'),
-    ('Alojamiento Web', 'GitHub Pages (HTTPS CDN)', 'Despliegue global en la nube disponible 24/7 de forma gratuita y segura.')
+    ('Frontend UI / UX', 'HTML5 Semántico + CSS3 Avanzado (Variables Dinámicas)', 'Diseño fullscreen responsivo inspirado en ChatGPT, soporte completo para tema claro/oscuro, microinteracciones y efectos ripple.'),
+    ('Lógica Conversacional', 'Vanilla JavaScript (ES6+ Modular)', 'Normalización de texto, motor NLP basado en intenciones semánticas y expresiones regulares, parsing dinámico de Markdown.'),
+    ('Iconografía Vectorial', 'SVG Inline (Trazo uniforme a 2px)', 'Iconografía nítida y corporativa que sustituye emojis informales, garantizando coherencia visual técnica en todas las resoluciones.'),
+    ('Orientador Vocacional', 'Algoritmo Polifactorial JS', 'Cuestionario interactivo de 6 reactivos con ponderación matricial y cálculo de compatibilidad porcentual con trofeo de resultado.'),
+    ('Motor de Voz Neural', 'Microsoft Edge TTS (Python) + Web Speech API', 'Síntesis de voz femenina dulce y humana con fallback automático para funcionamiento universal en web estática y servidores locales.'),
+    ('Reconocimiento Vocal', 'Web Speech Recognition API', 'Dictado por voz mediante micrófono en tiempo real con dialecto español de Perú (es-PE) y detección de silencio.'),
+    ('Almacenamiento Local', 'Web Storage API (localStorage)', 'Persistencia del historial de consultas recientes del usuario y preferencias de tema de interfaz.'),
+    ('Despliegue y CDN', 'GitHub Pages (HTTPS Global)', 'Alojamiento en la nube con disponibilidad permanente 24/7, certificado SSL activo y CDN de alta velocidad.')
 ]
 
 for row in tech_rows:
@@ -210,100 +303,67 @@ for row in tech_rows:
         p.runs[0].font.size = Pt(9.5)
         set_cell_margins(r_cells[idx], 100, 100, 120, 120)
 
-doc.add_page_break()
+# ==========================================
+# 7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO
+# ==========================================
+add_h1('7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO')
+add_p('Uno de los mayores logros del proyecto es la humanización de la voz de HercarIA, eliminando cualquier sensación de sintetizador robótico antiguo:')
+add_bullet('Calibración Acústica Agradable y Femenina: ', 'Se calibró la tasa de velocidad en 0.93 y el tono (pitch) en 1.05. Este ajuste acústico produce una cadencia pausada, melodiosa, suave y natural, ideal para la atención y orientación vocacional.')
+add_bullet('Supresión Total de Sintaxis Markdown y Asteriscos: ', 'Se diseñó un filtro de limpieza previa (regex) que erradica por completo la pronunciación de asteriscos (**), guiones, numerales (#), barras y tablas. La voz habla con lenguaje conversacional limpio mientras la pantalla muestra el texto formateado con viñetas y negritas.')
+add_bullet('Normalización Fonética de Siglas Institucionales: ', 'El preprocesador vocal traduce términos técnicos antes de llegar al sintetizador: "APSTI" se modula fonéticamente como "Ápsti" o "Arquitectura de Plataformas y Servicios TI", "ANI" como "Ani", "DPA" como "D P A", "S/ 150" como "150 soles", "IESTP" como "Instituto", y "SUNAT" como "Sunat".')
+add_bullet('Priorización Inteligente de Voces Femeninas: ', 'En la versión web (GitHub Pages y celulares), el sistema analiza las voces instaladas en el dispositivo y selecciona prioritariamente voces dulces en español (Dalia, Camila, Salome, Elvira, Sabina).')
+add_bullet('Módulo de Audio Desplegable Popover: ', 'En la cabecera superior se incluye el botón minimalista "[ 🔊 🟢 Voz ]". Al hacer clic, despliega un panel flotante donde el usuario puede activar/desactivar la voz, elegir su voz favorita y probar la entonación con el botón "Probar Voz".')
+add_bullet('Cancelación Instantánea de Ecos y Ruidos: ', 'Se programó la interrupción inmediata de la síntesis vocal al presionar la tecla Escape, al dar clic en el campo de texto o al enviar una nueva consulta, evitando la superposición molesta de audios.')
 
-# 4. Carreras
-add_h1('4. OFERTA FORMATIVA INSTITUCIONAL')
-add_p('Todas las carreras profesionales técnicas tienen una duración de 3 años lectivos (6 semestres académicos), otorgan Título Profesional Técnico a Nombre de la Nación y certificaciones modulares progresivas cada año:')
+# ==========================================
+# 8. REDISEÑO ERGONÓMICO DE LA INTERFAZ DE USUARIO (UI/UX)
+# ==========================================
+add_h1('8. REDISEÑO ERGONÓMICO DE LA INTERFAZ DE USUARIO (UI/UX)')
+add_p('Para brindar una experiencia óptima al usuario, se rediseñó la distribución de los componentes eliminando saturaciones visuales:')
+add_bullet('Menú Lateral Limpio estilo ChatGPT: ', 'El menú lateral (Sidebar) se reservó exclusivamente para las acciones de navegación fundamentales: botón destacado "+ Nueva Conversación", acceso rápido a "Test Vocacional", lista de "Consultas Recientes" y conmutador de "Modo Oscuro".')
+add_bullet('Botones de Utilidad en Cabecera Superior: ', 'Las funciones operativas se trasladaron a la esquina superior derecha del encabezado, junto al selector de voz: el botón "Guardar Chat" (descarga la transcripción en un archivo .txt con membrete oficial) y el botón "Borrar Chat" (reinicia la sesión de diálogo de manera segura).')
+add_bullet('Barra de Píldoras de Acceso Rápido (Chips): ', 'Directamente sobre el cuadro de entrada de texto se dispuso una barra horizontal con chips interactivos ("Las 4 Carreras Técnicas", "Registro de Pagos", "Matrícula y Costos 2026", "Mesa de Partes Virtual", "Ubicación y Contacto"). Al presionar un chip, la consulta se envía inmediatamente al chat sin necesidad de teclear.')
+add_bullet('Navegación Adaptativa de 3 Líneas: ', 'En computadoras de escritorio, el icono de menú colapsa la barra lateral para otorgar el 100% de la pantalla a la conversación. En teléfonos inteligentes, abre un Drawer deslizante con fondo oscuro translúcido y botón táctil de cierre.')
 
-carreras_data = [
-    ('Arquitectura de Plataformas y Servicios TI (APSTI)', 'Desarrollo de software web y móvil, administración de redes, ciberseguridad, servidores e infraestructura cloud.', 'Desarrollador web/móvil, administrador cloud, soporte TI en agencias aduaneras y empresas portuarias.'),
-    ('Administración de Negocios Internacionales (ANI)', 'Estrategias comerciales globales, exportación de productos del norte, aduanas, logística de contenedores y transporte marítimo.', 'Agencias marítimas y de aduanas en el Puerto de Paita, almacenes fiscales y empresas exportadoras.'),
-    ('Contabilidad', 'Gestión tributaria (SUNAT), formulación de estados financieros, libros electrónicos, auditoría y costos empresariales.', 'Estudios contables, entidades bancarias (Banco de la Nación, Cajas Piura), hospitales, municipios y MYPES.'),
-    ('Desarrollo Pesquero y Acuícola (DPA)', 'Cultivo de conchas de abanico y langostinos, faenas de navegación pesquera, procesamiento industrial e inocuidad alimentaria (HACCP).', 'Supervisores QA/QC en plantas congeladoras y conserveras de Paita, criaderos acuícolas e inspectores sanitarios.')
-]
+# ==========================================
+# 9. TEST VOCACIONAL PSICOMÉTRICO INTERACTIVO
+# ==========================================
+add_h1('9. TEST VOCACIONAL PSICOMÉTRICO INTERACTIVO')
+add_p('El sistema incorpora un orientador vocacional desarrollado en js/test_vocacional.js que diagnostica la inclinación profesional del postulante mediante 6 reactivos interactivos:')
+add_bullet('Pregunta 1 (Intereses Naturales): ', 'Indaga sobre actividades predilectas en tiempo libre (resolver problemas tecnológicos, coordinar proyectos comerciales, organizar finanzas o explorar la fauna marina).')
+add_bullet('Pregunta 2 (Entorno Laboral Deseado): ', 'Evalúa el ambiente de trabajo preferido (oficinas tecnológicas con servidores, agencias aduaneras portuarias, despachos tributarios o plantas de procesamiento y embarcaciones).')
+add_bullet('Pregunta 3 (Habilidades Destacadas): ', 'Mide competencias autopercibidas (pensamiento analítico y algoritmos, negociación persuasiva, exactitud numérica y orden, o destreza biológica y trabajo en campo).')
+add_bullet('Pregunta 4 (Motivación Profesional): ', 'Analiza metas de vida (crear soluciones de software para empresas, impulsar exportaciones regionales hacia mercados globales, liderar la administración contable de grandes corporaciones o innovar en la maricultura sostenible).')
+add_bullet('Pregunta 5 (Resolución de Conflictos): ', 'Evalúa el estilo de respuesta ante desafíos cotidianos.')
+add_bullet('Pregunta 6 (Visión de Futuro en Paita): ', 'Conecta las aspiraciones personales con las oportunidades laborales tangibles del puerto de Paita y la Región Piura.')
+add_p('Al culminar la evaluación, el algoritmo calcula el porcentaje de afinidad de las 4 carreras, presenta una tarjeta interactiva con trofeo dorado, detalla el campo laboral en la región y ofrece botones de acción para revisar la malla curricular o conocer los requisitos de matrícula.')
 
-table_c = doc.add_table(rows=1, cols=3)
-table_c.alignment = WD_TABLE_ALIGNMENT.CENTER
-for idx, title in enumerate(['Carrera Profesional', 'Enfoque Formativo', 'Campo Laboral en Paita / Piura']):
-    c = table_c.rows[0].cells[idx]
-    c.text = title
-    set_cell_background(c, '13357B')
-    p = c.paragraphs[0]
-    p.runs[0].font.bold = True
-    p.runs[0].font.color.rgb = RGBColor(255, 255, 255)
-    set_cell_margins(c, 120, 120, 150, 150)
+# ==========================================
+# 10. MEMORIA DE CONSTRUCCIÓN PASO A PASO
+# ==========================================
+add_h1('10. MEMORIA DE CONSTRUCCIÓN PASO A PASO')
+add_p('El desarrollo de HercarIA se ejecutó siguiendo 6 fases sistemáticas:')
+add_bullet('Fase 1 (Recopilación e Ingeniería de Conocimiento): ', 'Extracción sistemática de datos desde el portal web oficial ieshercar.edu.pe, TUPA vigente, plataforma de pagos (pagos.ieshercar.edu.pe) y sistema de boletas electrónicas.')
+add_bullet('Fase 2 (Maquetación y Diseño Visual ChatGPT): ', 'Creación de index.html y css/styles.css con maquetación flexible en pantalla completa, portada hero con tarjetas explicativas y soporte completo para modo oscuro y claro.')
+add_bullet('Fase 3 (Desarrollo del Motor NLP en JavaScript): ', 'Programación de js/app.js para detectar intenciones de usuario sobre requisitos, gratuidad, carreras, convalidaciones, títulos oficiales y horarios, aplicando normalización de cadenas de texto.')
+add_bullet('Fase 4 (Implementación del Test Psicométrico): ', 'Codificación de js/test_vocacional.js con cálculo matricial dinámico y tarjetas visuales interactivas.')
+add_bullet('Fase 5 (Humanización Vocal y Audio Desplegable): ', 'Desarrollo de js/voice.js, integrando Microsoft Edge TTS (Python) y síntesis del navegador con tono femenino dulce, filtros de sintaxis Markdown y dictado por micrófono.')
+add_bullet('Fase 6 (Despliegue y Control de Versiones en GitHub): ', 'Publicación en el repositorio oficial de GitHub (https://github.com/GMPH2007/HercarBOT) y activación de GitHub Pages para acceso universal y gratuito desde cualquier dispositivo móvil o computadora.')
 
-for c_row in carreras_data:
-    r_cells = table_c.add_row().cells
-    for idx, text in enumerate(c_row):
-        r_cells[idx].text = text
-        p = r_cells[idx].paragraphs[0]
-        p.runs[0].font.name = 'Arial'
-        p.runs[0].font.size = Pt(9.5)
-        set_cell_margins(r_cells[idx], 100, 100, 120, 120)
-
-# 5. Pagos y Matricula
-add_h1('5. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS')
-add_h2('5.1. Matrícula y Gratuidad de la Enseñanza')
-add_p('Por ser una institución pública estatal supervisada por el Ministerio de Educación (MINEDU) y la Dirección Regional de Educación de Piura (DREP), no existen pensiones mensuales. Los estudiantes únicamente abonan una tasa administrativa semestral conforme al TUPA institucional (aproximadamente S/ 150 a S/ 250 por ciclo de 6 meses completo).')
-
-add_h2('5.2. Protocolo de Registro de Vouchers')
-add_bullet('Paso 1: ', 'El usuario realiza el depósito en el Banco de la Nación (ventanilla o Agente MultiRed) y conserva el comprobante.')
-add_bullet('Paso 2: ', 'Accede a la plataforma oficial: https://pagos.ieshercar.edu.pe/')
-add_bullet('Paso 3: ', 'Ingresa su número de DNI para autenticarse en el sistema.')
-add_bullet('Paso 4: ', 'Selecciona el concepto (Matrícula, Examen de Admisión o Trámite) y digita el Número de Operación, Fecha y Monto.')
-add_bullet('Paso 5: ', 'Adjunta el archivo o foto del voucher legible y confirma el registro.')
-add_bullet('Paso 6: ', 'Descarga la boleta electrónica oficial desde: https://sistema.ieshercar.com/Consulta_Boletas/index.php')
-
-# 6. MEMORIA DE DESARROLLO: CÓMO SE HIZO EL SISTEMA
-add_h1('6. MEMORIA DE DESARROLLO: CÓMO SE CONSTRUYÓ HERCARTIA')
-add_p('El desarrollo de HercarIA se llevó a cabo siguiendo una metodología ágil de ingeniería de software orientada a prototipado rápido, alta fidelidad visual y optimización de rendimiento. A continuación se desglosan las fases de construcción:')
-
-add_h2('Fase 1: Extracción y Estructuración de Conocimiento Institucional')
-add_bullet('Recopilación de Fuentes Oficiales: ', 'Se realizó un relevamiento minucioso de la web oficial ieshercar.edu.pe, portales de pago (pagos.ieshercar.edu.pe), sistema de boletas y el TUPA del instituto.')
-add_bullet('Categorización Ontológica: ', 'La información se estructuró en js/knowledge.js bajo tópicos bien diferenciados: Identidad histórica y héroes patronos Cárcamo, las 4 carreras técnicas, requisitos de admisión y fechas, estructura de costos públicos (gratuidad de enseñanza) y guía de trámites de Mesa de Partes.')
-
-add_h2('Fase 2: Diseño de Experiencia de Usuario (UI/UX) Estilo ChatGPT')
-add_bullet('Estructura Visual: ', 'Se adoptó una maquetación en pantalla completa con barra lateral colapsable, contenedor central conversacional y una portada de bienvenida ("¿Qué deseas consultar hoy?") que contextualiza al visitante.')
-add_bullet('Estandarización Iconográfica: ', 'Se reemplazaron emojis heterogéneos por una librería unificada de iconos vectoriales SVG con trazo de 2px, garantizando un aspecto sobrio y corporativo.')
-add_bullet('Identidad Visual Institucional: ', 'Se aplicó la paleta cromática oficial: Azul Marino (#13357b), Azul Eléctrico (#2563eb) y Acentos Ámbar (#f59e0b), complementado con soporte de Tema Oscuro (Dark Mode).')
-
-add_h2('Fase 3: Desarrollo del Test Vocacional Interactivo')
-add_bullet('Algoritmo de Compatibilidad: ', 'Se implementó en js/test_vocacional.js un cuestionario interactivo de 6 reactivos con opciones múltiples que evalúan afinidad hacia software y redes (APSTI), logística y puertos (ANI), finanzas y tributos (Contabilidad) o recursos marinos y pesquería (DPA).')
-add_bullet('Cálculo Dinámico: ', 'Al finalizar las 6 preguntas, el algoritmo calcula el porcentaje de compatibilidad relativa y presenta una tarjeta destacada con trofeo dorado y sugerencias de inserción profesional.')
-
-add_h2('Fase 4: Motor de Voz Femenina Neural Peruana y Dictado por Micrófono')
-add_bullet('Voz Neural Camila (Perú): ', 'Se adoptó como estándar principal es-PE-CamilaNeural a través de Microsoft Edge TTS, garantizando una entonación dulce, natural y con fonética propia del Perú para la comunidad de Paita y Piura.')
-add_bullet('Normalización Fonética Especializada: ', 'Se incorporó un preprocesador que traduce siglas antes de la síntesis (I.E.S.T.P. a "Instituto", S/ 150 a "150 soles", APSTI a "A P S T I"), eliminando pausas forzadas o lecturas fragmentadas.')
-add_bullet('Segmentación Inteligente por Expresiones Regulares: ', 'Se reemplazó la división simplista por puntos por un parser de oraciones completas que une frases coherentes hasta 320 caracteres, garantizando fluidez total.')
-add_bullet('Control de Silenciamiento Inmediato: ', 'Se programó la interrupción instantánea de audio mediante tecla Escape, clic en entrada de texto o activación del botón de silenciar, evitando solapamientos sonoros.')
-add_bullet('Entrada por Micrófono (STT): ', 'Se añadió reconocimiento de voz en tiempo real con indicador visual de ondas concéntricas (ripple pulse).')
-
-add_h2('Fase 5: Navegación Adaptativa y Control de Conversación')
-add_bullet('Menú Responsivo de 3 Líneas: ', 'En pantallas de escritorio (Desktop), el botón de 3 líneas colapsa suavemente el menú lateral hacia la izquierda (-280px), otorgando el 100% de la pantalla al chat conversacional estilo ChatGPT. En dispositivos móviles y tabletas, despliega un cajón lateral (Drawer) con telón oscuro translúcido (overlay) y botón de cierre táctil.')
-add_bullet('Función Guardar Registro de Chat: ', 'Permite al usuario descargar con un solo clic un archivo formal (.txt) con la transcripción completa de su diálogo, fecha, hora y encabezados institucionales para su archivo personal.')
-add_bullet('Función Borrar Conversación: ', 'Botón con confirmación interactiva para limpiar la pantalla de chat, restablecer el estado del sistema y regresar a la portada de bienvenida.')
-add_bullet('Historial de Consultas Recientes: ', 'Almacenamiento persistente en localStorage que registra las preguntas formuladas y permite relanzarlas rápidamente desde la barra lateral.')
-add_bullet('Enlaces Directos a Plataformas Oficiales: ', 'Acceso inmediato en cabecera y portada a la Biblioteca Virtual (biblioteca.ieshercar.edu.pe), Portal Web Oficial (ieshercar.edu.pe), Sistema de Pagos y Vouchers (pagos.ieshercar.edu.pe), Mesa de Partes Virtual y Consulta de Boletas Electrónicas.')
-add_bullet('Optimización Táctil para Celulares: ', 'Adaptación del viewport (100dvh) para teléfonos móviles, cuadrícula responsiva a una sola columna y accesibilidad completa desde cualquier smartphone.')
-
-add_h2('Fase 6: Optimización, Pruebas y Despliegue en la Nube')
-add_bullet('Pruebas de Calidad de Interacción: ', 'Se evaluó la normalización de lenguaje eliminando tildes, signos de puntuación y admitiendo modismos frecuentes de los postulantes.')
-add_bullet('Despliegue Continuo en GitHub Pages: ', 'El repositorio se alojó en GitHub (https://github.com/GMPH2007/HercarBOT) y se configuró GitHub Pages para acceso inmediato vía HTTPS desde cualquier smartphone o computadora.')
-
-# 7. Manual y Enlaces
-add_h1('7. GUÍA DE INSTALACIÓN Y ENLACES INSTITUCIONALES')
+# ==========================================
+# 11. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES
+# ==========================================
+add_h1('11. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES')
 add_p('HercarIA se distribuye en dos modalidades para facilidad de los usuarios:')
-add_bullet('Lanzador con 1 Clic (Local Windows): ', 'Doble clic en el archivo Iniciar_HercarBOT.bat para activar el servidor con síntesis de voz neural y abrir el navegador.')
-add_bullet('Sitio Web en Vivo (Nube): ', 'Disponible en cualquier dispositivo a través de https://gmph2007.github.io/HercarBOT/')
+add_bullet('1. Acceso en Vivo en la Nube (GitHub Pages): ', 'Disponible de forma instantánea sin instalaciones en: https://gmph2007.github.io/HercarBOT/')
+add_bullet('2. Ejecución Local con 1 Clic (Windows): ', 'Descargar el proyecto desde GitHub y hacer doble clic en el archivo Iniciar_HercarBOT.bat. Este lanzador inicia el microservicio local de voz neural y abre el navegador automáticamente en http://localhost:8080.')
+add_bullet('Portal Web Oficial del Instituto: ', 'https://ieshercar.edu.pe/')
 add_bullet('Biblioteca Virtual Institucional: ', 'https://biblioteca.ieshercar.edu.pe/login.php')
-add_bullet('Plataforma de Pagos y Vouchers: ', 'https://pagos.ieshercar.edu.pe/')
+add_bullet('Plataforma de Pagos y Registro de Vouchers: ', 'https://pagos.ieshercar.edu.pe/')
 add_bullet('Mesa de Partes Virtual: ', 'https://sistema.ieshercar.edu.pe/registro-tramite/')
-add_bullet('Consulta de Boletas: ', 'https://sistema.ieshercar.com/Consulta_Boletas/index.php')
+add_bullet('Consulta y Descarga de Boletas Electrónicas: ', 'https://sistema.ieshercar.com/Consulta_Boletas/index.php')
 
-# Guardar documento Word
+# Guardar documento Word actualizado
 output_file = 'INFORME_TECNICO_HERCARBOT.docx'
 doc.save(output_file)
-print(f'{output_file} generado exitosamente!')
-
+print(f'[OK] {output_file} generado exitosamente con formato institucional de alta fidelidad!')
