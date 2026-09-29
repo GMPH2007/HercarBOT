@@ -15,10 +15,16 @@ class VoiceEngineHercar {
         this.speechSynthesis = window.speechSynthesis || null;
         this.selectedBrowserVoice = null;
         
-        // Calibración acústica para voz dulce, suave, delicada y perfectamente inteligible
-        this.voiceSpeed = 0.94; // Cadencia suave, natural y sin prisas
+        // Calibración acústica para voz femenina sumamente dulce, suave, delicada y humana
+        this.voiceSpeed = 0.93; // 93% de velocidad: cadencia pausada, dulce y natural
         this.voicePitch = 1.05; // Tono dulce, femenino, cálido y cristalino
-        this.backendAvailable = true;
+        
+        // Detección de host estático: en GitHub Pages o archivo local no hay servidor Python
+        const isStaticHost = window.location.protocol === 'file:' || 
+                             window.location.hostname.includes('github.io') ||
+                             window.location.hostname.includes('vercel.app') ||
+                             window.location.hostname.includes('netlify.app');
+        this.backendAvailable = !isStaticHost;
         
         // Voz neural de máxima dulzura y suavidad por defecto: Dalia (Latinoamericana dulce y suave)
         this.preferredNeuralVoice = 'es-MX-DaliaNeural';
@@ -389,13 +395,12 @@ class VoiceEngineHercar {
         const texto = this.limpiarTextoParaVoz(textoOriginal);
         if (!texto) return;
 
-        this.setSpeakingState(true);
-
-        // Si se seleccionó voz neural de estudio y el backend está disponible
+        // Si se seleccionó voz neural de estudio y el backend está disponible (servidor local)
         if (this.preferredNeuralVoice && this.backendAvailable) {
             try {
+                this.setSpeakingState(true);
                 const url = `/api/tts?voice=${encodeURIComponent(this.preferredNeuralVoice)}&text=${encodeURIComponent(texto)}`;
-                const audio = new Audio(url);
+                const audio = new Audio();
                 this.currentAudio = audio;
 
                 audio.onended = () => {
@@ -403,21 +408,20 @@ class VoiceEngineHercar {
                     this.currentAudio = null;
                 };
 
-                audio.onerror = (e) => {
-                    console.info('[Voz] Usando síntesis vocal del navegador');
+                audio.onerror = () => {
                     this.backendAvailable = false;
                     this.hablarConNavegador(texto);
                 };
 
+                audio.src = url;
                 await audio.play();
                 return;
             } catch (err) {
-                console.info('[Voz] Conmutando a síntesis vocal local');
                 this.backendAvailable = false;
             }
         }
 
-        // Fallback al sintetizador del navegador
+        // Síntesis vocal humana y dulce del navegador (GitHub Pages y móviles)
         this.hablarConNavegador(texto);
     }
 
@@ -429,29 +433,37 @@ class VoiceEngineHercar {
 
         try {
             this.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(texto);
-            
-            const matchedVoice = this.getBestBrowserVoice(this.preferredNeuralVoice);
-            if (matchedVoice) {
-                utterance.voice = matchedVoice;
-                utterance.lang = matchedVoice.lang || 'es-PE';
-            } else {
-                utterance.lang = 'es-PE';
-            }
 
-            utterance.rate = this.voiceSpeed;
-            utterance.pitch = this.voicePitch; // Tono dulce y suave
+            // Pausa breve de 35ms para permitir que el sintetizador del navegador limpie su buffer
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(texto);
+                
+                const matchedVoice = this.getBestBrowserVoice(this.preferredNeuralVoice);
+                if (matchedVoice) {
+                    utterance.voice = matchedVoice;
+                    utterance.lang = matchedVoice.lang || 'es-PE';
+                } else {
+                    utterance.lang = 'es-PE';
+                }
 
-            utterance.onend = () => {
-                this.setSpeakingState(false);
-            };
+                utterance.rate = this.voiceSpeed;
+                utterance.pitch = this.voicePitch; // Tono dulce, suave y natural
 
-            utterance.onerror = (e) => {
-                console.warn('[SpeechSynthesis] Error:', e);
-                this.setSpeakingState(false);
-            };
+                utterance.onstart = () => {
+                    this.setSpeakingState(true);
+                };
 
-            this.speechSynthesis.speak(utterance);
+                utterance.onend = () => {
+                    this.setSpeakingState(false);
+                };
+
+                utterance.onerror = (e) => {
+                    console.warn('[SpeechSynthesis] Error:', e);
+                    this.setSpeakingState(false);
+                };
+
+                this.speechSynthesis.speak(utterance);
+            }, 35);
         } catch (e) {
             console.error('[SpeechSynthesis] Error general:', e);
             this.setSpeakingState(false);
@@ -477,7 +489,7 @@ class VoiceEngineHercar {
     }
 
     probarVozDemostracion() {
-        const textoDemo = "¡Hola! Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué carrera te gustaría consultar hoy?";
+        const textoDemo = "¡Hola! Qué gusto saludarte. Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué carrera te gustaría consultar hoy?";
         this.hablar(textoDemo);
     }
 
