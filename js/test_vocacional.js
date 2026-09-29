@@ -372,7 +372,6 @@ Elige con sinceridad la opción que mejor te describa:`;
         `;
 
         this.chatApp.addBotInteractive(html, textoVoz);
-        this.chatApp.voiceEngine.hablar(textoVoz);
     }
 
     cancelar() {
