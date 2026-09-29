@@ -248,14 +248,21 @@ class VoiceEngineHercar {
 
         let clean = texto;
 
-        // 1. Reemplazos fonéticos de siglas e instituciones para que se pronuncien naturalmente
+        // 1. Títulos en Markdown y encabezados en mayúsculas: asegurar que terminen en punto para que la voz los lea como título
+        clean = clean
+            .replace(/(\*\*[A-ZÁÉÍÓÚ\s\(\)]+\*\*)\s*\n+/g, '$1.\n')
+            .replace(/#{1,6}\s*([^\n\r]+)/g, '$1.\n')
+            .replace(/^\s*[\*\•\-]\s*(.*?)$/gm, '$1.');
+
+        // 2. Reemplazos fonéticos naturales para español peruano (Paita/Piura)
         clean = clean
             .replace(/\bI\.?E\.?S\.?T\.?P\.?\b/gi, 'Instituto')
             .replace(/\bIESTP\b/gi, 'Instituto')
             .replace(/\bHercarIA\b/gi, 'Hercaria')
             .replace(/S\/\.?\s*(\d+)/g, '$1 soles')
-            .replace(/\bAPSTI\b/g, 'A P S T I')
-            .replace(/\bANI\b/g, 'A N I')
+            // Pronunciación de APSTI natural y clara
+            .replace(/\bAPSTI\b/g, 'Ápsti')
+            .replace(/\bANI\b/g, 'Ani')
             .replace(/\bDPA\b/g, 'D P A')
             .replace(/\bSUNAT\b/gi, 'Sunat')
             .replace(/\bMINEDU\b/gi, 'Minedu')
@@ -269,26 +276,23 @@ class VoiceEngineHercar {
             .replace(/\bpág\.\s*/gi, 'página ')
             .replace(/\bN°\s*/gi, 'número ');
 
-        // 2. Limpieza de etiquetas HTML, links Markdown y emojis
+        // 3. Limpieza absoluta de asteriscos, guiones, sintaxis markdown, emojis y enlaces
         clean = clean
-            .replace(/<[^>]*>/g, ' ')
-            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
-            .replace(/https?:\/\/\S+/g, '')
-            .replace(/\*\*(.*?)\*\*/g, '$1')
-            .replace(/\*(.*?)\*/g, '$1')
-            .replace(/#{1,6}\s?/g, '')
-            .replace(/[•\-\_]/g, ' ')
-            .replace(/[💻🚢📊🐟🏆💡📝💳📖🔄⚙️🌍🌱📈🏢🌊⚓🌐🧠🤝📑🔬⚡📦🔍🛡️🚀🌸🇵🇪🇪🇸▶️🔊🔇🗑️💾]/gu, '')
+            .replace(/<[^>]*>/g, ' ')                          // HTML
+            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')          // Markdown links [Texto](url) -> Texto
+            .replace(/https?:\/\/\S+/g, '')                    // URLs sin texto
+            .replace(/[\*\_\#\~\`•\-–—]/g, ' ')                // ¡ELIMINAR TODOS LOS ASTERISCOS Y GUIONES!
+            .replace(/[💻🚢📊🐟🏆💡📝💳📖🔄⚙️🌍🌱📈🏢🌊⚓🌐🧠🤝📑🔬⚡📦🔍🛡️🚀🌸🇵🇪🇪🇸▶️🔊🔇🗑️💾↗️]/gu, '') // Emojis
             .replace(/\s+/g, ' ')
             .trim();
 
-        // 3. Segmentación inteligente de oraciones por puntuación (evita romper siglas)
+        // 4. Segmentación por oraciones completas
         const matchOraciones = clean.match(/[^.!?]+[.!?]+/g);
         if (matchOraciones && matchOraciones.length > 0) {
             let resultado = '';
             for (let i = 0; i < matchOraciones.length; i++) {
                 const oracion = matchOraciones[i].trim();
-                if ((resultado + ' ' + oracion).length <= 320) {
+                if ((resultado + ' ' + oracion).length <= 340) {
                     resultado = resultado ? resultado + ' ' + oracion : oracion;
                 } else {
                     break;
@@ -297,8 +301,8 @@ class VoiceEngineHercar {
             clean = resultado || matchOraciones[0];
         }
 
-        if (clean.length > 320) {
-            clean = clean.substring(0, 315) + '...';
+        if (clean.length > 340) {
+            clean = clean.substring(0, 335) + '...';
         }
 
         return clean;
