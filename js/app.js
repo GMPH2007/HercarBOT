@@ -308,7 +308,7 @@ class HercarChatApp {
                 </div>
                 <div class="message-text">${parsedHTML}</div>
                 <div class="message-actions">
-                    <button class="msg-action-btn btn-speak" title="Escuchar respuesta con voz de chica">
+                    <button class="msg-action-btn btn-speak" title="Escuchar respuesta en voz alta">
                         🔊 Escuchar
                     </button>
                     <button class="msg-action-btn btn-copy" title="Copiar texto">
