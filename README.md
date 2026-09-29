@@ -77,12 +77,16 @@ Además, las dudas sobre trámites, validación de vouchers de Banco de la Naci�
 | Característica | Detalle Técnico | Beneficio para el Usuario |
 | :--- | :--- | :--- |
 | **Diseño Moderno Fullscreen** | Inspirado en ChatGPT con paleta cromática oficial (`#13357b`, `#2563eb`, `#f59e0b`). | Navegación intuitiva, limpia y familiar sin distracciones. |
+| **Menú Adaptativo de 3 Líneas** | Colapso lateral en Desktop para vista 100% limpia y Drawer táctil con overlay en móviles. | Máxima comodidad de lectura en cualquier pantalla. |
+| **Guardar Registro de Chat** | Descarga instantánea en formato `.txt` con fecha, hora y encabezados oficiales. | Constancia escrita para postulantes, padres y docentes. |
+| **Borrar Conversación** | Reinicio seguro con confirmación interactiva para limpiar el chat. | Comienza nuevas consultas desde cero en cualquier momento. |
+| **Historial de Consultas** | Persistencia automática en `localStorage` con acceso rápido en el menú. | Vuelve a consultar preguntas previas con un solo clic. |
 | **Portada Hero Interactiva** | Tarjetas con sombreado de elevación suave y 6 atajos clave. | Respuestas inmediatas con un solo clic desde la pantalla de inicio. |
-| **Test Vocacional Integrado** | Algoritmo psicométrico de compatibilidad porcentual. | Ayuda a los jóvenes indecisos a elegir su futuro profesional. |
-| **Voz Femenina Neural** | Microsoft Edge TTS (`es-ES-ElviraNeural`) y Web Speech API. | Respuestas leídas con entonación natural, dulce y humana. |
-| **Dictado por Micrófono** | Web Speech Recognition con efecto visual de ondas Ripple. | Permite consultar hablando con el manos libres activo. |
-| **Control Inteligente de Audio** | Silenciado instantáneo con tecla `Escape`, foco en texto o botón. | Cero ruidos molestos o solapamientos de audio residuales. |
-| **Modo Oscuro / Claro** | Variables dinámicas CSS con persistencia de preferencia. | Comodidad visual de día y de noche. |
+| **Test Vocacional Integrado** | Algoritmo psicométrico de compatibilidad porcentual con trofeo de carrera ganadora. | Ayuda a los jóvenes indecisos a elegir su futuro profesional. |
+| **Voz Femenina Neural (Perú)** | Microsoft Edge TTS (`es-PE-CamilaNeural`) y Web Speech API con acento natural. | Respuestas leídas con entonación natural, dulce y dialecto peruano. |
+| **Dictado por Micrófono** | Web Speech Recognition con efecto visual de ondas concéntricas Ripple. | Permite consultar hablando con el manos libres activo. |
+| **Control Inteligente de Audio** | Silenciado instantáneo con tecla `Escape`, foco en texto o botón en cabecera. | Cero ruidos molestos o solapamientos de audio residuales. |
+| **Modo Oscuro / Claro** | Variables dinámicas CSS con persistencia de preferencia en navegador. | Comodidad visual de día y de noche. |
 
 ---
 
