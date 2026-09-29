@@ -35,6 +35,7 @@ class HercarChatApp {
 
         this.setupEventListeners();
         this.setupVoiceFeedback();
+        this.renderizarHistorialSidebar();
         
         // Mostrar Portada de bienvenida por defecto
         this.mostrarPortada();
@@ -99,8 +100,24 @@ class HercarChatApp {
 
         if (this.btnNewChatEl) {
             this.btnNewChatEl.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
                 this.reiniciarConversacion();
             });
+        }
+
+        const btnExportChat = document.getElementById('btn-export-chat');
+        if (btnExportChat) {
+            btnExportChat.addEventListener('click', () => this.exportarConversacion());
+        }
+
+        const btnClearChat = document.getElementById('btn-clear-chat');
+        if (btnClearChat) {
+            btnClearChat.addEventListener('click', () => this.borrarConversacionConConfirmacion());
+        }
+
+        const btnClearHistoryAll = document.getElementById('btn-clear-history-all');
+        if (btnClearHistoryAll) {
+            btnClearHistoryAll.addEventListener('click', () => this.vaciarHistorialReciente());
         }
 
         if (this.btnStartTestSidebarEl) {
@@ -110,13 +127,41 @@ class HercarChatApp {
             });
         }
 
-        // Toggle Sidebar en móviles
+        // Toggle Sidebar en móviles (drawer con overlay) y en desktop (colapso completo)
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const btnCloseSidebarMobile = document.getElementById('btn-close-sidebar-mobile');
+
+        const toggleSidebar = () => {
+            if (window.innerWidth <= 768) {
+                const isOpen = sidebar.classList.toggle('open');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.toggle('active', isOpen);
+                }
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        };
+
+        const cerrarSidebar = () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        };
+
         if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
+            sidebarToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSidebar();
             });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', cerrarSidebar);
+        }
+
+        if (btnCloseSidebarMobile) {
+            btnCloseSidebarMobile.addEventListener('click', cerrarSidebar);
         }
 
         // Modo Oscuro / Claro
@@ -183,8 +228,12 @@ class HercarChatApp {
 
     cerrarSidebarMovilSiAplica() {
         const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
         if (sidebar && window.innerWidth <= 768) {
             sidebar.classList.remove('open');
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove('active');
         }
     }
 
@@ -207,6 +256,7 @@ class HercarChatApp {
     enviarConsultaDirecta(query) {
         if (!query || !query.trim()) return;
 
+        this.agregarAHistorialReciente(query);
         this.activarAreaChat();
         this.addUserMessage(query);
         this.mostrarTypingIndicator();
@@ -360,6 +410,118 @@ class HercarChatApp {
         this.voiceEngine.detenerVoz();
         this.testEngine.isActive = false;
         this.mostrarPortada();
+    }
+
+    borrarConversacionConConfirmacion() {
+        if (!this.history || this.history.length === 0) {
+            this.reiniciarConversacion();
+            return;
+        }
+
+        const confirmar = confirm('¿Estás seguro de que deseas borrar toda la conversación actual y reiniciar el chat?');
+        if (confirmar) {
+            this.reiniciarConversacion();
+        }
+    }
+
+    exportarConversacion() {
+        if (!this.history || this.history.length === 0) {
+            alert('Aún no hay mensajes en la conversación para guardar. Realiza una consulta primero.');
+            return;
+        }
+
+        const ahora = new Date();
+        const fechaStr = ahora.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' });
+        const horaStr = ahora.toLocaleTimeString('es-PE');
+        const fileDate = ahora.toISOString().slice(0, 10);
+
+        let contenido = `========================================================================\n`;
+        contenido += `   REGISTRO OFICIAL DE CONVERSACIÓN - HERCARTA (IESTP "HERMANOS CÁRCAMO")\n`;
+        contenido += `   Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo"\n`;
+        contenido += `   Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita – Piura, Perú\n`;
+        contenido += `   Portal Oficial: https://ieshercar.edu.pe/ | Plataforma Pagos: https://pagos.ieshercar.edu.pe/\n`;
+        contenido += `   Fecha: ${fechaStr} | Hora: ${horaStr}\n`;
+        contenido += `========================================================================\n\n`;
+
+        this.history.forEach((item) => {
+            const time = item.timestamp ? new Date(item.timestamp).toLocaleTimeString('es-PE') : '';
+            const rol = item.sender === 'user' ? 'USUARIO / POSTULANTE' : 'HERCARIA (ORIENTADORA VIRTUAL)';
+            const cleanText = (item.text || '')
+                .replace(/<[^>]*>/g, '')
+                .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+                .trim();
+
+            contenido += `[${time}] ${rol}:\n${cleanText}\n\n`;
+            contenido += `------------------------------------------------------------------------\n\n`;
+        });
+
+        contenido += `========================================================================\n`;
+        contenido += `Fin del registro de conversación. Generado automáticamente por HercarIA.\n`;
+        contenido += `Para consultas presenciales: Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita.\n`;
+        contenido += `========================================================================\n`;
+
+        const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Registro_Chat_HercarIA_${fileDate}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    agregarAHistorialReciente(query) {
+        if (!query || query.trim().length < 3) return;
+        try {
+            let queries = JSON.parse(localStorage.getItem('hercar_recent_queries') || '[]');
+            queries = queries.filter(q => q.toLowerCase() !== query.toLowerCase());
+            queries.unshift(query.trim());
+            if (queries.length > 8) queries = queries.slice(0, 8);
+            localStorage.setItem('hercar_recent_queries', JSON.stringify(queries));
+            this.renderizarHistorialSidebar();
+        } catch (e) {}
+    }
+
+    renderizarHistorialSidebar() {
+        const historySection = document.getElementById('sidebar-history-section');
+        const historyList = document.getElementById('sidebar-history-list');
+        if (!historySection || !historyList) return;
+
+        try {
+            const queries = JSON.parse(localStorage.getItem('hercar_recent_queries') || '[]');
+            if (queries.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+
+            historySection.style.display = 'block';
+            historyList.innerHTML = '';
+
+            queries.forEach(q => {
+                const item = document.createElement('div');
+                item.className = 'sidebar-history-item';
+                item.title = q;
+                item.innerHTML = `
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px; flex-shrink: 0; opacity: 0.7;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>${this.escapeHTML(q)}</span>
+                `;
+                item.addEventListener('click', () => {
+                    this.cerrarSidebarMovilSiAplica();
+                    this.enviarConsultaDirecta(q);
+                });
+                historyList.appendChild(item);
+            });
+        } catch (e) {}
+    }
+
+    vaciarHistorialReciente() {
+        localStorage.removeItem('hercar_recent_queries');
+        const historySection = document.getElementById('sidebar-history-section');
+        if (historySection) historySection.style.display = 'none';
     }
 
     /**
