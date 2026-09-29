@@ -176,9 +176,14 @@ c:\Users\misae\Downloads\HercarBOT O CHAT BOT HERCAR\
 ### 6.2. Ejecución Standalone (Sin Servidor)
 Hacer doble clic en `index.html`. El sistema operará al 100% de sus funciones conversacionales y empleará la voz nativa en español del navegador.
 
-### 6.3. Acceso Web Global
-Ingresar desde cualquier computadora, tableta o smartphone con conexión a internet a:
-🔗 **[https://gmph2007.github.io/HercarBOT/](https://gmph2007.github.io/HercarBOT/)**
+### 6.3. Acceso Web Global y Plataformas Oficiales
+* 🔗 **HercarIA en Vivo (GitHub Pages):** [https://gmph2007.github.io/HercarBOT/](https://gmph2007.github.io/HercarBOT/)
+* 📖 **Biblioteca Virtual Institucional:** [https://biblioteca.ieshercar.edu.pe/login.php](https://biblioteca.ieshercar.edu.pe/login.php)
+* 🏛️ **Portal Web Oficial:** [https://ieshercar.edu.pe/](https://ieshercar.edu.pe/)
+* 💳 **Plataforma de Pagos y Vouchers:** [https://pagos.ieshercar.edu.pe/](https://pagos.ieshercar.edu.pe/)
+* 📑 **Mesa de Partes Virtual:** [https://sistema.ieshercar.edu.pe/registro-tramite/](https://sistema.ieshercar.edu.pe/registro-tramite/)
+* 🧾 **Consulta de Boletas:** [https://sistema.ieshercar.com/Consulta_Boletas/index.php](https://sistema.ieshercar.com/Consulta_Boletas/index.php)
+* 💼 **Bolsa Laboral:** [https://bolsa-laboral.ieshercar.edu.pe/](https://bolsa-laboral.ieshercar.edu.pe/)
 
 ---
 
@@ -186,7 +191,7 @@ Ingresar desde cualquier computadora, tableta o smartphone con conexión a inter
 
 1. **Impacto Académico y Social:** HercarIA democratiza el acceso a la orientación vocacional y académica en la provincia de Paita, permitiendo que cualquier estudiante conozca las 4 carreras técnicas del instituto y sus ventajas competitivas.
 2. **Eficiencia Técnica:** La combinación de Vanilla JavaScript con hojas de estilo CSS optimizadas y el backend ligero en Python garantiza tiempos de carga inferiores a 1 segundo y fluidez absoluta sin dependencias frágiles.
-3. **Calidad de Interacción:** La integración de la voz neural femenina `es-ES-ElviraNeural` y el diseño limpio tipo ChatGPT transforman la experiencia de consulta en un diálogo cálido, profesional y humanizado.
+3. **Calidad de Interacción:** La integración de la voz neural peruana femenina `es-PE-CamilaNeural`, la eliminación de ruidos residuales y asteriscos, y el diseño limpio tipo ChatGPT transforman la experiencia de consulta en un diálogo cálido, profesional y humanizado.
 
 ---
 *Documento elaborado y verificado para fines académicos e institucionales.*  
