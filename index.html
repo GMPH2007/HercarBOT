@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=3.0">
+    <link rel="stylesheet" href="css/styles.css?v=4.0">
 </head>
 <body>
 
@@ -39,38 +39,14 @@
             </div>
 
             <div class="sidebar-content">
-                <!-- Grupo de Acciones Principales de Conversación -->
-                <div class="sidebar-action-group">
-                    <!-- Botón Inicio / Nueva Consulta -->
-                    <button type="button" class="btn-new-chat" id="btn-new-chat" title="Regresar al inicio o nueva consulta">
-                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        <span>Nueva Conversación</span>
-                    </button>
-
-                    <!-- Botón Guardar / Descargar Registro de Chat -->
-                    <button type="button" class="sidebar-btn-tool btn-export-chat" id="btn-export-chat" title="Descargar y guardar copia de la conversación">
-                        <svg class="svg-icon icon-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        <span>Guardar Registro de Chat</span>
-                    </button>
-
-                    <!-- Botón Borrar Conversación Actual -->
-                    <button type="button" class="sidebar-btn-tool btn-clear-chat" id="btn-clear-chat" title="Borrar la conversación actual y reiniciar">
-                        <svg class="svg-icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                        </svg>
-                        <span>Borrar Conversación</span>
-                    </button>
-                </div>
+                <!-- Botón Principal: Nueva Consulta -->
+                <button type="button" class="btn-new-chat" id="btn-new-chat" title="Iniciar nueva consulta o regresar al inicio">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Nueva Conversación</span>
+                </button>
 
                 <!-- Botón Destacado: Test Vocacional -->
                 <button type="button" class="btn-sidebar-test" id="btn-start-test-sidebar" title="Iniciar Test Vocacional Interactivo">
@@ -91,54 +67,6 @@
                         <button type="button" class="btn-clear-history-all" id="btn-clear-history-all" title="Vaciar historial">Vaciar</button>
                     </div>
                     <div class="sidebar-history-list" id="sidebar-history-list"></div>
-                </div>
-
-                <!-- Accesos Rápidos Institucionales -->
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title">Accesos Directos</div>
-                    <div class="sidebar-menu">
-                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas que ofrece el instituto')">
-                            <svg class="svg-icon icon-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
-                            <span>Las 4 Carreras Técnicas</span>
-                        </button>
-                        
-                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo registro mi voucher de pago en pagos.ieshercar.edu.pe?')">
-                            <svg class="svg-icon icon-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                            </svg>
-                            <span>Registro de Pagos y Vouchers</span>
-                        </button>
-
-                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo es el proceso de matrícula, admisión y cuáles son los costos?')">
-                            <svg class="svg-icon icon-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                            </svg>
-                            <span>Matrícula y Costos 2026</span>
-                        </button>
-
-                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo ingreso a la Mesa de Partes Virtual y qué trámites puedo hacer?')">
-                            <svg class="svg-icon icon-amber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                            <span>Mesa de Partes Virtual</span>
-                        </button>
-
-                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Dónde queda el instituto, cuáles son sus teléfonos y horarios de atención?')">
-                            <svg class="svg-icon icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                            <span>Ubicación y Contacto</span>
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -222,6 +150,27 @@
                     <div class="speaking-wave" id="header-speaking-indicator">
                         <span></span><span></span><span></span><span></span>
                     </div>
+
+                    <!-- Botón Guardar / Descargar Registro de Chat -->
+                    <button type="button" class="btn-header-tool btn-export-chat" id="btn-export-chat" title="Descargar y guardar copia de la conversación (.txt)">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span class="header-btn-label">Guardar Chat</span>
+                    </button>
+
+                    <!-- Botón Borrar Conversación Actual -->
+                    <button type="button" class="btn-header-tool btn-clear-chat" id="btn-clear-chat" title="Borrar la conversación actual y reiniciar">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                        <span class="header-btn-label">Borrar Chat</span>
+                    </button>
 
                     <!-- Módulo de Audio Minimalista (Icono único con Popover desplegable) -->
                     <div class="audio-module-container">
@@ -518,6 +467,28 @@
             <!-- Barra de Entrada Inferior con Efecto Ripple en Micrófono -->
             <div class="chat-input-wrapper">
                 
+                <!-- Barra de Accesos Directos (Píldoras / Chips Rápidos sobre el Input) -->
+                <div class="quick-access-chips" id="quick-access-chips">
+                    <div class="chips-scroll-track">
+                        <span class="chips-title">Accesos Directos:</span>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas que ofrece el instituto')">
+                            <span class="chip-icon">💻</span> Las 4 Carreras Técnicas
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo registro mi voucher de pago en pagos.ieshercar.edu.pe?')">
+                            <span class="chip-icon">💳</span> Registro de Pagos
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo es el proceso de matrícula, admisión y cuáles son los costos?')">
+                            <span class="chip-icon">📝</span> Matrícula y Costos 2026
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo ingreso a la Mesa de Partes Virtual y qué trámites puedo hacer?')">
+                            <span class="chip-icon">📁</span> Mesa de Partes Virtual
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Dónde queda el instituto, cuáles son sus teléfonos y horarios de atención?')">
+                            <span class="chip-icon">📍</span> Ubicación y Contacto
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Indicador visual cuando el micrófono está grabando -->
                 <div class="mic-listening-bar" id="mic-pulse-indicator">
                     <span class="recording-dot"></span>
@@ -565,9 +536,9 @@
     </div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/knowledge.js?v=3.0"></script>
-    <script src="js/test_vocacional.js?v=3.0"></script>
-    <script src="js/voice.js?v=3.0"></script>
-    <script src="js/app.js?v=3.0"></script>
+    <script src="js/knowledge.js?v=4.0"></script>
+    <script src="js/test_vocacional.js?v=4.0"></script>
+    <script src="js/voice.js?v=4.0"></script>
+    <script src="js/app.js?v=4.0"></script>
 </body>
 </html>
