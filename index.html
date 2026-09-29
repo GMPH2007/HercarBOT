@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=3.0">
 </head>
 <body>
 
@@ -225,7 +225,7 @@
 
                     <!-- Módulo de Audio Minimalista (Icono único con Popover desplegable) -->
                     <div class="audio-module-container">
-                        <button type="button" class="btn-audio-control" id="btn-audio-settings" title="Configurar Voz (Femenina Neural)">
+                        <button type="button" class="btn-audio-control" id="btn-audio-settings" title="Configuración de Voz">
                             <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -251,12 +251,13 @@
                                 </div>
 
                                 <div class="popover-row-vertical">
-                                    <label for="voice-select">Voz Femenina Seleccionada:</label>
+                                    <label for="voice-select">Voz Seleccionada:</label>
                                     <select id="voice-select" class="voice-select-styled">
-                                        <option value="es-PE-CamilaNeural" selected>Voz Camila (Chica Peruana - Recomendada)</option>
-                                        <option value="es-MX-DaliaNeural">Voz Dalia (Chica Suave y Dulce)</option>
-                                        <option value="es-ES-ElviraNeural">Voz Elvira (Chica Natural de Estudio)</option>
-                                        <option value="browser">Voz del Navegador (Nativa)</option>
+                                        <option value="es-MX-DaliaNeural" selected>Voz Dalia (Dulce, Suave y Clara - Recomendada)</option>
+                                        <option value="es-PE-CamilaNeural">Voz Camila (Amable y Natural)</option>
+                                        <option value="es-CO-SalomeNeural">Voz Salomé (Cálida y Melódica)</option>
+                                        <option value="es-ES-ElviraNeural">Voz Elvira (Institucional y Precisa)</option>
+                                        <option value="browser">Voz del Navegador (Predeterminada)</option>
                                     </select>
                                 </div>
 
@@ -564,9 +565,9 @@
     </div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/knowledge.js"></script>
-    <script src="js/test_vocacional.js"></script>
-    <script src="js/voice.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/knowledge.js?v=3.0"></script>
+    <script src="js/test_vocacional.js?v=3.0"></script>
+    <script src="js/voice.js?v=3.0"></script>
+    <script src="js/app.js?v=3.0"></script>
 </body>
 </html>
