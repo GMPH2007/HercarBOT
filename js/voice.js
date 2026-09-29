@@ -15,13 +15,13 @@ class VoiceEngineHercar {
         this.speechSynthesis = window.speechSynthesis || null;
         this.selectedBrowserVoice = null;
         
-        // Parámetros para voz femenina dulce y clara en navegador
-        this.voiceSpeed = 0.95;
-        this.voicePitch = 1.15; // Tono femenino dulce y natural
+        // Parámetros para voz femenina natural, fluida y clara
+        this.voiceSpeed = 1.0;
+        this.voicePitch = 1.0; // Tono natural sin distorsión
         this.backendAvailable = true;
         
-        // Voz neural de chica por defecto: Elvira (Español Natural de Estudio)
-        this.preferredNeuralVoice = 'es-ES-ElviraNeural';
+        // Voz neural de chica por defecto: Camila (Chica Peruana - Dialecto Nacional Amable)
+        this.preferredNeuralVoice = 'es-PE-CamilaNeural';
         this.lastHoverTime = 0;
 
         this.initBrowserVoices();
@@ -112,14 +112,24 @@ class VoiceEngineHercar {
             if (!voices || voices.length === 0) return;
 
             // Filtrar estrictamente voces en español
-            const spanishVoices = voices.filter(v => v.lang.startsWith('es') || v.lang.includes('Spanish'));
+            const spanishVoices = voices.filter(v => v.lang.startsWith('es') || v.lang.includes('Spanish') || v.lang.includes('Castilian'));
 
-            // Buscar candidatas femeninas prioritarias
-            const femaleNames = ['elvira', 'dalia', 'sabina', 'paulina', 'camila', 'helena', 'laura', 'monica', 'lucia', 'penelope', 'rosa', 'marta', 'zira'];
-            let bestVoice = spanishVoices.find(v => femaleNames.some(name => v.name.toLowerCase().includes(name)));
+            // Buscar candidatas femeninas prioritarias en español
+            const femaleNames = ['camila', 'sabina', 'dalia', 'elvira', 'paulina', 'elena', 'laura', 'monica', 'lucia', 'penelope', 'rosa', 'marta', 'zira', 'hilda', 'paloma', 'jimena', 'sofia', 'esperanza'];
+            
+            // 1. Prioridad: Voz Femenina Natural u Online en español
+            let bestVoice = spanishVoices.find(v => 
+                femaleNames.some(name => v.name.toLowerCase().includes(name)) && 
+                (v.name.includes('Natural') || v.name.includes('Online'))
+            );
 
+            // 2. Prioridad: Cualquier voz femenina identificada por nombre
             if (!bestVoice) {
-                // Voz femenina de Google o general en español
+                bestVoice = spanishVoices.find(v => femaleNames.some(name => v.name.toLowerCase().includes(name)));
+            }
+
+            // 3. Prioridad: Voz femenina de Google o marcada female
+            if (!bestVoice) {
                 bestVoice = spanishVoices.find(v => v.name.includes('Google') || v.name.toLowerCase().includes('female'));
             }
 
@@ -230,33 +240,65 @@ class VoiceEngineHercar {
     }
 
     /**
-     * Extrae un resumen conciso y comprensible del texto
+     * Extrae un resumen conciso, natural y fonéticamente amigable para la voz
      * omitiendo tablas, links y detalles sobrecargados
      */
     limpiarTextoParaVoz(texto) {
         if (!texto) return '';
 
-        // Si es una respuesta larga, tomar el primer párrafo o ideas clave
-        let clean = texto
+        let clean = texto;
+
+        // 1. Reemplazos fonéticos de siglas e instituciones para que se pronuncien naturalmente
+        clean = clean
+            .replace(/\bI\.?E\.?S\.?T\.?P\.?\b/gi, 'Instituto')
+            .replace(/\bIESTP\b/gi, 'Instituto')
+            .replace(/\bHercarIA\b/gi, 'Hercaria')
+            .replace(/S\/\.?\s*(\d+)/g, '$1 soles')
+            .replace(/\bAPSTI\b/g, 'A P S T I')
+            .replace(/\bANI\b/g, 'A N I')
+            .replace(/\bDPA\b/g, 'D P A')
+            .replace(/\bSUNAT\b/gi, 'Sunat')
+            .replace(/\bMINEDU\b/gi, 'Minedu')
+            .replace(/\bTUPA\b/gi, 'Tupa')
+            .replace(/\bDNI\b/gi, 'D N I')
+            .replace(/\bAv\.\s*/gi, 'Avenida ')
+            .replace(/\bUrb\.\s*/gi, 'Urbanización ')
+            .replace(/\bMz\.\s*/gi, 'Manzana ')
+            .replace(/\bLt\.\s*/gi, 'Lote ')
+            .replace(/\betc\.\s*/gi, 'etcétera ')
+            .replace(/\bpág\.\s*/gi, 'página ')
+            .replace(/\bN°\s*/gi, 'número ');
+
+        // 2. Limpieza de etiquetas HTML, links Markdown y emojis
+        clean = clean
             .replace(/<[^>]*>/g, ' ')
+            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+            .replace(/https?:\/\/\S+/g, '')
             .replace(/\*\*(.*?)\*\*/g, '$1')
             .replace(/\*(.*?)\*/g, '$1')
             .replace(/#{1,6}\s?/g, '')
-            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
-            .replace(/https?:\/\/\S+/g, '')
             .replace(/[•\-\_]/g, ' ')
-            .replace(/[💻🚢📊🐟🏆💡📝💳📖🔄⚙️🌍🌱📈🏢🌊⚓🌐🧠🤝📑🔬⚡📦🔍🛡️🚀🌸🇵🇪🇪🇸▶️🔊🔇]/gu, '')
+            .replace(/[💻🚢📊🐟🏆💡📝💳📖🔄⚙️🌍🌱📈🏢🌊⚓🌐🧠🤝📑🔬⚡📦🔍🛡️🚀🌸🇵🇪🇪🇸▶️🔊🔇🗑️💾]/gu, '')
             .replace(/\s+/g, ' ')
             .trim();
 
-        // Limitar a máximo 2 oraciones para una síntesis vocal ágil y fresca
-        const oraciones = clean.split('.');
-        if (oraciones.length > 2) {
-            clean = oraciones.slice(0, 2).join('.') + '.';
+        // 3. Segmentación inteligente de oraciones por puntuación (evita romper siglas)
+        const matchOraciones = clean.match(/[^.!?]+[.!?]+/g);
+        if (matchOraciones && matchOraciones.length > 0) {
+            let resultado = '';
+            for (let i = 0; i < matchOraciones.length; i++) {
+                const oracion = matchOraciones[i].trim();
+                if ((resultado + ' ' + oracion).length <= 320) {
+                    resultado = resultado ? resultado + ' ' + oracion : oracion;
+                } else {
+                    break;
+                }
+            }
+            clean = resultado || matchOraciones[0];
         }
 
-        if (clean.length > 280) {
-            clean = clean.substring(0, 270) + '...';
+        if (clean.length > 320) {
+            clean = clean.substring(0, 315) + '...';
         }
 
         return clean;
