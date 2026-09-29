@@ -111,18 +111,27 @@ El desarrollo se ejecutó en 7 etapas rigurosas:
 * Se implementó en [`js/app.js`](file:///c:/Users/misae/Downloads/HercarBOT%20O%20CHAT%20BOT%20HERCAR/js/app.js) un procesador de lenguaje natural capaz de normalizar texto (remoción de diacríticos y puntuación), resolver errores tipográficos comunes ("amtriucla", "carrea", "apsti", "boucher", "pesqueria") y clasificar la intención del usuario en 12 categorías semánticas.
 * El formateador traduce sintaxis Markdown (encabezados, listas, negritas, enlaces seguros con icono indicador y bloques de alerta) a HTML sanitizado.
 
-### Fase 5: Módulo de Audio y Síntesis Femenina Natural
-* Se configuró el motor [`js/voice.js`](file:///c:/Users/misae/Downloads/HercarBOT%20O%20CHAT%20BOT%20HERCAR/js/voice.js) para reproducir la voz neural **`es-ES-ElviraNeural`**, caracterizada por su tono femenino claro, cadencia suave y articulación profesional en español.
-* **Lectura Optimizada y Concisa:** El motor fue calibrado para sintetizar resúmenes directos y no saturar al usuario con párrafos excesivos.
-* **Control de Audio Minimalista:** En el Header se colocó un botón estilizado con icono de altavoz y punto de estado luminoso (*verde activo / rojo silenciado*), el cual despliega un menú Popover para alternar voces (Elvira, Dalia, Camila o Voz de Navegador) y probar el audio.
-* **Silenciamiento Inteligente:** Se desactivó cualquier habla automática accidental por movimiento de cursor (`hover`) y se programó el silenciado instantáneo al pulsar la tecla `Escape`, al enfocar el cuadro de texto o al presionar el micrófono.
+### Fase 5: Módulo de Audio, Síntesis Femenina Neural Peruana y Antirruido
+* **Voz Femenina Camila (`es-PE-CamilaNeural`):** Se adoptó como estándar principal la voz neural peruana de Microsoft Edge TTS, dotando al asistente de un tono dulce, natural y con articulación regional auténtica para Paita y Piura.
+* **Normalización Fonética Avanzada:** Se implementó en [`js/voice.js`](file:///c:/Users/misae/Downloads/HercarBOT%20O%20CHAT%20BOT%20HERCAR/js/voice.js) un diccionario fonético que reemplaza siglas como `I.E.S.T.P.` por "Instituto", `S/ 150` por "150 soles", y deletrea siglas como `APSTI` ("A P S T I"), impidiendo que los puntos de las abreviaturas corten el habla de la inteligencia artificial.
+* **Segmentación con Expresiones Regulares:** Las oraciones se agrupan mediante regex (`/[^.!?]+[.!?]+/g`) hasta un límite equilibrado de 320 caracteres, permitiendo alocuciones fluidas y naturales.
+* **Control de Audio Profesional:** El botón de la cabecera se renombró sobriamente a **"Voz"** (con punto de estado verde/rojo y popover desplegable para alternar entre Camila, Dalia, Elvira y navegador), ofreciendo una apariencia seria y académica para presentaciones institucionales.
+* **Silenciamiento Instantáneo:** Detención inmediata del audio pulsando la tecla `Escape`, enfocando el recuadro de texto o activando el micrófono.
 
-### Fase 6: Micro-Interacciones en el Input (Efecto Ripple)
+### Fase 6: Sistema de Control de Conversación y Navegación Adaptativa
+* **Menú Responsivo de 3 Líneas:** 
+  - En **Desktop**: El botón de 3 líneas colapsa el menú lateral (`margin-left: -280px`), permitiendo que el área de chat se expanda al 100% del ancho de la pantalla estilo ChatGPT. Al hacer clic nuevamente, el menú se despliega fluidamente.
+  - En **Móviles / Tablets**: Despliega un cajón lateral (Drawer) flotante con telón oscuro translúcido (`sidebar-overlay`) y botón de cierre táctil (`&times;`).
+* **Guardar Registro de Chat:** Botón dedicado que recopila los mensajes de la sesión activa, añade encabezados oficiales con fecha y hora, y descarga automáticamente el archivo `Registro_Chat_HercarIA_YYYY-MM-DD.txt`.
+* **Borrar Conversación:** Botón con confirmación interactiva para eliminar la conversación actual y regresar fluidamente a la portada interactiva.
+* **Historial de Consultas Recientes:** Almacenamiento persistente en `localStorage` que guarda las últimas preguntas realizadas para relanzarlas con un solo clic.
+
+### Fase 7: Micro-Interacciones en el Input (Efecto Ripple)
 * Se integró un contenedor relativo alrededor del botón de micrófono con dos anillos concéntricos (`.ripple-ring`) que ejecutan una animación fluida `@keyframes ripplePulse` cuando el usuario está dictando por voz, brindando una experiencia táctil y moderna.
 
-### Fase 7: Control de Versiones y Despliegue en la Nube
-* Mediante scripts de automatización conectados a la API REST de GitHub v3, se creó el repositorio oficial `GMPH2007/HercarBOT` y se subieron los módulos fuente y assets en alta resolución.
-* Se habilitó **GitHub Pages** sobre la rama principal `main`, logrando que la aplicación quede disponible públicamente en internet con certificado SSL (HTTPS).
+### Fase 8: Control de Versiones y Despliegue en la Nube
+* Mediante scripts de automatización conectados a la API REST de GitHub v3, se sincronizó el repositorio oficial `GMPH2007/HercarBOT` con los documentos Word (`.docx`), Markdown (`.md`) y fuentes optimizados.
+* Se validó el funcionamiento global sobre **GitHub Pages** con certificado SSL (HTTPS).
 
 ---
 
