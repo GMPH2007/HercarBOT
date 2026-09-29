@@ -5,6 +5,7 @@
 
 ---
 
+* **Carrera Profesional Técnica:** Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
 * **Autor / Desarrollador:** Gerson Misael Pintado Huamán (GMPH2007)
 * **Institución Beneficiaria:** I.E.S.T.P. "Hermanos Cárcamo" de Paita ([ieshercar.edu.pe](https://ieshercar.edu.pe/))
 * **Fecha:** Septiembre de 2026
@@ -118,13 +119,16 @@ El desarrollo se ejecutó en 7 etapas rigurosas:
 * **Control de Audio Profesional:** El botón de la cabecera se renombró sobriamente a **"Voz"** (con punto de estado verde/rojo y popover desplegable para alternar entre Camila, Dalia, Elvira y navegador), ofreciendo una apariencia seria y académica para presentaciones institucionales.
 * **Silenciamiento Instantáneo:** Detención inmediata del audio pulsando la tecla `Escape`, enfocando el recuadro de texto o activando el micrófono.
 
-### Fase 6: Sistema de Control de Conversación y Navegación Adaptativa
-* **Menú Responsivo de 3 Líneas:** 
-  - En **Desktop**: El botón de 3 líneas colapsa el menú lateral (`margin-left: -280px`), permitiendo que el área de chat se expanda al 100% del ancho de la pantalla estilo ChatGPT. Al hacer clic nuevamente, el menú se despliega fluidamente.
-  - En **Móviles / Tablets**: Despliega un cajón lateral (Drawer) flotante con telón oscuro translúcido (`sidebar-overlay`) y botón de cierre táctil (`&times;`).
-* **Guardar Registro de Chat:** Botón dedicado que recopila los mensajes de la sesión activa, añade encabezados oficiales con fecha y hora, y descarga automáticamente el archivo `Registro_Chat_HercarIA_YYYY-MM-DD.txt`.
-* **Borrar Conversación:** Botón con confirmación interactiva para eliminar la conversación actual y regresar fluidamente a la portada interactiva.
-* **Historial de Consultas Recientes:** Almacenamiento persistente en `localStorage` que guarda las últimas preguntas realizadas para relanzarlas con un solo clic.
+### Fase 6: Rediseño Ergonómico de UI y Navegación Adaptativa
+* **Menú Lateral Minimalista (Estilo ChatGPT):** El menú lateral se despejó por completo de saturaciones y enlaces redundantes, concentrándose únicamente en `+ Nueva Conversación`, `Test Vocacional`, `Consultas Recientes` y el interruptor de `Modo Oscuro`.
+* **Controles Operativos en Cabecera:** Se trasladaron a la parte superior derecha, junto al módulo de audio:
+  - **Guardar Registro de Chat (`.btn-export-chat`):** Descarga instantánea en formato `.txt` con fecha, hora y encabezados formales.
+  - **Borrar Conversación (`.btn-clear-chat`):** Reinicio seguro con confirmación que limpia la pantalla y retorna a la portada.
+* **Barra de Píldoras de Acceso Rápido (Chips):** Situada directamente sobre el área de redacción (`.quick-access-chips`), permitiendo enviar consultas sobre las 4 carreras, pagos, matrícula y trámites con un solo clic o toque en móvil.
+* **Navegación Adaptativa de 3 Líneas:** 
+  - En **Desktop**: El botón de 3 líneas colapsa suavemente el menú lateral a 0 ancho, expandiendo el chat al 100% de la pantalla.
+  - En **Móviles / Tablets**: Despliega un Drawer flotante con overlay oscuro y botón de cierre táctil.
+* **Historial de Consultas Recientes:** Almacenamiento persistente en `localStorage` con opción de vaciado en un solo clic.
 
 ### Fase 7: Micro-Interacciones en el Input (Efecto Ripple)
 * Se integró un contenedor relativo alrededor del botón de micrófono con dos anillos concéntricos (`.ripple-ring`) que ejecutan una animación fluida `@keyframes ripplePulse` cuando el usuario está dictando por voz, brindando una experiencia táctil y moderna.
