@@ -33,7 +33,7 @@ except ImportError:
 PORT = 8080
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-async def generar_audio_neural(texto: str, voz: str = "es-ES-ElviraNeural") -> bytes:
+async def generar_audio_neural(texto: str, voz: str = "es-PE-CamilaNeural") -> bytes:
     """Genera audio MP3 usando la voz neural seleccionada."""
     tts = edge_tts.Communicate(texto, voz)
     mp3_buffer = io.BytesIO()
@@ -53,7 +53,7 @@ class HercarRequestHandler(SimpleHTTPRequestHandler):
         if parsed_url.path == '/api/tts':
             query_params = urllib.parse.parse_qs(parsed_url.query)
             texto = query_params.get('text', [''])[0]
-            voz = query_params.get('voice', ['es-ES-ElviraNeural'])[0]
+            voz = query_params.get('voice', ['es-PE-CamilaNeural'])[0]
 
             if not texto:
                 self.send_error(400, "Parametro 'text' faltante")
