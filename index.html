@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HercarIA • Asistente Virtual Oficial IESTP "Hermanos Cárcamo"</title>
+    <meta name="description" content="Chatbot oficial con Inteligencia Artificial, voz femenina interactiva y orientador vocacional del IESTP Hermanos Cárcamo de Paita.">
+    
+    <!-- Favicon institucional -->
+    <link rel="shortcut icon" href="assets/logo-crest.png" type="image/png">
+    
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR LATERAL ESTILO CHATGPT (LIMPIO, MINIMALISTA Y ELEGANTE) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-box">
+                    <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" class="sidebar-logo">
+                </div>
+                <div class="sidebar-brand">
+                    <h2>HercarIA</h2>
+                    <p>IESTP Hermanos Cárcamo</p>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Botón Inicio / Nueva Consulta -->
+                <button type="button" class="btn-new-chat" id="btn-new-chat" title="Regresar al inicio o nueva consulta">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Inicio / Nueva Consulta</span>
+                </button>
+
+                <!-- Botón Destacado: Test Vocacional -->
+                <button type="button" class="btn-sidebar-test" id="btn-start-test-sidebar" title="Iniciar Test Vocacional Interactivo">
+                    <div class="test-btn-text">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                        <span>Test Vocacional</span>
+                    </div>
+                    <span class="test-tag">Interactúa</span>
+                </button>
+
+                <!-- Accesos Rápidos Institucionales -->
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Accesos Directos</div>
+                    <div class="sidebar-menu">
+                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas que ofrece el instituto')">
+                            <svg class="svg-icon icon-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Las 4 Carreras Técnicas</span>
+                        </button>
+                        
+                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo registro mi voucher de pago en pagos.ieshercar.edu.pe?')">
+                            <svg class="svg-icon icon-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <span>Registro de Pagos y Vouchers</span>
+                        </button>
+
+                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo es el proceso de matrícula, admisión y cuáles son los costos?')">
+                            <svg class="svg-icon icon-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>Matrícula y Costos 2026</span>
+                        </button>
+
+                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo ingreso a la Mesa de Partes Virtual y qué trámites puedo hacer?')">
+                            <svg class="svg-icon icon-amber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Mesa de Partes Virtual</span>
+                        </button>
+
+                        <button type="button" class="sidebar-btn" onclick="window.hercarApp.enviarConsultaDirecta('¿Dónde queda el instituto, cuáles son sus teléfonos y horarios de atención?')">
+                            <svg class="svg-icon icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Ubicación y Contacto</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer del Sidebar -->
+            <div class="sidebar-footer">
+                <div class="campus-pill">
+                    <span class="dot"></span>
+                    <span>Paita, Piura • En línea</span>
+                </div>
+                <button type="button" class="btn-theme-toggle" id="theme-toggle">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <span>Modo Oscuro</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL (PANTALLA COMPLETA) -->
+        <main class="chat-main">
+            
+            <!-- Barra Superior / Header Limpio y Optimizado -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <button type="button" class="btn-sidebar-toggle" id="sidebar-toggle" title="Abrir o Cerrar menú lateral">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="header-bot-info">
+                        <div class="header-avatar">
+                            <img src="assets/logo-crest.png" alt="Insignia Hercar">
+                        </div>
+                        <div class="header-titles">
+                            <h1>
+                                HercarIA
+                                <span class="status-badge">Activo</span>
+                            </h1>
+                            <p>Orientadora Oficial • IESTP Hermanos Cárcamo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <!-- Ondas de voz animadas cuando habla -->
+                    <div class="speaking-wave" id="header-speaking-indicator">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+
+                    <!-- Módulo de Audio Minimalista (Icono único con Popover desplegable) -->
+                    <div class="audio-module-container">
+                        <button type="button" class="btn-audio-control" id="btn-audio-settings" title="Configurar Voz de Chica">
+                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                            <span class="voice-badge-dot" id="voice-badge-indicator"></span>
+                            <span class="voice-btn-text">Voz de Chica</span>
+                        </button>
+
+                        <!-- Menú Desplegable Minimalista de Audio -->
+                        <div class="audio-popover" id="audio-popover">
+                            <div class="popover-header">
+                                <h4>Configuración de Voz</h4>
+                                <button type="button" class="btn-close-popover" id="btn-close-popover">&times;</button>
+                            </div>
+                            
+                            <div class="popover-body">
+                                <div class="popover-row">
+                                    <label>Estado de Voz:</label>
+                                    <button type="button" class="btn-toggle-switch" id="btn-voice-toggle">
+                                        <span class="switch-dot"></span>
+                                        <span id="voice-switch-text">Activada</span>
+                                    </button>
+                                </div>
+
+                                <div class="popover-row-vertical">
+                                    <label for="voice-select">Voz de Chica Seleccionada:</label>
+                                    <select id="voice-select" class="voice-select-styled">
+                                        <option value="es-ES-ElviraNeural" selected>Voz Elvira (Chica Natural - Recomendada)</option>
+                                        <option value="es-MX-DaliaNeural">Voz Dalia (Chica Suave y Dulce)</option>
+                                        <option value="es-PE-CamilaNeural">Voz Camila (Chica Peruana Amable)</option>
+                                        <option value="browser">Voz del Navegador (Nativa)</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn-popover-test" id="btn-test-voice">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    <span>Escuchar Muestra de Voz</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenedor Scrollable del Chat y Portada -->
+            <div class="chat-scroll-area" id="chat-scroll-area">
+                
+                <!-- ========================================================
+                     PORTADA DE INICIO PROFESIONAL ("¿QUÉ DESEAS CONSULTAR?")
+                     ======================================================== -->
+                <div class="portada-container" id="portada-container">
+                    
+                    <div class="portada-badge-header">
+                        <div class="portada-logo-wrapper">
+                            <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" class="portada-logo">
+                        </div>
+                        <span class="portada-sub-badge">INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO</span>
+                    </div>
+
+                    <h1 class="portada-title">¡Bienvenido a <span>HercarIA</span>!</h1>
+                    <h2 class="portada-subtitle">¿Qué deseas consultar hoy?</h2>
+                    
+                    <p class="portada-description">
+                        Soy tu orientadora virtual interactiva con voz. Selecciona uno de los módulos clave o escribe cualquier duda sobre nuestras carreras, admisiones y trámites institucionales:
+                    </p>
+
+                    <!-- Cuadrícula de Opciones de Inicio Rápido Rediseñadas -->
+                    <div class="portada-grid">
+                        
+                        <!-- Tarjeta 1: Test Vocacional -->
+                        <div class="portada-card card-test" onclick="window.hercarTest.iniciar()">
+                            <div class="card-top-badge">
+                                <span class="badge-recommended">Orientación Vocacional</span>
+                            </div>
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-accent">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Test Vocacional Interactivo</h3>
+                                    <p>¿No sabes qué carrera elegir? Descubre tu verdadera vocación con 6 preguntas rápidas.</p>
+                                    <span class="card-action-link">Comenzar Test Ahora →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 2: Las 4 Carreras Técnicas -->
+                        <div class="portada-card" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas del instituto')">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-blue">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Nuestras 4 Carreras Técnicas</h3>
+                                    <p>APSTI (Sistemas), Negocios Internacionales, Contabilidad y Desarrollo Pesquero (3 años).</p>
+                                    <span class="card-action-link">Ver Carreras y Mallas →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 3: Métodos de Pago y Vouchers -->
+                        <div class="portada-card" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo registro mi voucher de pago en pagos.ieshercar.edu.pe?')">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-green">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Registro de Pagos y Vouchers</h3>
+                                    <p>Cómo pagar en el Banco de la Nación y validar tu comprobante en pagos.ieshercar.edu.pe.</p>
+                                    <span class="card-action-link">Guía de Pagos Paso a Paso →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 4: Matrículas y Costos -->
+                        <div class="portada-card" onclick="window.hercarApp.enviarConsultaDirecta('¿Cuánto cuesta la matrícula y cuáles son los requisitos?')">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-purple">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Matrícula y Costos 2026</h3>
+                                    <p>Educación pública gratuita sin mensualidades privadas. Requisitos para cachimbos y regulares.</p>
+                                    <span class="card-action-link">Ver Costos y Requisitos →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 5: Mesa de Partes Virtual -->
+                        <div class="portada-card" onclick="window.hercarApp.enviarConsultaDirecta('¿Cómo tramito una constancia de estudios o título en Mesa de Partes?')">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-amber">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Mesa de Partes Virtual</h3>
+                                    <p>Solicita constancias de estudio, récords de notas, certificado de egresado y titulación online.</p>
+                                    <span class="card-action-link">Ver Trámites Disponibles →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 6: Contacto y Sede Paita -->
+                        <div class="portada-card" onclick="window.hercarApp.enviarConsultaDirecta('¿Dónde queda el instituto y cuáles son los teléfonos y horarios?')">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-cyan">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Sede Paita y Contacto</h3>
+                                    <p>Av. Miguel Grau – Urb. El Parque, horarios de atención, teléfonos y enlace a WhatsApp.</p>
+                                    <span class="card-action-link">Ver Ubicación y Teléfonos →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="portada-footer-note">
+                        <span>💡 <em>Sugerencia:</em> Puedes hacer clic en cualquiera de las tarjetas de arriba o escribir tu consulta en el recuadro inferior.</span>
+                    </div>
+
+                </div>
+
+                <!-- Contenedor del Flujo de Mensajes de Conversación -->
+                <div class="chat-messages" id="chat-messages" style="display: none;"></div>
+
+            </div>
+
+            <!-- Barra de Entrada Inferior con Efecto Ripple en Micrófono -->
+            <div class="chat-input-wrapper">
+                
+                <!-- Indicador visual cuando el micrófono está grabando -->
+                <div class="mic-listening-bar" id="mic-pulse-indicator">
+                    <span class="recording-dot"></span>
+                    <span>Escuchando tu voz... Habla con tranquilidad</span>
+                </div>
+
+                <div class="chat-input-box" id="chat-input-box">
+                    <textarea 
+                        id="chat-input" 
+                        class="chat-textarea" 
+                        placeholder="Pregúntale a HercarIA o presiona el micrófono para hablar..." 
+                        rows="1"></textarea>
+
+                    <div class="chat-input-actions">
+                        <!-- Botón de Micrófono con Contenedor de Ondas Ripple -->
+                        <div class="mic-button-wrapper">
+                            <div class="ripple-ring ring-1"></div>
+                            <div class="ripple-ring ring-2"></div>
+                            <button type="button" class="btn-input-mic" id="btn-mic" title="Hablar con el micrófono">
+                                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Botón de Enviar Mensaje -->
+                        <button type="button" class="btn-input-send" id="btn-send" title="Enviar mensaje">
+                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-input-disclaimer">
+                    HercarIA • Asistente Oficial del <a href="https://ieshercar.edu.pe/" target="_blank">IESTP "Hermanos Cárcamo"</a> • Av. Miguel Grau – Urb. El Parque Mz. A Lt.01, Paita – Piura
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts de la Aplicación -->
+    <script src="js/knowledge.js"></script>
+    <script src="js/test_vocacional.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
