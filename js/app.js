@@ -865,16 +865,16 @@ Todas nuestras carreras tienen una duración de **3 años (6 semestres académic
             return;
         }
 
-        let respuesta = `${c.icono} **CARRERA PROFESIONAL TÉCNICA DE ${c.nombre.toUpperCase()}**
+        let respuesta = `## ${c.icono} Carrera Profesional Técnica de ${c.nombre}
 
-* **Duración:** ${c.duracion}
-* **Título Otorgado:** ${c.titulo}
+En el Instituto "Hermanos Cárcamo", esta carrera tiene una duración de **${c.duracion}** y otorga **${c.titulo}** a Nombre de la Nación.
+
 * **Enfoque formativo:** ${c.perfil}
 
 ---
 
-### 🛠️ Módulos Formativos y Certificaciones Anuales:
-Cada año que apruebes recibes una certificación oficial que te permite laborar antes de terminar la carrera:
+### 🛠️ Módulos Formativos y Certificaciones Oficiales por Año:
+Al culminar cada año académico con éxito, recibes una certificación modular oficial para incorporarte al mercado laboral:
 `;
 
         c.modulos.forEach(m => {
@@ -884,7 +884,7 @@ Cada año que apruebes recibes una certificación oficial que te permite laborar
         respuesta += `
 ---
 
-### 💼 Campo Laboral y Oportunidades:
+### 💼 Campo Laboral y Oportunidades en Paita y Piura:
 `;
         c.campoLaboral.forEach(cl => {
             respuesta += `* ${cl}\n`;
@@ -893,10 +893,10 @@ Cada año que apruebes recibes una certificación oficial que te permite laborar
         respuesta += `
 ---
 
-### 🌟 ¿Por qué estudiarla en Paita?
+### 🌟 ¿Por qué elegir esta carrera en Paita?
 ${c.porQueEstudiar}
 
-¿Deseas saber los requisitos de matrícula o evaluar si encaja con tu perfil en el test vocacional?`;
+¿Te gustaría consultar los requisitos y fechas de matrícula para esta carrera o evaluar tu perfil con nuestro test vocacional?`;
 
         this.addBotMessage(respuesta);
     }
