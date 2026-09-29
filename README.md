@@ -24,7 +24,7 @@
 
   <p align="center">
     <img src="https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS%20ES6+-orange?style=flat-square" alt="Frontend" />
-    <img src="https://img.shields.io/badge/Voz%20Neural-es--ES--ElviraNeural-blueviolet?style=flat-square" alt="Voice" />
+    <img src="https://img.shields.io/badge/Voz%20Femenina-es--PE--CamilaNeural%20(Per%C3%BA)-blueviolet?style=flat-square" alt="Voice" />
     <img src="https://img.shields.io/badge/Backend-Python%203.11%20%7C%20Edge--TTS-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python" />
     <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20100%25-success?style=flat-square" alt="Status" />
     <img src="https://img.shields.io/badge/Licencia-Educativa%20MINEDU-13357b?style=flat-square" alt="License" />
