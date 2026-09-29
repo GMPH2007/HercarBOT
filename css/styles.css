@@ -637,6 +637,115 @@ body:not(.dark-mode) .chat-scroll-area::-webkit-scrollbar-thumb {
     50% { height: 16px; }
 }
 
+/* Botones de Herramientas en Cabecera (Guardar Chat, Borrar Chat) */
+.btn-header-tool {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 7px 13px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: var(--transition);
+}
+.btn-header-tool svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2;
+}
+.btn-header-tool:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+}
+.btn-header-tool.btn-export-chat {
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.25);
+    background: rgba(16, 185, 129, 0.06);
+}
+.btn-header-tool.btn-export-chat:hover {
+    color: #34d399;
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.14);
+}
+.btn-header-tool.btn-clear-chat {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.06);
+}
+.btn-header-tool.btn-clear-chat:hover {
+    color: #f87171;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.14);
+}
+
+@media (max-width: 768px) {
+    .header-btn-label {
+        display: none;
+    }
+    .btn-header-tool {
+        padding: 7px 9px;
+    }
+}
+
+/* ==========================================================================
+   BARRA DE ACCESOS DIRECTOS (CHIPS / PÍLDORAS SOBRE EL INPUT)
+   ========================================================================== */
+.quick-access-chips {
+    max-width: 860px;
+    margin: 0 auto 10px auto;
+    padding: 0 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.quick-access-chips::-webkit-scrollbar {
+    display: none;
+}
+.chips-scroll-track {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    width: max-content;
+}
+.chips-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    padding-right: 2px;
+}
+.chip-pill {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 6px 13px;
+    border-radius: var(--radius-full);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.chip-pill:hover {
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--blue-vibrant);
+    border-color: rgba(37, 99, 235, 0.35);
+    transform: translateY(-1.5px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+.chip-icon {
+    font-size: 13px;
+}
+
 /* ==========================================================================
    MÓDULO DE AUDIO MINIMALISTA (DROPDOWN / POPOVER)
    ========================================================================== */
