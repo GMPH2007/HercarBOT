@@ -723,7 +723,43 @@ class HercarChatApp {
             return;
         }
 
-        // 11. Saludos
+        // 11. Convalidación universitaria
+        if (q.includes('convalida') || q.includes('convalidar') || q.includes('universidad') || q.includes('bachiller') || q.includes('seguir estudiando')) {
+            this.responderConvalidacionUniversitaria();
+            return;
+        }
+
+        // 12. Duración de carreras
+        if (q.includes('cuanto dura') || q.includes('duracion') || q.includes('cuantos anos') || q.includes('tiempo de carrera') || q.includes('semestres')) {
+            this.responderDuracion();
+            return;
+        }
+
+        // 13. Título oficial a Nombre de la Nación
+        if (q.includes('titulo') || q.includes('nombre de la nacion') || q.includes('grado') || q.includes('es oficial')) {
+            this.responderTituloOficial();
+            return;
+        }
+
+        // 14. Prácticas y convenios laborales
+        if (q.includes('practica') || q.includes('practicas') || q.includes('convenio') || q.includes('convenios') || q.includes('bolsa de trabajo') || q.includes('bolsa laboral') || q.includes('donde trabajo')) {
+            this.responderConveniosYPracticas();
+            return;
+        }
+
+        // 15. Turnos y horarios de estudio
+        if (q.includes('turno') || q.includes('turnos') || q.includes('horario de clase') || q.includes('tarde') || q.includes('noche')) {
+            this.responderTurnosYHorarios();
+            return;
+        }
+
+        // 16. Límite de edad
+        if (q.includes('limite de edad') || q.includes('edad maxima') || q.includes('edad para postular') || q.includes('soy mayor') || q.includes('tengo 30') || q.includes('tengo 40')) {
+            this.responderEdadLimite();
+            return;
+        }
+
+        // 17. Saludos
         if (
             q.startsWith('hola') || 
             q.includes('buenos dias') || 
@@ -975,7 +1011,8 @@ ${i.historia}
 * **Embarcación Pesquera Propia:** Un hito educativo en el norte del Perú, equipada con sistemas de radar, visión nocturna y navegación GPS para que los estudiantes de Pesquera y Acuicultura aprendan en el mar con tecnología de primer nivel.
 * **Compromiso Social:** Brindar educación superior tecnológica de calidad sin barreras económicas a toda la juventud de Paita, Piura y la región.`;
 
-        this.addBotMessage(respuesta);
+        const vozHistoria = "El instituto fue fundado en 1987 en honor a los heroicos hermanos Cárcamo de Paita. Actualmente contamos con una inversión de 36 millones en modernos laboratorios y una embarcación propia para prácticas en alta mar.";
+        this.addBotMessage(respuesta, true, vozHistoria);
     }
 
     responderBecas() {
@@ -988,7 +1025,89 @@ En el IESTP "Hermanos Cárcamo" tienes acceso a múltiples beneficios económico
 3. **Carnet de Medio Pasaje:** Carnet oficial emitido por el MINEDU que te garantiza tarifa preferencial en transporte público.
 4. **Bolsa Laboral y Prácticas:** Convenios con agencias marítimas, aduaneras, plantas pesqueras y agroindustrias de Paita y Piura para tu rápida inserción al mercado de trabajo.`;
 
-        this.addBotMessage(respuesta);
+        const vozBecas = "¡Sí! En nuestro instituto puedes estudiar con Beca 18 de Pronabec con todos los gastos cubiertos, además de becas por excelencia académica y carnet de medio pasaje.";
+        this.addBotMessage(respuesta, true, vozBecas);
+    }
+
+    responderDuracion() {
+        const respuesta = `⏳ **DURACIÓN Y ESTRUCTURA DE LAS CARRERAS**
+
+En el **IESTP "Hermanos Cárcamo"**, todas las carreras profesionales técnicas tienen una duración oficial de:
+
+* ⏱️ **3 Años Académicos** (distribuidos en **6 semestres** o ciclos lectivos).
+* 📜 **Certificaciones Modulares Progresivas:** Cada año que apruebas con éxito, recibes una certificación oficial que te permite trabajar formalmente sin esperar a graduarte.
+* 🎓 **Grado al finalizar:** Título Profesional Técnico a Nombre de la Nación.
+
+¿Te gustaría conocer la malla curricular o el perfil de alguna carrera en específico?`;
+
+        const voz = "Todas nuestras carreras técnicas duran 3 años divididos en 6 semestres. Además, al culminar cada año recibes una certificación modular oficial para incorporarte al trabajo de inmediato. ¿Deseas conocer alguna carrera?";
+        this.addBotMessage(respuesta, true, voz);
+    }
+
+    responderConvalidacionUniversitaria() {
+        const respuesta = `🏛️ **CONVALIDACIÓN CON UNIVERSIDADES**
+
+¡Sí, totalmente! De acuerdo con la **Ley de Institutos y Escuelas de Educación Superior (Ley N° 30512)**:
+
+* 🎓 **Convalidación Oficial:** Los egresados titulados de institutos superiores públicos pueden convalidar sus créditos y asignaturas aprobadas en universidades públicas y privadas licenciadas por la **SUNEDU**.
+* 🚀 **Beneficio:** Te permite obtener tu Grado de Bachiller Universitario y Título Profesional Universitario (como Ingeniero o Licenciado) en menor tiempo (habitualmente 2 a 3 años adicionales).
+* 💼 **Ventaja Competitiva:** Ya ingresarás a la universidad con experiencia práctica y trabajando como profesional técnico calificado.`;
+
+        const voz = "¡Sí, totalmente! Gracias a la Ley de Educación Superior, puedes convalidar tus estudios técnicos con universidades públicas y privadas licenciadas por SUNEDU para obtener tu ingeniería o licenciatura en menor tiempo.";
+        this.addBotMessage(respuesta, true, voz);
+    }
+
+    responderTituloOficial() {
+        const respuesta = `🎖️ **VALOR OFICIAL DEL TÍTULO PROFESIONAL**
+
+Al culminar satisfactoriamente tus 3 años (6 ciclos) y aprobar tu proceso de titulación en el IESTP "Hermanos Cárcamo":
+
+* 🇵🇪 **Título a Nombre de la Nación:** Emitido con el respaldo oficial del **Ministerio de Educación (MINEDU)**.
+* 🌐 **Reconocimiento Nacional e Internacional:** Válido para postular a plazas laborales del Estado (régimen CAS, 276, 728), ascensos en las Fuerzas Armadas y Policía Nacional, y empresas privadas en todo el Perú.
+* 📋 **Inscripción en el Registro Nacional de Grados y Títulos:** Tu título queda registrado de forma pública y oficial.`;
+
+        const voz = "Al culminar tus 3 años y sustentar tu proyecto obtienes el Título Profesional Técnico a Nombre de la Nación con valor oficial del Ministerio de Educación en todo el Perú.";
+        this.addBotMessage(respuesta, true, voz);
+    }
+
+    responderTurnosYHorarios() {
+        const respuesta = `⏰ **HORARIOS DE CLASES Y TURNOS**
+
+* ☀️ **Turno de Clases:** Turno diurno regular.
+* 🏫 **Ambientes Pedagógicos:** Clases teóricas y sesiones prácticas intensivas en talleres y laboratorios especializados (computación, redes, microbiología, navegación marítima).
+* 🏢 **Horario de Atención Administrativa:** Lunes a Viernes de 8:00 AM a 3:00 PM en nuestro campus de Paita.
+
+¿Deseas saber más sobre las inscripciones o el examen de admisión?`;
+
+        const voz = "Nuestras clases se imparten en turno diurno regular, con modernas aulas y talleres tecnológicos. Atendemos de lunes a viernes de 8 de la mañana a 3 de la tarde.";
+        this.addBotMessage(respuesta, true, voz);
+    }
+
+    responderEdadLimite() {
+        const respuesta = `🎂 **¿HAY LÍMITE DE EDAD PARA POSTULAR?**
+
+¡**NO HAY LÍMITE DE EDAD**! La educación superior tecnológica pública en el Perú está abierta para todos:
+
+* ✅ Pueden postular jóvenes recién egresados de 5° de secundaria.
+* ✅ Pueden postular adultos, trabajadores o emprendedores que deseen formalizar sus conocimientos técnicos y obtener un título oficial a Nombre de la Nación.
+* 📑 **Único requisito fundamental:** Haber concluido satisfactoriamente la educación secundaria (EBR o EBA) con certificados de estudios.`;
+
+        const voz = "¡No hay ningún límite de edad! Cualquier persona que haya terminado la secundaria puede postular y estudiar cualquiera de nuestras 4 carreras profesionales técnicas.";
+        this.addBotMessage(respuesta, true, voz);
+    }
+
+    responderConveniosYPracticas() {
+        const respuesta = `🤝 **CONVENIOS DE PRÁCTICAS Y EMPLEABILIDAD**
+
+El IESTP "Hermanos Cárcamo" cuenta con una sólida alianza con el sector productivo de Paita y Piura:
+
+* 🚢 **Sector Portuario y Marítimo:** Convenios con agencias aduaneras, navieras y terminales portuarios de Paita para estudiantes de APSTI y Negocios Internacionales.
+* 🐟 **Sector Pesquero e Industrial:** Prácticas en empresas pesqueras, congeladoras y acuícolas, además de prácticas reales en la embarcación propia del instituto.
+* 💼 **Sector Comercial y Financiero:** Bancos, cooperativas y estudios contables para estudiantes de Contabilidad.
+* 🌐 **Bolsa Laboral Activa:** [bolsa-laboral.ieshercar.edu.pe](https://bolsa-laboral.ieshercar.edu.pe/)`;
+
+        const voz = "Contamos con convenios institucionales con empresas del puerto de Paita, agencias aduaneras y plantas pesqueras para que realices prácticas preprofesionales desde tus primeros ciclos.";
+        this.addBotMessage(respuesta, true, voz);
     }
 
     responderSaludo() {
@@ -1003,7 +1122,8 @@ Estoy lista para ayudarte con:
 
 ¿Qué consulta te gustaría realizar en este momento?`;
 
-        this.addBotMessage(respuesta);
+        const vozSaludo = "¡Hola! Qué gusto saludarte. Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué te gustaría consultar hoy?";
+        this.addBotMessage(respuesta, true, vozSaludo);
     }
 
     responderGenerico(query) {
@@ -1019,7 +1139,8 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
 
 ¿Te gustaría que te detalle alguna carrera o iniciamos el test vocacional?`;
 
-        this.addBotMessage(respuesta);
+        const vozGenerica = "Puedo orientarte sobre nuestras 4 carreras técnicas de 3 años, requisitos de matrícula gratuita, registro de pagos en el Banco de la Nación o iniciar tu test vocacional. ¿En qué tema te gustaría que te ayude?";
+        this.addBotMessage(respuesta, true, vozGenerica);
     }
 
     normalizarTexto(txt) {
