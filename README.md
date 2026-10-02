@@ -2,12 +2,12 @@
 
   <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" width="140" />
 
-  # 🧠 HercarIA v5.0 • Red Neuronal & Asistente Virtual Oficial
+  # 🧠 HercarIA v5.1 • Red Neuronal & Asistente Virtual Oficial
   ### Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo"
   **Paita — Piura, Perú**
 
   <p align="center">
-    <i>Plataforma de Inteligencia Artificial para la Carrera Profesional Técnica de APSTI, dotada de Red Neuronal Artificial Multicapa (MLP) en navegador, Inspector Visual con Playground en vivo, Simulador de Matrícula TUPA 2026, Mapa del Campus e Instalaciones, Orientador Vocacional Psicométrico y Síntesis Vocal Femenina Humana.</i>
+    <i>Plataforma de Inteligencia Artificial para la Carrera Profesional Técnica de APSTI, dotada de Red Neuronal Artificial Multicapa (MLP) en navegador, Base de Conocimientos Enciclopédica (Mallas curriculares ciclo por ciclo, Beca 18, Titulación EFSRT, Temario de admisión), Simulador TUPA 2026, Mapa del Campus, Orientador Vocacional Psicométrico, Interfaz Limpia Estilo ChatGPT y Síntesis Vocal Femenina Humana.</i>
   </p>
 
   <p align="center">
@@ -23,11 +23,11 @@
   </p>
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Red%20Neuronal-MLP%20(220--36--18--22)-7c3aed?style=flat-square&logo=diagram-next&logoColor=white" alt="Neural Network" />
+    <img src="https://img.shields.io/badge/Red%20Neuronal-MLP%20(260--36--18--34)-7c3aed?style=flat-square&logo=diagram-next&logoColor=white" alt="Neural Network" />
     <img src="https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS%20ES6+-orange?style=flat-square" alt="Frontend" />
     <img src="https://img.shields.io/badge/Voz%20Femenina-es--PE--CamilaNeural%20%2F%20Dalia-blueviolet?style=flat-square" alt="Voice" />
     <img src="https://img.shields.io/badge/Carrera-APSTI%20Oficial-13357b?style=flat-square" alt="APSTI" />
-    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20v5.0-success?style=flat-square" alt="Status" />
+    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20v5.1-success?style=flat-square" alt="Status" />
   </p>
 
   ---
