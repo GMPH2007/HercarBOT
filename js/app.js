@@ -389,9 +389,6 @@ class HercarChatApp {
                 <div class="bot-header-meta">
                     <span class="bot-name">HercarIA</span>
                     <span class="bot-badge-tag">Orientadora Oficial</span>
-                    <button type="button" class="btn-neural-badge" title="Ver análisis neuronal de esta consulta" onclick="window.hercarApp.abrirInspectorNeuronal('${previewQuery}')">
-                        🧠 Red Neuronal: ${confPct} <span class="badge-time">(${inference.latencyMs}ms)</span>
-                    </button>
                     <span class="voice-wave-anim" style="display: none;">
                         <span></span><span></span><span></span><span></span>
                     </span>
@@ -417,9 +414,6 @@ class HercarChatApp {
                     </button>
                     <button type="button" class="msg-action-btn btn-copy" title="Copiar texto de respuesta">
                         📋 Copiar
-                    </button>
-                    <button type="button" class="msg-action-btn btn-neural-inspect" title="Inspeccionar activación de la Red Neuronal" onclick="window.hercarApp.abrirInspectorNeuronal('${previewQuery}')">
-                        🧠 Red Neuronal
                     </button>
                     <div class="msg-rating-group">
                         <button type="button" class="msg-action-btn btn-rate-up" title="Respuesta útil" onclick="window.hercarApp.calificarRespuesta(this, 'up')">👍</button>
@@ -846,7 +840,78 @@ class HercarChatApp {
             return;
         }
 
-        // Respuesta general
+        // 0. Comando para inspección de red neuronal (solicitado por evaluadores)
+        if (q === '/inspector' || q === '/red' || q === '/neuronal' || q === '/redneuronal' || q === '/ia') {
+            this.abrirInspectorNeuronal();
+            return;
+        }
+
+        // Malla Curricular y Cursos ciclo por ciclo
+        if (nr.intent === 'malla_curricular' || q.includes('malla') || q.includes('plan de estudio') || q.includes('cursos') || q.includes('materias') || q.includes('asignaturas')) {
+            let carreraSel = 'apsti';
+            if (q.includes('ani') || q.includes('negocio') || q.includes('aduan') || q.includes('comercio')) carreraSel = 'ani';
+            else if (q.includes('conta') || q.includes('tribut') || q.includes('finanz')) carreraSel = 'contabilidad';
+            else if (q.includes('pesqu') || q.includes('dpa') || q.includes('mar') || q.includes('acuicol')) carreraSel = 'dpa';
+            this.responderMallaCurricular(carreraSel, nr);
+            return;
+        }
+
+        // Temario de Examen de Admisión
+        if (nr.intent === 'temario_admision' || q.includes('temario') || (q.includes('que viene') && q.includes('examen')) || q.includes('como es el examen')) {
+            this.responderTemarioAdmision(nr);
+            return;
+        }
+
+        // Titulación y Prácticas EFSRT
+        if (nr.intent === 'titulacion_efsrt' || q.includes('titul') || q.includes('como me titulo') || q.includes('efsrt') || q.includes('proyecto de titulacion')) {
+            this.responderTitulacionEFSRT(nr);
+            return;
+        }
+
+        // Carnet de Medio Pasaje
+        if (nr.intent === 'carnet_pasaje' || q.includes('carnet') || q.includes('medio pasaje') || q.includes('pasaje')) {
+            this.responderCarnetPasaje(nr);
+            return;
+        }
+
+        // Rutas y Cómo Llegar
+        if (nr.intent === 'como_llegar_transporte' || q.includes('como llego') || q.includes('transporte') || q.includes('combi') || q.includes('paradero') || q.includes('desde piura') || q.includes('desde sullana')) {
+            this.responderComoLlegar(nr);
+            return;
+        }
+
+        // SIGA Web y Notas
+        if (nr.intent === 'plataforma_siga' || q.includes('siga') || q.includes('aula virtual') || q.includes('intranet') || q.includes('ver mis notas') || q.includes('asistencia')) {
+            this.responderPlataformaSIGA(nr);
+            return;
+        }
+
+        // Biblioteca Virtual
+        if (nr.intent === 'biblioteca_virtual' || q.includes('biblioteca') || q.includes('libros')) {
+            this.responderBibliotecaVirtual(nr);
+            return;
+        }
+
+        // Quién te creó / Autoría
+        if (nr.intent === 'quien_te_creo' || q.includes('quien te creo') || q.includes('quien te desarrollo') || q.includes('creador') || q.includes('quien eres') || q.includes('autor')) {
+            this.responderQuienTeCreo(nr);
+            return;
+        }
+
+        // Conceptos técnicos de carreras
+        if (nr.intent === 'conceptos_tecnologia' || q.includes('que es programacion') || q.includes('que es cloud') || q.includes('que es nube') || q.includes('que es reefer') || q.includes('que es incoterm') || q.includes('que es sire') || q.includes('que es haccp')) {
+            this.responderConceptosTecnicos(rawQuery, nr);
+            return;
+        }
+
+        // Búsqueda en Conocimiento Enciclopédico
+        const respEnciclopedia = INSTITUCIONAL_KB.buscarEnConocimiento(rawQuery);
+        if (respEnciclopedia) {
+            this.addBotMessage(respEnciclopedia, true, '', nr);
+            return;
+        }
+
+        // Respuesta general / Fallback
         this.responderGenerico(rawQuery, nr);
     }
 
@@ -1233,6 +1298,74 @@ Recuerda que estoy disponible las **24 horas del día** para resolver cualquier 
         this.addBotMessage(respuesta, true, vozAgradece, nr);
     }
 
+    responderMallaCurricular(carreraId, nr = null) {
+        const malla = INSTITUCIONAL_KB.formatearMallaCarrera(carreraId);
+        if (malla) {
+            this.addBotMessage(malla, true, `Aquí tienes la malla curricular completa de los seis ciclos para la carrera.`, nr);
+        } else {
+            this.responderCarrerasGenerales(nr);
+        }
+    }
+
+    responderTemarioAdmision(nr = null) {
+        const temario = INSTITUCIONAL_KB.buscarEnConocimiento('temario de examen de admision');
+        this.addBotMessage(temario, true, "El examen de admisión incluye razonamiento matemático, comprensión lectora, cultura general y ciencias. ¡Prepárate con confianza!", nr);
+    }
+
+    responderTitulacionEFSRT(nr = null) {
+        const tit = INSTITUCIONAL_KB.buscarEnConocimiento('requisitos para titularme efsrt');
+        this.addBotMessage(tit, true, "Para titularte a Nombre de la Nación debes culminar los seis ciclos, acreditar tus prácticas preprofesionales y sustentar un proyecto de innovación.", nr);
+    }
+
+    responderBeca18(nr = null) {
+        const beca = INSTITUCIONAL_KB.buscarEnConocimiento('beca 18 pronabec');
+        this.addBotMessage(beca, true, "El instituto Hermanos Cárcamo es público y elegible para Beca 18 de PRONABEC. Incluye laptop gratuita y subvención económica completa.", nr);
+    }
+
+    responderCarnetPasaje(nr = null) {
+        const carnet = INSTITUCIONAL_KB.buscarEnConocimiento('carnet de medio pasaje');
+        this.addBotMessage(carnet, true, "El carnet oficial del Ministerio de Educación te otorga el 50% de descuento en el pasaje de transporte público.", nr);
+    }
+
+    responderComoLlegar(nr = null) {
+        const llegar = INSTITUCIONAL_KB.buscarEnConocimiento('como llego al instituto transporte');
+        this.addBotMessage(llegar, true, "El instituto queda en Avenida Miguel Grau, Urbanización El Parque, en Paita Alta. Puedes llegar en combis directas desde Piura, Sullana o el puerto.", nr);
+    }
+
+    responderPlataformaSIGA(nr = null) {
+        const siga = INSTITUCIONAL_KB.buscarEnConocimiento('sistema siga notas y asistencia');
+        this.addBotMessage(siga, true, "Puedes ingresar al sistema SIGA en siga.ieshercar.edu.pe con tu DNI para revisar tus notas y asistencias.", nr);
+    }
+
+    responderBibliotecaVirtual(nr = null) {
+        const respuesta = `📚 **BIBLIOTECA VIRTUAL INSTITUCIONAL**\n\nEl IESTP "Hermanos Cárcamo" cuenta con acceso a plataformas de lectura e investigación digital con más de 15,000 libros y manuales técnicos:\n\n* 🔗 **Biblioteca Virtual Oficial:** [https://biblioteca.ieshercar.edu.pe/login.php](https://biblioteca.ieshercar.edu.pe/login.php)\n* 📖 **Biblioteca Latina DREP Piura:** [https://iestphercar.bibliotecalatina.com/login](https://iestphercar.bibliotecalatina.com/login)\n\n### 💡 Colecciones disponibles:\n* Manuales de Redes Cisco, Programación y Servidores Cloud.\n* Libros de Operatividad Aduanera y Comercio Exterior.\n* Tratados de Contabilidad Financiera y Tributación SUNAT.\n* Guías de Cultivo Acuícola y Sanidad Pesquera.`;
+        this.addBotMessage(respuesta, true, "Puedes ingresar a la biblioteca virtual oficial para acceder a miles de libros técnicos y manuales de tu carrera.", nr);
+    }
+
+    responderQuienTeCreo(nr = null) {
+        const respuesta = `🤖 **SOBRE MÍ Y MI DESARROLLO**\n\nSoy **HercarIA**, el asistente virtual inteligente y orientador vocacional oficial del **IESTP "Hermanos Cárcamo" de Paita**.\n\n### 💻 Autor y Desarrollador:\n* **Estudiante:** **Gerson Misael Pintado Huamán (GMPH2007)**\n* **Carrera:** Arquitectura de Plataformas y Servicios de Tecnologías de la Información (**APSTI**)\n* **Sede:** Paita, Piura, Perú 🇵🇪\n\n### 🚀 Tecnología:\nCuento con una Red Neuronal Artificial en JavaScript puro con ejecución en tu navegador, síntesis de voz femenina dulce humanizada, cálculo de cuotas TUPA y mapa del campus. ¡Mi meta es ayudarte a alcanzar tus sueños profesionales técnicos!`;
+        this.addBotMessage(respuesta, true, "Fui desarrollada por Gerson Misael Pintado Huamán de la carrera de APSTI del instituto Hermanos Cárcamo. ¡Estoy aquí para orientarte en todo lo que necesites!", nr);
+    }
+
+    responderConceptosTecnicos(query, nr = null) {
+        const q = query.toLowerCase();
+        let r = '';
+        if (q.includes('programacion') || q.includes('lenguajes')) {
+            r = `💻 **¿QUÉ ES PROGRAMACIÓN Y QUÉ LENGUAJES ENSEÑAN EN APSTI?**\n\nProgramar es escribir instrucciones lógicas para que una computadora resuelva problemas o cree aplicaciones de forma automática.\n\nEn la carrera técnica de **APSTI** aprenderás:\n* 🐍 **Python:** Para lógica, backend y machine learning.\n* 🌐 **JavaScript & TypeScript:** Para desarrollo web frontend moderno y móvil.\n* 🐘 **PHP y Java:** Para sistemas empresariales y bases de datos.\n* 🗄️ **SQL y MongoDB:** Para almacenamiento y consulta de datos.\n* ☁️ **Servidores Cloud:** Despliegue en AWS, Azure y contenedores Docker.`;
+        } else if (q.includes('cloud') || q.includes('nube')) {
+            r = `☁️ **¿QUÉ ES LA COMPUTACIÓN EN LA NUBE (CLOUD)?**\n\nEs la tecnología que permite utilizar servidores, almacenamiento de datos, redes y software a través de internet en lugar de comprar equipos físicos costosos.\n\nEn **APSTI** aprenderás a desplegar servicios en **AWS** y **Microsoft Azure**, configurar contenedores con **Docker** y garantizar que los sistemas de agencias marítimas y aduaneras funcionen las 24 horas del día sin interrupciones.`;
+        } else if (q.includes('reefer') || q.includes('contenedor')) {
+            r = `🧊 **¿QUÉ ES UN CONTENEDOR REEFER (NEGOCIOS INTERNACIONALES)?**\n\nUn contenedor Reefer es una unidad de carga marítima refrigerada con motor autónomo que mantiene productos perecibles a temperaturas bajo cero (hasta -25°C).\n\nEn el puerto de Paita son fundamentales para exportar pota congelada, perico, conchas de abanico, uvas y mangos orgánicos hacia Estados Unidos, Europa y Asia manteniendo intacta la cadena de frío.`;
+        } else if (q.includes('incoterm')) {
+            r = `🌐 **¿QUÉ SON LOS INCOTERMS EN COMERCIO EXTERIOR?**\n\nSon términos comerciales internacionales regulados por la Cámara de Comercio Internacional (CCI) como **FOB** (Free on Board) o **CIF** (Cost, Insurance and Freight).\n\nDefinen claramente quién asume el pago del flete, seguro y la responsabilidad sobre las mercancías en el trayecto desde el puerto de Paita hasta el puerto de destino.`;
+        } else if (q.includes('sire')) {
+            r = `📊 **¿QUÉ ES EL SIRE EN CONTABILIDAD?**\n\nEs el **Sistema Integrado de Registros Electrónicos** de la **SUNAT**.\n\nPermite a las empresas generar automáticamente sus registros de compras y ventas electrónicos a partir de los comprobantes de pago emitidos, facilitando la declaración tributaria mensual del IGV y reduciendo errores contables.`;
+        } else {
+            r = `🔬 **INNOVACIÓN Y TECNOLOGÍA EN EL IESTP HERMANOS CÁRCAMO**\n\nNuestras 4 carreras integran tecnologías modernas de vanguardia:\n* **APSTI:** Inteligencia Artificial, Cloud Computing y Ciberseguridad.\n* **ANI:** Logística portuaria digital y trazabilidad de comercio exterior.\n* **Contabilidad:** Facturación electrónica, SIRE y análisis financiero computarizado.\n* **DPA:** Biotecnología marina, maricultura y navegación con radares satelitales.`;
+        }
+        this.addBotMessage(r, true, "Aquí tienes la explicación detallada sobre este concepto técnico y cómo se aplica en la carrera.", nr);
+    }
+
     responderGenerico(query, nr = null) {
         const respuesta = `Comprendo tu consulta sobre *"**${this.escapeHTML(query)}**"*. 
 
@@ -1303,18 +1436,59 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
                     { text: 'Duración y Semestres', query: '¿Cuánto tiempo duran las carreras técnicas?', icon: '⏳' },
                     { text: 'Trámites en Mesa de Partes', query: '¿Cómo tramito una constancia de estudios o título?', icon: '📁' }
                 ];
+            case 'malla_curricular':
+                return [
+                    { text: 'Malla de APSTI', query: '¿Cuál es la malla curricular y cursos de APSTI?', icon: '💻' },
+                    { text: 'Malla de Negocios (ANI)', query: '¿Cuál es la malla curricular de Negocios Internacionales?', icon: '🚢' },
+                    { text: 'Malla de Contabilidad', query: '¿Cuál es la malla curricular de Contabilidad?', icon: '📊' },
+                    { text: 'Malla de Pesquería (DPA)', query: '¿Cuál es la malla curricular de Desarrollo Pesquero?', icon: '🐟' }
+                ];
+            case 'temario_admision':
+            case 'admision_examen':
+                return [
+                    { text: 'Temario del Examen', query: '¿Cuál es el temario del examen de admisión?', icon: '📝' },
+                    { text: 'Requisitos de Admisión', query: '¿Cuáles son los requisitos para inscribirse al examen?', icon: '📋' },
+                    { text: 'Simulador de Matrícula', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                ];
+            case 'titulacion_efsrt':
+                return [
+                    { text: 'Prácticas EFSRT', query: '¿Cómo se acreditan las prácticas preprofesionales EFSRT?', icon: '🤝' },
+                    { text: 'Convalidación SUNEDU', query: '¿Se puede convalidar con universidades licenciadas por SUNEDU?', icon: '🎓' },
+                    { text: 'Mesa de Partes Virtual', query: '¿Cómo ingreso a la Mesa de Partes Virtual?', icon: '📁' }
+                ];
+            case 'becas_beneficios':
+                return [
+                    { text: 'Requisitos de Beca 18', query: '¿Cuáles son los requisitos para postular a Beca 18?', icon: '🎓' },
+                    { text: 'Carreras Elegibles', query: 'Cuéntame sobre todas las carreras técnicas', icon: '💻' },
+                    { text: 'Examen de Admisión', query: '¿Cuándo es el examen de admisión y requisitos?', icon: '📝' }
+                ];
+            case 'como_llegar_transporte':
             case 'ubicacion_contacto':
             case 'turnos_horarios':
                 return [
                     { text: 'Ver Mapa del Campus', query: 'Ver mapa interactivo del campus e instalaciones', icon: '🗺️' },
-                    { text: 'Simulador de Matrícula', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
-                    { text: 'Las 4 Carreras Técnicas', query: 'Cuéntame sobre todas las carreras técnicas', icon: '🎓' }
+                    { text: 'Horarios de Clase', query: '¿Cuáles son los horarios y turnos de clase?', icon: '⏰' },
+                    { text: 'Medio Pasaje MINEDU', query: '¿Cómo tramito mi carnet de medio pasaje?', icon: '🚌' }
+                ];
+            case 'carnet_pasaje':
+                return [
+                    { text: '¿Cómo llegar en combi?', query: '¿Cómo llego al instituto desde Piura o Sullana?', icon: '📍' },
+                    { text: 'Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
+                    { text: 'Mesa de Partes', query: '¿Cómo tramito una constancia de estudios?', icon: '📁' }
+                ];
+            case 'plataforma_siga':
+            case 'biblioteca_virtual':
+                return [
+                    { text: 'Biblioteca Virtual', query: '¿Cómo ingreso a la biblioteca virtual oficial?', icon: '📚' },
+                    { text: 'Sistema SIGA', query: '¿Cómo entro al sistema SIGA para ver mis notas?', icon: '💻' },
+                    { text: 'Boletas Electrónicas', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' }
                 ];
             default:
                 return [
                     { text: 'Las 4 Carreras Técnicas', query: 'Cuéntame sobre todas las carreras técnicas que ofrece el instituto', icon: '💻' },
-                    { text: 'Test Vocacional Interactivo', query: 'Iniciar test vocacional', icon: '🎯' },
-                    { text: 'Simulador TUPA 2026', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                    { text: 'Malla Curricular', query: '¿Cuáles son los cursos y materias de cada ciclo?', icon: '📖' },
+                    { text: 'Test Vocacional', query: 'Iniciar test vocacional', icon: '🎯' },
+                    { text: 'Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
                 ];
         }
     }
