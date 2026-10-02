@@ -1930,3 +1930,762 @@ body.dark-mode .chat-input-disclaimer a {
         width: 280px;
     }
 }
+
+/* ==========================================================================
+   VERSION 5.0 - RED NEURONAL APSTI, SIMULADOR TUPA Y HERRAMIENTAS INTELIGENTES
+   ========================================================================== */
+
+/* Indicador de Red Neuronal en Header */
+.header-neural-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+body.dark-mode .header-neural-indicator {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+}
+.header-neural-indicator:hover {
+    background: rgba(37, 99, 235, 0.16);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+.neural-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulseDotLive 1.8s infinite;
+}
+@keyframes pulseDotLive {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Herramientas del Sidebar */
+.sidebar-tools-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+.btn-sidebar-subtool {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.btn-sidebar-subtool .svg-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+.btn-sidebar-subtool:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+.btn-sidebar-subtool:hover .svg-icon {
+    color: var(--primary);
+}
+.btn-sidebar-neural {
+    position: relative;
+    color: var(--primary);
+    font-weight: 700;
+}
+body.dark-mode .btn-sidebar-neural {
+    color: #38bdf8;
+}
+.neural-badge-live {
+    margin-left: auto;
+    padding: 2px 6px;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Píldora de Red Neuronal en Cabecera del Mensaje del Bot */
+.btn-neural-badge {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+body.dark-mode .btn-neural-badge {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.25);
+    color: #38bdf8;
+}
+.btn-neural-badge:hover {
+    background: rgba(37, 99, 235, 0.18);
+    transform: translateY(-1px);
+}
+.btn-neural-badge .badge-time {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 10px;
+}
+
+/* Sugerencias Dinámicas (Follow-Up Chips) */
+.bot-follow-up-chips {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-color);
+}
+.follow-up-title {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+.chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.btn-followup-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.btn-followup-chip:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+}
+body.dark-mode .btn-followup-chip:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Acciones en los mensajes del bot */
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+.msg-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.msg-action-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+}
+.msg-rating-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+.msg-rating-group .msg-action-btn {
+    padding: 4px 6px;
+    font-size: 12px;
+}
+.msg-rating-group .msg-action-btn.active {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: #10b981;
+    color: #059669;
+}
+
+/* ==========================================================================
+   ESTILOS DE MODALES FLOTANTES (GLASSMORPHISM)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+    animation: fadeInModal 0.25s ease-out;
+}
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUpModal {
+    from { transform: translateY(20px) scale(0.97); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-surface);
+}
+.modal-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.modal-icon-badge {
+    font-size: 26px;
+}
+.modal-header-title h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+.modal-header-title p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 2px 0 0;
+}
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+.btn-close-modal:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.modal-body {
+    padding: 22px 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    gap: 12px;
+}
+.modal-footer-info {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+.btn-modal-close-action {
+    padding: 8px 16px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.btn-modal-close-action:hover {
+    background: var(--border-color);
+}
+
+/* Inspector de Red Neuronal */
+.neural-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.metric-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    text-align: center;
+}
+.metric-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+.metric-val {
+    font-size: 16px;
+    font-weight: 800;
+}
+.text-primary { color: var(--primary); }
+.text-accent { color: #d97706; }
+.text-green { color: #059669; }
+.text-purple { color: #7c3aed; }
+
+.neural-section {
+    margin-bottom: 20px;
+}
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.probability-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.prob-bar-item {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+}
+.prob-bar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.prob-bar-pct {
+    font-weight: 800;
+    color: var(--primary);
+}
+body.dark-mode .prob-bar-pct {
+    color: #38bdf8;
+}
+.prob-bar-track {
+    width: 100%;
+    height: 7px;
+    background: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.prob-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #38bdf8);
+    border-radius: 4px;
+    transition: width 0.4s ease-out;
+}
+
+.tokens-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+}
+.token-badge {
+    padding: 3px 8px;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--primary);
+}
+body.dark-mode .token-badge {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+}
+.token-empty {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.topology-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 14px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+}
+.layer-node-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    min-width: 110px;
+    text-align: center;
+}
+.layer-node-box.layer-output {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.05);
+}
+.layer-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.layer-count {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 3px 0;
+}
+.layer-desc {
+    font-size: 10.5px;
+    color: var(--primary);
+    font-weight: 600;
+}
+.layer-connector {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.neural-playground-box {
+    padding: 14px;
+    background: rgba(37, 99, 235, 0.06);
+    border: 1px dashed rgba(37, 99, 235, 0.35);
+    border-radius: var(--radius-md);
+}
+.playground-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.playground-input {
+    flex: 1;
+    padding: 9px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-primary);
+    outline: none;
+}
+.playground-input:focus {
+    border-color: var(--primary);
+}
+.btn-playground-run {
+    padding: 9px 16px;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.btn-playground-run:hover {
+    background: var(--primary-dark);
+}
+
+/* ==========================================================================
+   SIMULADOR DE MATRÍCULA TUPA
+   ========================================================================== */
+.simulador-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+}
+.sim-tab {
+    padding: 8px 14px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+.sim-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+.simulador-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+.sim-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    cursor: pointer;
+}
+.sim-item-row:hover {
+    border-color: var(--primary);
+}
+.sim-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.sim-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+.sim-item-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.sim-item-price {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--primary);
+}
+body.dark-mode .sim-item-price {
+    color: #38bdf8;
+}
+
+.simulador-total-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+}
+.total-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.total-sub {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+}
+.total-amount {
+    font-size: 24px;
+    font-weight: 900;
+    color: #059669;
+}
+body.dark-mode .total-amount {
+    color: #10b981;
+}
+
+.simulador-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   MAPA DEL CAMPUS
+   ========================================================================== */
+.map-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.map-sector {
+    padding: 14px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.map-sector:hover, .map-sector.active {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    background: var(--bg-surface);
+}
+.sector-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    background: rgba(37, 99, 235, 0.12);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.map-sector h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.map-sector p {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.sector-detail-card {
+    padding: 14px 18px;
+    background: rgba(37, 99, 235, 0.05);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-md);
+}
+.sector-detail-card h4 {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.sector-detail-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION FLOTANTE
+   ========================================================================== */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(40px);
+    background: #0f172a;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10000;
+}
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 600px) {
+    .neural-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .map-grid {
+        grid-template-columns: 1fr;
+    }
+    .topology-diagram {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .layer-connector {
+        text-align: center;
+        transform: rotate(90deg);
+    }
+    .header-neural-indicator .neural-header-text {
+        display: none;
+    }
+}
