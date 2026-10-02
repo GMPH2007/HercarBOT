@@ -2689,3 +2689,11 @@ body.dark-mode .total-amount {
         display: none;
     }
 }
+
+/* Ocultamiento definitivo de indicadores de IA invasivos para interfaz pulcra */
+#header-neural-indicator,
+#btn-open-neural-monitor,
+.btn-neural-badge,
+.btn-neural-inspect {
+    display: none !important;
+}
