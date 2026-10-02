@@ -2,12 +2,12 @@
 
   <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" width="140" />
 
-  # 🤖 HercarIA • Asistente Virtual Oficial
+  # 🧠 HercarIA v5.0 • Red Neuronal & Asistente Virtual Oficial
   ### Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo"
   **Paita — Piura, Perú**
 
   <p align="center">
-    <i>Orientador vocacional inteligente, consultor académico 24/7 y guía interactiva de trámites y matrículas institucionales con voz femenina neural humana y diseño estilo ChatGPT.</i>
+    <i>Plataforma de Inteligencia Artificial para la Carrera Profesional Técnica de APSTI, dotada de Red Neuronal Artificial Multicapa (MLP) en navegador, Inspector Visual con Playground en vivo, Simulador de Matrícula TUPA 2026, Mapa del Campus e Instalaciones, Orientador Vocacional Psicométrico y Síntesis Vocal Femenina Humana.</i>
   </p>
 
   <p align="center">
@@ -23,11 +23,11 @@
   </p>
 
   <p align="center">
+    <img src="https://img.shields.io/badge/Red%20Neuronal-MLP%20(220--36--18--22)-7c3aed?style=flat-square&logo=diagram-next&logoColor=white" alt="Neural Network" />
     <img src="https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS%20ES6+-orange?style=flat-square" alt="Frontend" />
-    <img src="https://img.shields.io/badge/Voz%20Femenina-es--PE--CamilaNeural%20(Per%C3%BA)-blueviolet?style=flat-square" alt="Voice" />
-    <img src="https://img.shields.io/badge/Backend-Python%203.11%20%7C%20Edge--TTS-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python" />
-    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20100%25-success?style=flat-square" alt="Status" />
-    <img src="https://img.shields.io/badge/Licencia-Educativa%20MINEDU-13357b?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/badge/Voz%20Femenina-es--PE--CamilaNeural%20%2F%20Dalia-blueviolet?style=flat-square" alt="Voice" />
+    <img src="https://img.shields.io/badge/Carrera-APSTI%20Oficial-13357b?style=flat-square" alt="APSTI" />
+    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20v5.0-success?style=flat-square" alt="Status" />
   </p>
 
   ---
@@ -47,11 +47,14 @@
 ## 📌 Tabla de Contenidos
 
 - [🎯 ¿Qué es HercarIA y qué problema resuelve?](#-qu%C3%A9-es-hercaria-y-qu%C3%A9-problema-resuelve)
+- [🧠 Arquitectura de la Red Neuronal Artificial (MLP)](#-arquitectura-de-la-red-neuronal-artificial-mlp)
 - [🌟 Características Principales](#-caracter%C3%ADsticas-principales)
+- [🧮 Simulador de Matrícula y Tasas TUPA 2026](#-simulador-de-matr%C3%ADcula-y-tasas-tupa-2026)
+- [🗺️ Mapa Arquitectónico del Campus](#️-mapa-arquitect%C3%B3nico-del-campus)
 - [🎓 Oferta Formativa (Las 4 Carreras Técnicas)](#-oferta-formativa-las-4-carreras-t%C3%A9cnicas)
 - [💰 Matrículas, Costos y Gratuidad de la Enseñanza](#-matr%C3%ADculas-costos-y-gratuidad-de-la-ense%C3%B1anza)
 - [🧭 Test Vocacional Psicométrico](#-test-vocacional-psicom%C3%A9trico)
-- [🎙️ Motor de Voz Femenina Neural y Micrófono](#️-motor-de-voz-femenina-neural-y-micr%C3%B3fono)
+- [🎙️ Motor de Voz Femenina Dulce y Micrófono](#️-motor-de-voz-femenina-dulce-y-micr%C3%B3fono)
 - [🚀 Cómo Iniciar el Sistema](#-c%C3%B3mo-iniciar-el-sistema)
 - [📂 Estructura de Archivos](#-estructura-de-archivos)
 - [🛠️ Stack Tecnológico](#️-stack-tecnol%C3%B3gico)
@@ -65,10 +68,33 @@ En la provincia de **Paita** (Región Piura), muchos egresados de educación sec
 
 Además, las dudas sobre trámites, validación de vouchers de Banco de la Nación en la plataforma digital institucional y fechas de matrícula suelen acumularse fuera de los horarios de atención de secretaría académica.
 
-**HercarIA** fue creado para solucionar esta problemática ofreciendo:
-1. **Orientación Vocacional Inmediata:** Un test guiado de 6 reactivos que mide intereses y habilidades, recomendando con precisión la carrera con mayor afinidad para el estudiante.
-2. **Atención Continua 24/7:** Resuelve preguntas frecuentes sobre costos, admisión, trámites de Mesa de Partes y horarios al instante.
-3. **Experiencia Humana y Accesible:** Voz dulce femenina en español y reconocimiento por micrófono para que personas de cualquier edad puedan interactuar hablando o escribiendo.
+**HercarIA v5.0** soluciona esta problemática mediante:
+1. **Inteligencia Artificial Real con Red Neuronal:** Clasificación de intenciones con un Perceptrón Multicapa ejecutado en tiempo real en el navegador (latencia < 5ms).
+2. **Orientación Vocacional Inmediata:** Test guiado de 6 reactivos que mide intereses y habilidades con trofeo y porcentajes de afinidad.
+3. **Simulador de Matrícula TUPA 2026:** Cálculo interactivo y transparente de pagos institucionales.
+4. **Atención Continua 24/7:** Resuelve dudas sobre admisión, carreras, trámites y pagos en cualquier momento.
+5. **Experiencia Humana:** Voz dulce femenina y dictado por micrófono para consultar hablando con naturalidad.
+
+---
+
+## 🧠 Arquitectura de la Red Neuronal Artificial (MLP)
+
+HercarIA incorpora una **Red Neuronal Artificial Perceptrón Multicapa (Feedforward MLP)** desarrollada en JavaScript puro ([`js/neural_network.js`](file:///c:/Users/misae/Downloads/HercarBOT%20O%20CHAT%20BOT%20HERCAR/js/neural_network.js)) que opera 100% en el cliente:
+
+```text
+┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
+│     CAPA DE ENTRADA     │     │      CAPA OCULTA 1      │     │      CAPA OCULTA 2      │     │     CAPA DE SALIDA      │
+│   220 Nodos (TF-IDF)    │ ──> │   36 Neuronas LeakyReLU │ ──> │    18 Neuronas Tanh     │ ──> │   22 Clases (Softmax)   │
+└─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘
+```
+
+- **Vectorización:** 220 dimensiones léxicas institucionales con ponderación TF-IDF y normalización de texto.
+- **Capa Oculta 1:** 36 neuronas con función de activación **LeakyReLU** ($\alpha = 0.01$) para prevenir neuronas muertas.
+- **Capa Oculta 2:** 18 neuronas con función de activación **Tanh** para comprimir representaciones en $[-1, 1]$.
+- **Capa de Salida:** 22 neuronas de intención con función de activación **Softmax** para distribución probabilística normalizada.
+- **Inicialización:** Distribución uniforme de **Xavier / Glorot** para estabilidad de gradiente.
+- **Entrenamiento:** Descenso de Gradiente Estocástico (SGD) con **Backpropagation** y pérdida por Entropía Cruzada (~180 ejemplos institucionales entrenados en ~35ms).
+- **Inspector Visual y Playground:** Modal interactivo con grafo SVG reactivo, barras de probabilidad Softmax y caja de pruebas para evaluar cualquier frase en tiempo real.
 
 ---
 
@@ -76,23 +102,41 @@ Además, las dudas sobre trámites, validación de vouchers de Banco de la Naci�
 
 | Característica | Detalle Técnico | Beneficio para el Usuario |
 | :--- | :--- | :--- |
-| **Diseño Moderno Fullscreen** | Inspirado en ChatGPT con paleta cromática oficial (`#13357b`, `#2563eb`, `#f59e0b`). | Navegación intuitiva, limpia y familiar sin distracciones. |
-| **Menú Adaptativo de 3 Líneas** | Colapso lateral en Desktop para vista 100% limpia y Drawer táctil con overlay en móviles. | Máxima comodidad de lectura en cualquier pantalla. |
-| **Guardar Registro de Chat** | Descarga instantánea en formato `.txt` con fecha, hora y encabezados oficiales. | Constancia escrita para postulantes, padres y docentes. |
-| **Borrar Conversación** | Reinicio seguro con confirmación interactiva para limpiar el chat. | Comienza nuevas consultas desde cero en cualquier momento. |
-| **Historial de Consultas** | Persistencia automática en `localStorage` con acceso rápido en el menú. | Vuelve a consultar preguntas previas con un solo clic. |
-| **Portada Hero Interactiva** | Tarjetas con sombreado de elevación suave y 6 atajos clave. | Respuestas inmediatas con un solo clic desde la pantalla de inicio. |
-| **Test Vocacional Integrado** | Algoritmo psicométrico de compatibilidad porcentual con trofeo de carrera ganadora. | Ayuda a los jóvenes indecisos a elegir su futuro profesional. |
-| **Voz Femenina Neural (Perú)** | Microsoft Edge TTS (`es-PE-CamilaNeural`) y Web Speech API con acento natural. | Respuestas leídas con entonación natural, dulce y dialecto peruano. |
-| **Dictado por Micrófono** | Web Speech Recognition con efecto visual de ondas concéntricas Ripple. | Permite consultar hablando con el manos libres activo. |
-| **Control Inteligente de Audio** | Silenciado instantáneo con tecla `Escape`, foco en texto o botón en cabecera. | Cero ruidos molestos o solapamientos de audio residuales. |
-| **Modo Oscuro / Claro** | Variables dinámicas CSS con persistencia de preferencia en navegador. | Comodidad visual de día y de noche. |
+| **Red Neuronal Multicapa (MLP)** | Topología 220 $\rightarrow$ 36 $\rightarrow$ 18 $\rightarrow$ 22 con Softmax y latencia < 5ms. | Entiende el lenguaje natural del postulante sin depender de servidores externos. |
+| **Inspector Neuronal en Vivo** | Grafo SVG reactivo y Playground interactivo de inferencia. | Permite a profesores y alumnos auditar visualmente cómo piensa la IA. |
+| **Simulador de Matrícula TUPA 2026** | Calculadora dinámica con perfiles para cachimbos, regulares y titulación. | Conoce exactamente el presupuesto de trámites en soles con un clic. |
+| **Mapa del Campus e Instalaciones** | Plano arquitectónico interactivo con hotspots de laboratorios APSTI, DPA y ANI. | Conoce las aulas, servidores y la embarcación de prácticas antes de postular. |
+| **Chips Contextuales de Sugerencia** | Preguntas guiadas de seguimiento generadas dinámicamente bajo cada respuesta. | Flujo de diálogo natural sin necesidad de pensar qué consultar después. |
+| **Acciones en Mensajes & Toast** | Botones de escuchar, copiar con notificación Toast, auditar cálculo neural y calificar. | Experiencia ergonómica moderna y retroalimentación inmediata. |
+| **Diseño Moderno Fullscreen** | Inspirado en ChatGPT con paleta corporativa oficial (`#13357b`, `#2563eb`, `#f59e0b`). | Interfaz limpia, profesional y libre de saturaciones. |
+| **Voz Femenina Dulce & Antirruido** | Microsoft Edge TTS (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`) con supresión de Markdown. | Trato cálido y melodioso que nunca lee asteriscos ni códigos mecánicos. |
+| **Dictado por Micrófono (STT)** | Web Speech Recognition con animación concéntrica de ondas *Ripple*. | Consulta directamente hablando con el manos libres en cualquier dispositivo. |
+
+---
+
+## 🧮 Simulador de Matrícula y Tasas TUPA 2026
+
+Accesible desde el menú lateral o las tarjetas de bienvenida:
+- **Perfil Postulante / Cachimbo:** Examen de admisión (S/ 100), Matrícula 1er ciclo (S/ 150), Carné de medio pasaje MINEDU (S/ 20), Carpeta del postulante (S/ 25). Total: **S/ 295.00**.
+- **Perfil Estudiante Regular:** Matrícula semestral (S/ 150), Carné de medio pasaje (S/ 20), Seguro de accidentes (S/ 15). Total: **S/ 185.00**.
+- **Perfil Trámites y Titulación:** Certificado modular (S/ 40), Carpeta de titulación profesional técnica (S/ 250), Certificado oficial de estudios (S/ 50), Constancia de egresado (S/ 30).
+- **Funciones:** Cálculo instantáneo con checkboxes, copiado de presupuesto formal al portapapeles y botón para consultar directamente al bot.
+
+---
+
+## 🗺️ Mapa Arquitectónico del Campus
+
+Plano interactivo organizado por sectores:
+- **Sector A (Tecnología y Cloud APSTI):** Laboratorios de Cómputo 1 y 2, servidores locales, racks de telecomunicaciones y laboratorios de software.
+- **Sector B (Ciencias Marinas DPA):** Centro de maricultura, acuarios experimentales y módulo de faenas para la embarcación escuela del instituto.
+- **Sector C (Gestión y Negocios ANI & Contabilidad):** Aulas multimedia climatizadas con infoproyectores y conectividad de alta velocidad.
+- **Sector D (Áreas Comunes):** Auditorio institucional, biblioteca virtual, dirección general y canchas deportivas.
 
 ---
 
 ## 🎓 Oferta Formativa (Las 4 Carreras Técnicas)
 
-Todas las carreras tienen una duración de **3 años lectivos (6 ciclos académicos)** y otorgan **Título Profesional Técnico a Nombre de la Nación**, además de certificaciones modulares anuales que facilitan una pronta inserción laboral:
+Todas las carreras tienen una duración de **3 años lectivos (6 ciclos académicos)** y otorgan **Título Profesional Técnico a Nombre de la Nación**, además de certificaciones modulares anuales:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -101,23 +145,14 @@ Todas las carreras tienen una duración de **3 años lectivos (6 ciclos académi
 │ 💻 APSTI                       │ 🚢 ANI                                │
 │ Arquitectura de Plataformas    │ Administración de Negocios            │
 │ y Servicios TI                 │ Internacionales                       │
-│ Software, Redes, Nube y Soporte│ Comercio Exterior, Aduanas y Puertos  │
+│ Software, Redes, Cloud e IA    │ Comercio Exterior, Aduanas y Puertos  │
 ├────────────────────────────────┼───────────────────────────────────────┤
 │ 📊 CONTABILIDAD                │ 🐟 DPA                                │
 │ Contabilidad y Finanzas        │ Desarrollo Pesquero y Acuícola        │
-│ Tributación SUNAT, Auditoría   │ Procesamiento Marino, Acuicultura y   │
-│ y Gestión Empresarial          │ Prácticas en Embarcación Propia       │
+│ Tributación SUNAT, Auditoría   │ Procesamiento Marino, Maricultura y   │
+│ y Gestión Empresarial          │ Prácticas en Embarcación Escuela      │
 └────────────────────────────────┴───────────────────────────────────────┘
 ```
-
-### Tabla Comparativa de Carreras
-
-| Carrera | Módulos Principales | Oportunidades Laborales en Paita y Piura |
-| :--- | :--- | :--- |
-| **APSTI** | Soporte TI, Redes y Comunicaciones, Desarrollo Web/Móvil, Servidores Cloud. | Agencias marítimas, empresas del Parque Industrial de Paita, banca y teletrabajo. |
-| **ANI** | Logística internacional, despacho aduanero, gestión portuaria, comercio exterior. | Terminal Portuario Euroandinos (TPE), agencias de aduana, almacenes y exportadoras de pota/mango/uva. |
-| **Contabilidad** | Contabilidad comercial y de costos, tributación SUNAT, libros electrónicos, auditoría. | Estudios contables, entidades financieras (Banco de la Nación, Cajas), municipios y empresas pesqueras. |
-| **DPA** | Cultivo acuícola de conchas de abanico, navegación costera, aseguramiento de la calidad (HACCP). | Plantas procesadoras de congelados y conservas en Paita, criaderos marinos y embarcaciones industriales. |
 
 ---
 
@@ -127,66 +162,51 @@ Todas las carreras tienen una duración de **3 años lectivos (6 ciclos académi
 > **El I.E.S.T.P. "Hermanos Cárcamo" es una institución pública del Estado Peruano.**
 > * **NO se cobran mensualidades ni pensiones privadas.**
 > * La enseñanza es **100% gratuita**.
-> * El único pago es el **derecho de matrícula administrativo semestral (TUPA)**: aproximadamente **S/ 150 a S/ 250 por ciclo de 6 meses completo**.
+> * El único abono es la tasa de matrícula semestral (TUPA): **S/ 150 a S/ 250 por ciclo de 6 meses completo**.
 
-### 📝 Cómo registrar el pago del Banco de la Nación:
+### 📝 Cómo registrar el comprobante del Banco de la Nación:
 1. Pagar en ventanilla o Agente MultiRed del Banco de la Nación.
-2. Ingresar al portal oficial de registro: [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
+2. Ingresar a: [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
 3. Iniciar sesión con su número de **DNI**.
-4. Seleccionar el concepto correspondiente, ingresar la **Fecha**, **Monto** y **Número de Operación**.
-5. Adjuntar la foto o archivo escaneado del voucher legible y guardar.
-6. Consultar y descargar su comprobante oficial en: [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).
+4. Ingresar la **Fecha**, **Monto** y **Número de Operación**.
+5. Adjuntar foto o archivo escaneado legible y presionar **Registrar Pago**.
+6. Descargar su comprobante tributario oficial en: [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).
 
 ---
 
 ## 🧭 Test Vocacional Psicométrico
 
-El asistente incorpora un test vocacional especialmente desarrollado para aspirantes:
-* **6 Preguntas Diagnósticas:** Evalúan afinidad por tecnología, comercio exterior, cálculos contables o ciencias marinas.
-* **Algoritmo de Compatibilidad:** Al responder la sexta pregunta, calcula en tiempo real los porcentajes de afinidad de las 4 carreras.
-* **Presentación con Trofeo:** Destaca la carrera principal ganadora, detalla el campo laboral en la región y brinda accesos directos para iniciar la postulación.
+- **6 Preguntas Ponderadas:** Diagnostican intereses, ambiente laboral soñado y competencias hacia la tecnología, aduanas, finanzas o ciencias marinas.
+- **Cálculo Matricial:** Procesa los porcentajes de afinidad de las 4 carreras oficiales en tiempo real.
+- **Tarjeta de Resultados:** Muestra la carrera ganadora con trofeo, porcentaje de compatibilidad, campo laboral paiteño y enlaces a la malla curricular.
 
 ---
 
-## 🎙️ Motor de Voz Femenina Neural y Micrófono
+## 🎙️ Motor de Voz Femenina Dulce y Micrófono
 
-- **Voz Neural de Estudio (`es-ES-ElviraNeural`):** Generada mediante el microservicio local con Microsoft Edge TTS, brindando dicción clara, dulce y profesional.
-- **Entrada por Micrófono (Speech-to-Text):** Permite al estudiante hablarle directamente al asistente. Cuenta con un efecto visual animado de ondas expansivas (*ripple effect*) durante la grabación.
-- **Control Antirruido y Silenciamiento:** El audio se interrumpe de inmediato al presionar la tecla `Escape`, al hacer clic en el cuadro de texto o mediante el botón de audio en la barra superior.
+- **Afinación Acústica Agradable:** Velocidad 0.93 y tono 1.05 en voces neurales femeninas (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`, `es-ES-ElviraNeural`).
+- **Filtro Anti-Markdown:** Omite asteriscos, guiones y caracteres de código al momento de hablar.
+- **Normalización Fonética:** Convierte `APSTI` en "Ápsti", `IESTP` en "Instituto", `S/ 150` en "150 soles", etc.
+- **Dictado por Micrófono con Ondas Ripple:** Habla directamente con manos libres sin necesidad de teclear.
+- **Silenciamiento Instantáneo:** Tecla `Escape`, clic en el cuadro de texto o botón en cabecera.
 
 ---
 
 ## 🚀 Cómo Iniciar el Sistema
 
 ### Opción 1: En la Web (Acceso Inmediato sin Instalación)
-Simplemente ingresa desde cualquier navegador a la versión en producción:
+Ingresa directamente desde cualquier navegador móvil o de escritorio:
 👉 **[https://gmph2007.github.io/HercarBOT/](https://gmph2007.github.io/HercarBOT/)**
 
 ---
 
-### Opción 2: En Windows con 1 solo clic (Recomendada con Voz Neural de Estudio)
+### Opción 2: En Windows con 1 Clic (Recomendada con Voz Neural de Estudio)
 1. Descarga o clona este repositorio en tu computadora.
 2. Haz doble clic en el archivo:
    ```cmd
    Iniciar_HercarBOT.bat
    ```
-3. El lanzador arrancará el servidor local Python en segundo plano y abrirá automáticamente tu navegador en `http://localhost:8080` con la voz neural habilitada.
-
----
-
-### Opción 3: Desde la Terminal (PowerShell / CMD)
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/GMPH2007/HercarBOT.git
-cd HercarBOT
-
-# 2. Instalar dependencias de voz neural (opcional pero recomendado)
-pip install edge-tts requests
-
-# 3. Iniciar el servidor
-python server.py
-```
-Abre tu navegador en: [http://localhost:8080](http://localhost:8080)
+3. El lanzador activará el servidor local Python en segundo plano y abrirá automáticamente tu navegador en `http://localhost:8080`.
 
 ---
 
@@ -195,21 +215,22 @@ Abre tu navegador en: [http://localhost:8080](http://localhost:8080)
 ```text
 HercarBOT/
 ├── assets/
-│   ├── logo-crest.png               # Insignia oficial recortada en alta definición (256x256)
-│   ├── logo-hercar.png              # Logo institucional oficial
+│   ├── logo-crest.png               # Insignia institucional en alta definición (256x256)
+│   ├── logo-hercar.png              # Logo del IESTP Hermanos Cárcamo
 │   └── logo-iestp.png               # Escudo institucional original
 ├── css/
-│   └── styles.css                   # Hoja de estilos (Diseño ChatGPT, animaciones ripple, Dark Mode)
+│   └── styles.css                   # Hoja de estilos (Design system, Red Neuronal, Modales, Ripple, Dark Mode)
 ├── js/
-│   ├── knowledge.js                 # Base de conocimientos institucional completa y categorizada
-│   ├── test_vocacional.js           # Algoritmo psicométrico interactivo con trofeo y porcentajes
-│   ├── voice.js                     # Motor de audio TTS (Elvira Neural) y dictado por micrófono STT
-│   └── app.js                       # Controlador principal del chat, parser NLP y formateador Markdown
-├── index.html                       # Interfaz gráfica moderna en pantalla completa
-├── server.py                        # Servidor HTTP en Python con endpoint /api/tts para Edge-TTS
-├── Iniciar_HercarBOT.bat            # Script de lanzamiento automático para Windows
-├── generar_word.py                  # Generador del informe técnico formal en formato Microsoft Word (.docx)
-├── INFORME_TECNICO_HERCARBOT.docx   # Documento formal en Word listo para imprimir o presentar
+│   ├── neural_network.js            # Red Neuronal Artificial MLP (220-36-18-22, LeakyReLU, Tanh, Softmax)
+│   ├── knowledge.js                 # Base de conocimientos institucional estructurada
+│   ├── test_vocacional.js           # Algoritmo psicométrico vocacional con trofeo
+│   ├── voice.js                     # Motor de voz dulce femenina TTS y reconocimiento STT
+│   └── app.js                       # Controlador del chat, ensamble híbrido, simulador TUPA y mapa
+├── index.html                       # Interfaz gráfica moderna (Landing hero, Chat fullscreen y modales)
+├── server.py                        # Servidor HTTP Python con endpoint /api/tts para Edge-TTS
+├── Iniciar_HercarBOT.bat            # Script de lanzamiento con 1 clic para Windows
+├── generar_word.py                  # Generador del informe técnico formal en formato Word (.docx)
+├── INFORME_TECNICO_HERCARBOT.docx   # Documento formal en Word listo para presentar o imprimir
 ├── INFORME_TECNICO_HERCARBOT.md     # Documentación técnica completa en formato Markdown
 └── README.md                        # Presentación principal del proyecto en GitHub
 ```
@@ -218,11 +239,13 @@ HercarBOT/
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend:** HTML5 Semántico, CSS3 Moderno (Custom Properties, Flexbox, Grid), JavaScript Vanilla (ES6+).
-- **Backend / Microservicio:** Python 3.11, `http.server`, biblioteca `edge-tts`.
-- **Iconografía:** SVG Inline de trazo uniforme (estándar Feather / Phosphor Icons a 2px).
-- **Control de Versiones & Hosting:** Git, GitHub, GitHub Pages (CDN global con HTTPS).
-- **Generación de Documentación Formal:** `python-docx` con paleta institucional y maquetación editorial.
+- **Inteligencia Artificial:** Red Neuronal Artificial Perceptrón Multicapa (MLP) pura en Vanilla JS con optimizador SGD y Softmax.
+- **Frontend:** HTML5 Semántico, CSS3 Moderno (Variables, Flexbox, Grid, Glassmorphism), JavaScript ES6+ Modular.
+- **Síntesis Vocal:** Microsoft Edge TTS (`edge-tts` Python) y Web Speech API nativa.
+- **Reconocimiento Vocal:** Web Speech Recognition API (`webkitSpeechRecognition`).
+- **Iconografía:** SVG Inline de trazo uniforme a 2px (Estándar Feather / Phosphor Icons).
+- **Control de Versiones & Hosting:** Git, GitHub, GitHub Pages (HTTPS Global).
+- **Documentación Técnica Formal:** `python-docx` con estilo editorial institucional y Markdown estructurado.
 
 ---
 
