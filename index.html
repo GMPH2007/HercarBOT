@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=4.0">
+    <link rel="stylesheet" href="css/styles.css?v=5.0">
 </head>
 <body>
 
@@ -59,6 +59,38 @@
                     </div>
                     <span class="test-tag">Interactúa</span>
                 </button>
+
+                <!-- Herramientas Inteligentes Integradas -->
+                <div class="sidebar-tools-group">
+                    <button type="button" class="btn-sidebar-subtool" id="btn-open-simulador" title="Calcular costos de matrícula y tasas TUPA">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                            <line x1="8" y1="6" x2="16" y2="6"></line>
+                            <line x1="16" y1="14" x2="16" y2="18"></line>
+                            <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
+                        </svg>
+                        <span>Simulador TUPA</span>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-subtool" id="btn-open-mapa" title="Explorar instalaciones y laboratorios del instituto">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                        <span>Mapa del Campus</span>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-subtool btn-sidebar-neural" id="btn-open-neural-monitor" title="Monitorear el estado y las activaciones de la Red Neuronal">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                            <path d="M12 12L2.5 7.5"></path>
+                        </svg>
+                        <span>Red Neuronal APSTI</span>
+                        <span class="neural-badge-live">IA</span>
+                    </button>
+                </div>
 
                 <!-- Historial de Consultas Recientes -->
                 <div class="sidebar-section" id="sidebar-history-section" style="display: none;">
@@ -146,6 +178,12 @@
                 </div>
 
                 <div class="header-right">
+                    <!-- Indicador Interactivo de Red Neuronal APSTI -->
+                    <button type="button" class="header-neural-indicator" id="header-neural-indicator" title="Red Neuronal Artificial APSTI en ejecución (Clic para inspeccionar)">
+                        <span class="neural-pulse-dot"></span>
+                        <span class="neural-header-text">Red Neuronal IA</span>
+                    </button>
+
                     <!-- Ondas de voz animadas cuando habla -->
                     <div class="speaking-wave" id="header-speaking-indicator">
                         <span></span><span></span><span></span><span></span>
@@ -353,6 +391,43 @@
                             </div>
                         </div>
 
+                        <!-- Tarjeta 7: Simulador TUPA -->
+                        <div class="portada-card" onclick="window.hercarApp.abrirSimuladorTUPA()">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-purple">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                        <line x1="8" y1="6" x2="16" y2="6"></line>
+                                        <line x1="16" y1="14" x2="16" y2="18"></line>
+                                        <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Simulador de Matrícula y Cuotas TUPA</h3>
+                                    <p>Calcula tus montos para Cachimbos, Regulares o trámites con cálculo transparente y desglosado.</p>
+                                    <span class="card-action-link">Abrir Calculadora TUPA →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 8: Mapa del Campus -->
+                        <div class="portada-card" onclick="window.hercarApp.abrirMapaCampus()">
+                            <div class="card-body-content">
+                                <div class="card-icon-box icon-blue">
+                                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                                    </svg>
+                                </div>
+                                <div class="card-info">
+                                    <h3>Mapa del Campus e Instalaciones</h3>
+                                    <p>Recorre los laboratorios de APSTI, taller pesquero DPA, aulas multimedia y secretaría.</p>
+                                    <span class="card-action-link">Explorar Instalaciones →</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- SECCIÓN DE PLATAFORMAS DIGITALES Y ENLACES INSTITUCIONALES -->
@@ -535,10 +610,236 @@
         </main>
     </div>
 
+    <!-- ==========================================================================
+         MODALES Y HERRAMIENTAS INTERACTIVAS AVANZADAS (APSTI)
+         ========================================================================== -->
+
+    <!-- 1. MODAL: INSPECTOR DE RED NEURONAL ARTIFICIAL APSTI -->
+    <div class="modal-overlay" id="modal-neural-inspector" style="display: none;">
+        <div class="modal-card modal-neural-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="modal-icon-badge">🧠</span>
+                    <div>
+                        <h3>Inspector de Red Neuronal Artificial</h3>
+                        <p>Arquitectura Feedforward Multi-Layer Perceptron (MLP) • Carrera de APSTI</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="window.hercarApp.cerrarTodosLosModales()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Tarjetas de Métricas en Vivo -->
+                <div class="neural-metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Intención Predicha</span>
+                        <span class="metric-val text-primary" id="neural-metric-intent">Cargando...</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Nivel de Confianza</span>
+                        <span class="metric-val text-accent" id="neural-metric-confidence">--%</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Latencia de Inferencia</span>
+                        <span class="metric-val text-green" id="neural-metric-latency">-- ms</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Pesos Sinápticos</span>
+                        <span class="metric-val text-purple" id="neural-metric-weights">8,964</span>
+                    </div>
+                </div>
+
+                <!-- Top 3 Probabilidades Softmax -->
+                <div class="neural-section">
+                    <div class="section-title">
+                        <span>📊 Distribución de Probabilidad Softmax (Top 3):</span>
+                    </div>
+                    <div class="probability-bars" id="neural-prob-bars">
+                        <!-- Generado dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Tokens y Características Detectadas -->
+                <div class="neural-section">
+                    <div class="section-title">
+                        <span>🔍 Tokens Semánticos Activados (Bag-of-Words):</span>
+                    </div>
+                    <div class="tokens-cloud" id="neural-tokens-cloud">
+                        <span class="token-empty">No hay tokens activos</span>
+                    </div>
+                </div>
+
+                <!-- Diagrama Topológico de la Red Neuronal -->
+                <div class="neural-section">
+                    <div class="section-title">
+                        <span>⚡ Topología Sináptica Feedforward:</span>
+                    </div>
+                    <div class="topology-diagram">
+                        <div class="layer-node-box">
+                            <span class="layer-title">Capa Entrada</span>
+                            <span class="layer-count">220 Nodos</span>
+                            <span class="layer-desc">Vocabulario / TF-IDF</span>
+                        </div>
+                        <div class="layer-connector">➔</div>
+                        <div class="layer-node-box">
+                            <span class="layer-title">Capa Oculta 1</span>
+                            <span class="layer-count">36 Neuronas</span>
+                            <span class="layer-desc">LeakyReLU</span>
+                        </div>
+                        <div class="layer-connector">➔</div>
+                        <div class="layer-node-box">
+                            <span class="layer-title">Capa Oculta 2</span>
+                            <span class="layer-count">18 Neuronas</span>
+                            <span class="layer-desc">Tanh</span>
+                        </div>
+                        <div class="layer-connector">➔</div>
+                        <div class="layer-node-box layer-output">
+                            <span class="layer-title">Capa Salida</span>
+                            <span class="layer-count">22 Clases</span>
+                            <span class="layer-desc">Softmax</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laboratorio / Playground de Pruebas en Tiempo Real -->
+                <div class="neural-playground-box">
+                    <label for="neural-playground-input"><strong>🧪 Probar inferencia con cualquier frase:</strong></label>
+                    <div class="playground-input-row">
+                        <input type="text" id="neural-playground-input" placeholder="Ej: ¿Cuáles son los cursos de computación y sistemas?" class="playground-input">
+                        <button type="button" id="btn-run-playground" class="btn-playground-run">⚡ Evaluar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="modal-footer-info">🔬 Modelo entrenado 100% en cliente con Backpropagation • APSTI 2026</span>
+                <button type="button" class="btn-modal-close-action" onclick="window.hercarApp.cerrarTodosLosModales()">Cerrar Inspector</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MODAL: SIMULADOR DE MATRÍCULA Y TASAS TUPA 2026 -->
+    <div class="modal-overlay" id="modal-simulador-tupa" style="display: none;">
+        <div class="modal-card modal-simulador-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="modal-icon-badge">🧮</span>
+                    <div>
+                        <h3>Simulador de Matrícula y Tasas TUPA</h3>
+                        <p>IESTP "Hermanos Cárcamo" • Cálculo transparente para Banco de la Nación</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="window.hercarApp.cerrarTodosLosModales()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="simulador-tabs">
+                    <button type="button" class="sim-tab active" data-profile="cachimbo" onclick="window.hercarApp.cambiarPerfilSimulador('cachimbo')">Ingresante Cachimbo (Sem. I)</button>
+                    <button type="button" class="sim-tab" data-profile="regular" onclick="window.hercarApp.cambiarPerfilSimulador('regular')">Alumno Regular (Sem. II - VI)</button>
+                    <button type="button" class="sim-tab" data-profile="tramites" onclick="window.hercarApp.cambiarPerfilSimulador('tramites')">Trámites y Constancias</button>
+                </div>
+
+                <div class="simulador-items-list" id="simulador-items-list">
+                    <!-- Checkboxes generados por JS -->
+                </div>
+
+                <div class="simulador-total-box">
+                    <div class="total-info">
+                        <span class="total-label">Monto Total Estimado a Depositar:</span>
+                        <span class="total-sub">En ventanilla o Agente MultiRed del Banco de la Nación</span>
+                    </div>
+                    <div class="total-amount" id="simulador-total-val">S/ 0.00</div>
+                </div>
+
+                <div class="simulador-note">
+                    <p>💡 <em>Recordatorio de Gratuidad:</em> El instituto <strong>NO cobra pensiones mensuales privadas</strong> (S/ 0.00 al mes). Este monto corresponde únicamente a la tasa administrativa semestral estipulada en el TUPA oficial.</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-action-outline" id="btn-copiar-simulacion" onclick="window.hercarApp.copiarResumenSimulador()">📋 Copiar Resumen</button>
+                <button type="button" class="btn-action-primary" onclick="window.hercarApp.consultarSobreSimulacion()">💬 Consultar en el Chat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MODAL: MAPA INTERACTIVO DEL CAMPUS E INSTALACIONES -->
+    <div class="modal-overlay" id="modal-mapa-campus" style="display: none;">
+        <div class="modal-card modal-mapa-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="modal-icon-badge">🗺️</span>
+                    <div>
+                        <h3>Mapa Interactivo del Campus e Instalaciones</h3>
+                        <p>Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita – Piura</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="window.hercarApp.cerrarTodosLosModales()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Visual Blueprint Layout -->
+                <div class="campus-map-wrapper">
+                    <div class="map-grid">
+                        <div class="map-sector sector-apsti" onclick="window.hercarApp.seleccionarHotspotMapa('apsti')">
+                            <div class="sector-badge">Pabellón A</div>
+                            <h4>💻 APSTI (Sistemas y Redes)</h4>
+                            <p>4 Laboratorios de Cómputo, Servidores y Redes CISCO</p>
+                        </div>
+
+                        <div class="map-sector sector-dpa" onclick="window.hercarApp.seleccionarHotspotMapa('dpa')">
+                            <div class="sector-badge">Módulo Marítimo</div>
+                            <h4>🐟 Desarrollo Pesquero (DPA)</h4>
+                            <p>Taller de Artes de Pesca y Embarcación de Prácticas</p>
+                        </div>
+
+                        <div class="map-sector sector-ani" onclick="window.hercarApp.seleccionarHotspotMapa('ani')">
+                            <div class="sector-badge">Pabellón B</div>
+                            <h4>🚢 ANI y Contabilidad</h4>
+                            <p>Aulas Multimedia y Laboratorios Tributarios SUNAT</p>
+                        </div>
+
+                        <div class="map-sector sector-admin" onclick="window.hercarApp.seleccionarHotspotMapa('admin')">
+                            <div class="sector-badge">Administración</div>
+                            <h4>🏛️ Dirección y Mesa de Partes</h4>
+                            <p>Secretaría Académica, Caja y Trámites Presenciales</p>
+                        </div>
+
+                        <div class="map-sector sector-biblio" onclick="window.hercarApp.seleccionarHotspotMapa('biblio')">
+                            <div class="sector-badge">Servicios</div>
+                            <h4>📚 Biblioteca y Auditorio</h4>
+                            <p>Terminales de Biblioteca Virtual y Sala de Actos</p>
+                        </div>
+
+                        <div class="map-sector sector-deportes" onclick="window.hercarApp.seleccionarHotspotMapa('deportes')">
+                            <div class="sector-badge">Recreación</div>
+                            <h4>⚽ Losa Polideportiva</h4>
+                            <p>Canchas multiusos y áreas de integración estudiantil</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Información Detallada del Sector Seleccionado -->
+                <div class="sector-detail-card" id="sector-detail-card">
+                    <h4 id="sector-title">Selecciona un sector del plano para ver sus detalles</h4>
+                    <p id="sector-description">Haz clic sobre cualquier pabellón o laboratorio para conocer su equipamiento, carreras asociadas y actividades prácticas.</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-action-primary" onclick="window.hercarApp.enviarConsultaDirecta('¿Dónde queda el instituto y cuáles son las rutas de acceso en Paita?')">📍 ¿Cómo llegar a la sede?</button>
+                <button type="button" class="btn-modal-close-action" onclick="window.hercarApp.cerrarTodosLosModales()">Cerrar Mapa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+    <div class="toast-notification" id="toast-notification"></div>
+
     <!-- Scripts de la Aplicación -->
-    <script src="js/knowledge.js?v=4.0"></script>
-    <script src="js/test_vocacional.js?v=4.0"></script>
-    <script src="js/voice.js?v=4.0"></script>
-    <script src="js/app.js?v=4.0"></script>
+    <script src="js/neural_network.js?v=5.0"></script>
+    <script src="js/knowledge.js?v=5.0"></script>
+    <script src="js/test_vocacional.js?v=5.0"></script>
+    <script src="js/voice.js?v=5.0"></script>
+    <script src="js/app.js?v=5.0"></script>
 </body>
 </html>
