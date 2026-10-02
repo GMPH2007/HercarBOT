@@ -110,7 +110,7 @@ r.font.bold = True
 r = p_meta.add_run('VERSIÓN DEL SISTEMA:\n')
 r.font.bold = True
 r.font.size = Pt(10)
-r = p_meta.add_run('Versión 5.0 Neuronal APSTI (Producción Estable)\n\n')
+r = p_meta.add_run('Versión 5.1 Neuronal APSTI Ampliada (Producción Estable)\n\n')
 r.font.size = Pt(10.5)
 r.font.bold = True
 r.font.color.rgb = COLOR_PURPLE
@@ -190,9 +190,9 @@ def add_bullet(bold_prefix, text):
 # 1. RESUMEN EJECUTIVO
 # ==========================================
 add_h1('1. RESUMEN EJECUTIVO')
-add_p('El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema "HercarIA v5.0", una plataforma de Inteligencia Artificial conversacional de última generación concebida para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
-add_p('Desarrollado en el seno formativo de la Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), HercarIA integra por primera vez en la educación técnica regional una Red Neuronal Artificial Perceptrón Multicapa (MLP) ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning), con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.')
-add_p('Asimismo, el sistema cuenta con síntesis vocal femenina neural dulce y humana, un Orientador Vocacional Psicométrico de 6 reactivos ponderados, un Simulador Interactivo de Matrícula y Tasas TUPA 2026, un Mapa Arquitectónico Digital del Campus, un Inspector Visual de Red Neuronal con Playground de inferencia en tiempo real, chips contextuales inteligentes de seguimiento y descarga de historiales en formato formal.')
+add_p('El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema "HercarIA v5.1", una plataforma de Inteligencia Artificial conversacional de última generación concebida para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
+add_p('Desarrollado en el seno formativo de la Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), HercarIA integra una Red Neuronal Artificial Perceptrón Multicapa (MLP) ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning) con vectorización TF-IDF, activación LeakyReLU y Tanh, distribución Softmax de intenciones con latencia inferior a 5 milisegundos, y un motor de recuperación semántica enciclopédico.')
+add_p('La versión 5.1 expande masivamente el conocimiento institucional para responder consultas detalladas sobre mallas curriculares ciclo por ciclo, temarios del examen de admisión, trámites de titulación y prácticas EFSRT, Beca 18 (PRONABEC), carné de medio pasaje, rutas de transporte desde Piura y Sullana, el sistema SIGA web y la biblioteca virtual. Asimismo, refina ergonómicamente la interfaz ocultando indicadores o botones toscos de IA para brindar una experiencia de usuario limpia, sobria, humana y profesional similar a ChatGPT.')
 
 # ==========================================
 # 2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN EN PAITA
