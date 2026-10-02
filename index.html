@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=5.0">
+    <link rel="stylesheet" href="css/styles.css?v=5.1">
 </head>
 <body>
 
@@ -81,7 +81,7 @@
                         <span>Mapa del Campus</span>
                     </button>
 
-                    <button type="button" class="btn-sidebar-subtool btn-sidebar-neural" id="btn-open-neural-monitor" title="Monitorear el estado y las activaciones de la Red Neuronal">
+                    <button type="button" class="btn-sidebar-subtool btn-sidebar-neural" id="btn-open-neural-monitor" title="Monitorear el estado y las activaciones de la Red Neuronal" style="display: none !important;">
                         <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="3"></circle>
                             <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
@@ -178,8 +178,8 @@
                 </div>
 
                 <div class="header-right">
-                    <!-- Indicador Interactivo de Red Neuronal APSTI -->
-                    <button type="button" class="header-neural-indicator" id="header-neural-indicator" title="Red Neuronal Artificial APSTI en ejecución (Clic para inspeccionar)">
+                    <!-- Indicador Interactivo de Red Neuronal APSTI (Oculto de la vista para mantener diseño limpio) -->
+                    <button type="button" class="header-neural-indicator" id="header-neural-indicator" title="Red Neuronal Artificial APSTI en ejecución" style="display: none !important;">
                         <span class="neural-pulse-dot"></span>
                         <span class="neural-header-text">Red Neuronal IA</span>
                     </button>
@@ -836,10 +836,10 @@
     <div class="toast-notification" id="toast-notification"></div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/neural_network.js?v=5.0"></script>
-    <script src="js/knowledge.js?v=5.0"></script>
-    <script src="js/test_vocacional.js?v=5.0"></script>
-    <script src="js/voice.js?v=5.0"></script>
-    <script src="js/app.js?v=5.0"></script>
+    <script src="js/neural_network.js?v=5.1"></script>
+    <script src="js/knowledge.js?v=5.1"></script>
+    <script src="js/test_vocacional.js?v=5.1"></script>
+    <script src="js/voice.js?v=5.1"></script>
+    <script src="js/app.js?v=5.1"></script>
 </body>
 </html>
