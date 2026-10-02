@@ -1,15 +1,9 @@
 /**
  * HERCARTIA - MOTOR DE RED NEURONAL ARTIFICIAL (MLP FEEDFORWARD)
- * Especialidad: Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
+ * Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios TI (APSTI)
  * IESTP "Hermanos Cárcamo" - Paita, Piura
  * 
- * Arquitectura:
- * - Preprocesamiento: Tokenizador n-gram, lematizador semántico y codificador TF-IDF
- * - Capa de Entrada: 220 dimensiones (Vector de características Bag-of-Words / Stems)
- * - Capa Oculta 1: 36 Neuronas con activación LeakyReLU (f(x) = x > 0 ? x : 0.01x)
- * - Capa Oculta 2: 18 Neuronas con activación Tanh (Tangente hiperbólica)
- * - Capa de Salida: 22 Clases de Intención con distribución de probabilidad Softmax
- * - Entrenamiento: Retropropagación (Backpropagation) con Momentum y Regularización
+ * Versión 5.1 Neuronal Ampliada con Mallas, Titulación, Beca 18, SIGA y Conceptos Técnicos
  */
 
 class HercarNeuralNetwork {
@@ -20,9 +14,12 @@ class HercarNeuralNetwork {
             'carrera_ani',
             'carrera_contabilidad',
             'carrera_dpa',
+            'malla_curricular',
             'todas_carreras',
             'matricula_costos',
             'admision_examen',
+            'temario_admision',
+            'titulacion_efsrt',
             'pagos_vouchers',
             'boletas_electronicas',
             'mesa_partes_tramites',
@@ -33,10 +30,16 @@ class HercarNeuralNetwork {
             'edad_limite',
             'convenios_practicas',
             'becas_beneficios',
+            'carnet_pasaje',
+            'como_llegar_transporte',
+            'plataforma_siga',
+            'biblioteca_virtual',
             'ubicacion_contacto',
             'historia_institucion',
             'simulador_tupa',
             'mapa_campus',
+            'quien_te_creo',
+            'conceptos_tecnologia',
             'saludo',
             'agradecimiento',
             'desconocido'
@@ -48,61 +51,74 @@ class HercarNeuralNetwork {
             'carrera_ani': 'Carrera ANI (Comercio Exterior y Aduanas)',
             'carrera_contabilidad': 'Carrera Contabilidad (Tributación y Finanzas)',
             'carrera_dpa': 'Carrera DPA (Pesquería y Maricultura)',
+            'malla_curricular': 'Malla Curricular y Cursos Semestre a Semestre',
             'todas_carreras': 'Oferta Formativa Global (Las 4 Carreras)',
             'matricula_costos': 'Matrícula, Tasas TUPA y Gratuidad Pública',
             'admision_examen': 'Admisión, Requisitos y Examen Ordinario',
+            'temario_admision': 'Temario de Estudio para Examen de Admisión',
+            'titulacion_efsrt': 'Requisitos de Titulación y Prácticas EFSRT',
             'pagos_vouchers': 'Registro de Vouchers en pagos.ieshercar.edu.pe',
             'boletas_electronicas': 'Consulta y Descarga de Boletas Electrónicas',
             'mesa_partes_tramites': 'Mesa de Partes Virtual y Trámites FUT',
             'duracion_semestres': 'Duración Formativa (3 Años / 6 Semestres)',
             'convalidacion_sunedu': 'Convalidación Universitaria (SUNEDU / Ley 30512)',
             'titulo_oficial': 'Título Profesional Técnico (MINEDU)',
-            'turnos_horarios': 'Turnos Diurnos y Horarios de Laboratorio',
+            'turnos_horarios': 'Turnos Diurnos y Horarios de Clases',
             'edad_limite': 'Requisitos de Edad (Sin Límite)',
             'convenios_practicas': 'Convenios y Prácticas en el Puerto de Paita',
-            'becas_beneficios': 'Becas y Programas de Apoyo (Beca 18)',
+            'becas_beneficios': 'Becas y Programas de Apoyo (Beca 18 PRONABEC)',
+            'carnet_pasaje': 'Carnet Oficial de Medio Pasaje MINEDU',
+            'como_llegar_transporte': 'Rutas de Transporte y Cómo Llegar al Instituto',
+            'plataforma_siga': 'Sistema Académico SIGA Web (Notas y Asistencia)',
+            'biblioteca_virtual': 'Biblioteca Virtual Institucional (Libros)',
             'ubicacion_contacto': 'Sede Institucional, Ubicación y Teléfonos',
             'historia_institucion': 'Historia Institucional y Héroes Cárcamo',
             'simulador_tupa': 'Simulador de Matrícula y Cuotas TUPA',
             'mapa_campus': 'Mapa Interactivo de Instalaciones y Laboratorios',
+            'quien_te_creo': 'Autor y Desarrollador de la IA (APSTI)',
+            'conceptos_tecnologia': 'Conceptos Técnicos de Computación e Innovación',
             'saludo': 'Protocolo de Saludo y Bienvenida',
             'agradecimiento': 'Agradecimiento y Despedida Cortés',
             'desconocido': 'Consulta Abierta / Fallback Semántico'
         };
 
-        // Vocabulario de características clave (220 dimensiones)
+        // Vocabulario enriquecido (260 dimensiones normalizadas)
         this.vocabulary = [
             'test', 'vocacion', 'vocacional', 'estudiar', 'elegir', 'escoger', 'recomiend', 'aptitud', 'indecis',
-            'apsti', 'sistem', 'comput', 'softwar', 'program', 'desarroll', 'red', 'cisco', 'servidor', 'cloud', 'web', 'bd', 'ti', 'tecnolog',
-            'ani', 'negoci', 'internacional', 'aduan', 'puert', 'comerci', 'exterior', 'export', 'import', 'contened', 'flet', 'maritim', 'logist',
-            'contabil', 'tribut', 'sunat', 'finanz', 'auditor', 'libr', 'electronic', 'declar', 'igv', 'rent', 'balance', 'fiscal', 'cuent',
-            'dpa', 'pesqu', 'acuicol', 'maricultur', 'conch', 'abanic', 'langostin', 'barc', 'embarcac', 'haccp', 'congel', 'pesc', 'harin', 'mar',
-            'carrer', 'ofert', 'estudi', 'opcion', 'programas', 'cuant', 'dur', 'ao', 'semestr', 'cicl', 'modul', 'titul', 'nacion', 'minedu',
+            'apsti', 'sistem', 'comput', 'softwar', 'program', 'desarroll', 'red', 'cisco', 'servidor', 'cloud', 'web', 'bd', 'ti', 'tecnolog', 'ia', 'codigo',
+            'ani', 'negoci', 'internacional', 'aduan', 'puert', 'comerci', 'exterior', 'export', 'import', 'contened', 'flet', 'maritim', 'logist', 'reefer', 'incoterm',
+            'contabil', 'tribut', 'sunat', 'finanz', 'auditor', 'libr', 'electronic', 'declar', 'igv', 'rent', 'balance', 'fiscal', 'cuent', 'sire', 'factur',
+            'dpa', 'pesqu', 'acuicol', 'maricultur', 'conch', 'abanic', 'langostin', 'barc', 'embarcac', 'haccp', 'congel', 'pesc', 'harin', 'mar', 'bahia',
+            'mall', 'curs', 'mater', 'asignatur', 'plan', 'estudi', 'silab', 'ciclo', 'primer', 'segund', 'tercer', 'cuart', 'quint', 'sext',
+            'carrer', 'ofert', 'opcion', 'programas', 'cuant', 'dur', 'ao', 'semestr', 'cicl', 'modul', 'titul', 'nacion', 'minedu', 'efsrt', 'practic', 'ingles', 'proyect', 'sustent',
             'matricul', 'cost', 'pag', 'gratis', 'mensual', 'pension', 'cuot', 'tupa', 'tas', 'gratuit', 'public',
-            'admis', 'examen', 'postul', 'ingres', 'requisit', 'pre', 'tecno', 'fech', 'cronogram', 'document', 'secundari', 'dni',
+            'admis', 'examen', 'postul', 'ingres', 'requisit', 'pre', 'tecno', 'fech', 'cronogram', 'document', 'secundari', 'dni', 'temari', 'verbal', 'matematic',
             'voucher', 'boucher', 'banc', 'nacion', 'plataform', 'regist', 'operac', 'adjunt', 'valid',
             'bolet', 'comprobant', 'descarg', 'consult', 'electron',
             'mes', 'part', 'tramit', 'constanci', 'record', 'not', 'egresad', 'fut', 'solicitud',
             'convalid', 'univers', 'sunedu', 'bachiller', 'licenciatur', 'ley', '30512',
-            'turn', 'horari', 'maana', 'tard', 'noch', 'diurn', 'taller', 'laboratori', 'clas',
-            'edad', 'limit', 'mayor', 'ao', 'viej', 'requisito',
-            'conveni', 'practic', 'empres', 'puerto', 'paita', 'euroandin', 'tpe', 'bols', 'emple', 'trabaj',
-            'bec', '18', 'pronabec', 'benefici', 'ayud', 'pobr', 'subvenc',
-            'ubicac', 'dond', 'qued', 'direcc', 'telefon', 'whatsapp', 'llegar', 'sede', 'parqu', 'grau', 'ciud',
-            'histori', 'herman', 'carcam', 'heroes', 'quien', 'fundac', 'aniversari', 'gore', 'millon', 'invers',
+            'turn', 'horari', 'maana', 'tard', 'noch', 'diurn', 'taller', 'laboratori', 'clas', 'asistenci',
+            'edad', 'limit', 'mayor', 'viej', 'requisito',
+            'conveni', 'empres', 'puerto', 'paita', 'euroandin', 'tpe', 'bols', 'emple', 'trabaj',
+            'bec', '18', 'pronabec', 'benefici', 'ayud', 'pobr', 'subvenc', 'sisfoh', 'laptop',
+            'pasaj', 'carnet', 'medi', 'descuent', 'bus', 'transpor', 'combi', 'rut', 'llegar', 'terminal', 'piur', 'sullan',
+            'siga', 'plataform', 'not', 'asistenci', 'virtual', 'intranet',
+            'bibliotec', 'libr', 'virtual', 'lectur', 'digital', 'drep',
+            'ubicac', 'dond', 'qued', 'direcc', 'telefon', 'whatsapp', 'sede', 'parqu', 'grau', 'ciud',
+            'histori', 'herman', 'carcam', 'heroes', 'fundac', 'aniversari', 'gore', 'millon', 'invers', 'autorid', 'director',
             'simul', 'calcul', 'cuanto', 'pagar', 'liquid', 'presupuest', 'simulador',
-            'map', 'instalac', 'campus', 'pabellon', 'aulas', 'ambientes', 'donde', 'queda',
+            'map', 'instalac', 'campus', 'pabellon', 'aulas', 'ambientes',
+            'cread', 'autor', 'gerson', 'gmph', 'desarrollad', 'programad', 'quien', 'eres',
+            'defin', 'concept', 'signific', 'python', 'javascript', 'docker', 'api', 'cibersegur',
             'hol', 'buen', 'dia', 'tard', 'noch', 'salud', 'hey', 'alo',
             'graci', 'agradec', 'excelent', 'genial', 'graciass', 'amabl', 'chau', 'adios'
         ];
 
-        // Dimensiones
         this.inputDim = this.vocabulary.length;
         this.hidden1Dim = 36;
         this.hidden2Dim = 18;
         this.outputDim = this.intents.length;
 
-        // Matrices de pesos y sesgos
         this.W1 = [];
         this.b1 = new Float32Array(this.hidden1Dim);
         this.W2 = [];
@@ -110,92 +126,86 @@ class HercarNeuralNetwork {
         this.W3 = [];
         this.b3 = new Float32Array(this.outputDim);
 
-        // Estado del entrenamiento
         this.isTrained = false;
         this.trainingLoss = 0.0;
         this.trainingAccuracy = 0.0;
         this.lastInference = null;
 
-        // Inicializar arquitectura y pesos sinápticos
         this.initWeights();
-        this.bootstrapTraining();
+        this.trainNetwork();
     }
 
-    /**
-     * Inicialización de Xavier/Glorot para estabilidad del gradiente
-     */
     initWeights() {
-        const randGlorot = (fanIn, fanOut) => {
-            const limit = Math.sqrt(6.0 / (fanIn + fanOut));
-            return (Math.random() * 2 * limit) - limit;
-        };
-
-        // W1: inputDim x hidden1Dim
-        this.W1 = [];
+        const xavier1 = Math.sqrt(6.0 / (this.inputDim + this.hidden1Dim));
+        this.W1 = new Array(this.inputDim);
         for (let i = 0; i < this.inputDim; i++) {
-            const row = new Float32Array(this.hidden1Dim);
+            this.W1[i] = new Float32Array(this.hidden1Dim);
             for (let j = 0; j < this.hidden1Dim; j++) {
-                row[j] = randGlorot(this.inputDim, this.hidden1Dim);
+                this.W1[i][j] = (Math.random() * 2 - 1) * xavier1;
             }
-            this.W1.push(row);
         }
 
-        // W2: hidden1Dim x hidden2Dim
-        this.W2 = [];
-        for (let i = 0; i < this.hidden1Dim; i++) {
-            const row = new Float32Array(this.hidden2Dim);
-            for (let j = 0; j < this.hidden2Dim; j++) {
-                row[j] = randGlorot(this.hidden1Dim, this.hidden2Dim);
+        const xavier2 = Math.sqrt(6.0 / (this.hidden1Dim + this.hidden2Dim));
+        this.W2 = new Array(this.hidden1Dim);
+        for (let j = 0; j < this.hidden1Dim; j++) {
+            this.W2[j] = new Float32Array(this.hidden2Dim);
+            for (let k = 0; k < this.hidden2Dim; k++) {
+                this.W2[j][k] = (Math.random() * 2 - 1) * xavier2;
             }
-            this.W2.push(row);
         }
 
-        // W3: hidden2Dim x outputDim
-        this.W3 = [];
-        for (let i = 0; i < this.hidden2Dim; i++) {
-            const row = new Float32Array(this.outputDim);
-            for (let j = 0; j < this.outputDim; j++) {
-                row[j] = randGlorot(this.hidden2Dim, this.outputDim);
+        const xavier3 = Math.sqrt(6.0 / (this.hidden2Dim + this.outputDim));
+        this.W3 = new Array(this.hidden2Dim);
+        for (let k = 0; k < this.hidden2Dim; k++) {
+            this.W3[k] = new Float32Array(this.outputDim);
+            for (let l = 0; l < this.outputDim; l++) {
+                this.W3[k][l] = (Math.random() * 2 - 1) * xavier3;
             }
-            this.W3.push(row);
         }
     }
 
-    /**
-     * Funciones de Activación
-     */
     leakyRelu(x) {
         return x > 0 ? x : 0.01 * x;
+    }
+
+    dLeakyRelu(x) {
+        return x > 0 ? 1.0 : 0.01;
     }
 
     tanh(x) {
         return Math.tanh(x);
     }
 
-    softmax(arr) {
-        let maxVal = -Infinity;
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] > maxVal) maxVal = arr[i];
-        }
-        const expArr = new Float32Array(arr.length);
-        let sumExp = 0.0;
-        for (let i = 0; i < arr.length; i++) {
-            expArr[i] = Math.exp(arr[i] - maxVal);
-            sumExp += expArr[i];
-        }
-        for (let i = 0; i < arr.length; i++) {
-            expArr[i] /= (sumExp || 1.0);
-        }
-        return expArr;
+    dTanh(x) {
+        const t = Math.tanh(x);
+        return 1.0 - t * t;
     }
 
-    /**
-     * Vectorizador de Texto (Bag-of-Words Normalizado)
-     */
+    softmax(arr) {
+        let max = -Infinity;
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] > max) max = arr[i];
+        }
+        const exps = new Float32Array(arr.length);
+        let sum = 0.0;
+        for (let i = 0; i < arr.length; i++) {
+            exps[i] = Math.exp(arr[i] - max);
+            sum += exps[i];
+        }
+        for (let i = 0; i < arr.length; i++) {
+            exps[i] /= (sum || 1.0);
+        }
+        return exps;
+    }
+
     vectorize(text) {
-        const clean = text
-            .toLowerCase()
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // sin tildes
+        if (!text || typeof text !== 'string') {
+            return { vector: new Float32Array(this.inputDim), matchedTokens: [] };
+        }
+
+        const clean = text.toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
             .replace(/[^a-z0-9\s]/g, ' ')
             .trim();
 
@@ -215,7 +225,6 @@ class HercarNeuralNetwork {
             }
         });
 
-        // Normalización L2 del vector para estabilidad
         let norm = 0.0;
         for (let i = 0; i < vector.length; i++) {
             norm += vector[i] * vector[i];
@@ -230,11 +239,7 @@ class HercarNeuralNetwork {
         return { vector, matchedTokens };
     }
 
-    /**
-     * Propagación hacia adelante (Forward Pass)
-     */
     forward(inputVector) {
-        // Capa Oculta 1: h1 = LeakyReLU(input * W1 + b1)
         const h1 = new Float32Array(this.hidden1Dim);
         for (let j = 0; j < this.hidden1Dim; j++) {
             let sum = this.b1[j];
@@ -244,7 +249,6 @@ class HercarNeuralNetwork {
             h1[j] = this.leakyRelu(sum);
         }
 
-        // Capa Oculta 2: h2 = Tanh(h1 * W2 + b2)
         const h2 = new Float32Array(this.hidden2Dim);
         for (let k = 0; k < this.hidden2Dim; k++) {
             let sum = this.b2[k];
@@ -254,7 +258,6 @@ class HercarNeuralNetwork {
             h2[k] = this.tanh(sum);
         }
 
-        // Capa de Salida: z = h2 * W3 + b3; out = Softmax(z)
         const z = new Float32Array(this.outputDim);
         for (let l = 0; l < this.outputDim; l++) {
             let sum = this.b3[l];
@@ -268,9 +271,6 @@ class HercarNeuralNetwork {
         return { h1, h2, out };
     }
 
-    /**
-     * Conjunto de Datos de Entrenamiento (150+ patrones institucionales)
-     */
     getTrainingData() {
         return [
             // Test vocacional
@@ -286,200 +286,191 @@ class HercarNeuralNetwork {
             { q: 'que es arquitectura de plataformas y servicios ti', intent: 'carrera_apsti' },
             { q: 'carrera de computacion e informatica sistemas y programacion', intent: 'carrera_apsti' },
             { q: 'desarrollo de software y redes de comunicacion cisco', intent: 'carrera_apsti' },
-            { q: 'apsti campo laboral y malla curricular de sistemas', intent: 'carrera_apsti' },
-            { q: 'ensenan programacion web aplicaciones servidores y base de datos', intent: 'carrera_apsti' },
-            { q: 'informacion sobre la carrera tecnica de tecnologia y redes', intent: 'carrera_apsti' },
+            { q: 'apsti campo laboral de sistemas y servidores cloud', intent: 'carrera_apsti' },
 
             // ANI
             { q: 'carrera de administracion de negocios internacionales ani', intent: 'carrera_ani' },
             { q: 'comercio exterior aduanas y logistica portuaria', intent: 'carrera_ani' },
             { q: 'exportacion e importacion en el puerto de paita', intent: 'carrera_ani' },
             { q: 'que hace un egresado de negocios internacionales', intent: 'carrera_ani' },
-            { q: 'malla de ani fletes maritimos y contenedores', intent: 'carrera_ani' },
 
             // Contabilidad
-            { q: 'carrera de contabilidad y finanzas', intent: 'carrera_contabilidad' },
-            { q: 'tributacion sunat libros electronicos y auditoria', intent: 'carrera_contabilidad' },
-            { q: 'estudiar contabilidad balance general y estados financieros', intent: 'carrera_contabilidad' },
-            { q: 'estudios contables bancos y gestion tributaria', intent: 'carrera_contabilidad' },
+            { q: 'carrera de contabilidad finanzas y tributacion sunat', intent: 'carrera_contabilidad' },
+            { q: 'quiero ser contador estudiar contabilidad en paita', intent: 'carrera_contabilidad' },
+            { q: 'auditoria costos balance y libros electronicos sire', intent: 'carrera_contabilidad' },
 
             // DPA
             { q: 'carrera de desarrollo pesquero y acuicola dpa', intent: 'carrera_dpa' },
-            { q: 'maricultura cultivo de conchas de abanico y langostinos', intent: 'carrera_dpa' },
-            { q: 'pesqueria navegacion y practicas en barco propio', intent: 'carrera_dpa' },
-            { q: 'plantas pesqueras congeladoras conservas y control de calidad haccp', intent: 'carrera_dpa' },
+            { q: 'pesqueria acuicultura cultivo de conchas de abanico y langostinos', intent: 'carrera_dpa' },
+            { q: 'embarcacion pesquera propia practicas de maricultura haccp', intent: 'carrera_dpa' },
+
+            // Mallas Curriculares
+            { q: 'cual es la malla curricular de apsti', intent: 'malla_curricular' },
+            { q: 'que cursos llevan en primer ciclo de negocios internacionales', intent: 'malla_curricular' },
+            { q: 'plan de estudios y materias de contabilidad', intent: 'malla_curricular' },
+            { q: 'malla de desarrollo pesquero y acuicola semestres', intent: 'malla_curricular' },
+            { q: 'que asignaturas y cursos se ensenan en cada semestre', intent: 'malla_curricular' },
 
             // Todas las carreras
-            { q: 'que carreras tecnicas ofrece el instituto', intent: 'todas_carreras' },
-            { q: 'cuales son las cuatro carreras del hercar', intent: 'todas_carreras' },
-            { q: 'oferta educativa y carreras disponibles en paita', intent: 'todas_carreras' },
-            { q: 'que se puede estudiar en el instituto tecnologico', intent: 'todas_carreras' },
+            { q: 'que carreras tecnicas ofrece el instituto hercar', intent: 'todas_carreras' },
+            { q: 'cuales son los programas profesionales para estudiar', intent: 'todas_carreras' },
+            { q: 'oferta academica del instituto hermanos carcamo paita', intent: 'todas_carreras' },
 
-            // Matricula y Costos
-            { q: 'cuanto cuesta la matricula y cuales son los costos', intent: 'matricula_costos' },
-            { q: 'cuanto se paga de mensualidad o pension', intent: 'matricula_costos' },
-            { q: 'el instituto es gratis o cobran pension mensual', intent: 'matricula_costos' },
-            { q: 'pago por semestre tupa costo de ensenanza publica', intent: 'matricula_costos' },
-            { q: 'requisitos de matricula para cachimbos y regulares', intent: 'matricula_costos' },
+            // Matrícula y Costos
+            { q: 'cuanto cuesta la matricula y la mensualidad', intent: 'matricula_costos' },
+            { q: 'es gratis el instituto se pagan pensiones mensuales', intent: 'matricula_costos' },
+            { q: 'costos tupa pago por semestre instituto publico', intent: 'matricula_costos' },
 
-            // Admision
-            { q: 'cuando es el examen de admision y como postulo', intent: 'admision_examen' },
-            { q: 'requisitos para ingresar al instituto examen ordinario', intent: 'admision_examen' },
-            { q: 'fechas de admision cronograma de postulacion 2026', intent: 'admision_examen' },
-            { q: 'modalidades de ingreso exonerados y academia pre', intent: 'admision_examen' },
+            // Admisión
+            { q: 'cuando es el examen de admision y requisitos para postular', intent: 'admision_examen' },
+            { q: 'como ingresar al instituto pre tecno exonerados', intent: 'admision_examen' },
+            { q: 'documentos para inscribirme al examen de admision', intent: 'admision_examen' },
+
+            // Temario Examen
+            { q: 'cual es el temario del examen de admision', intent: 'temario_admision' },
+            { q: 'que temas vienen en el examen para ingresar', intent: 'temario_admision' },
+            { q: 'como prepararme para la prueba de conocimientos y verbal', intent: 'temario_admision' },
+
+            // Titulación y EFSRT
+            { q: 'cuales son los requisitos para titularme en el instituto', intent: 'titulacion_efsrt' },
+            { q: 'como saco mi titulo profesional tecnico a nombre de la nacion', intent: 'titulacion_efsrt' },
+            { q: 'que son las efsrt y practicas preprofesionales', intent: 'titulacion_efsrt' },
+            { q: 'examen de suficiencia o sustentacion de proyecto para titulo', intent: 'titulacion_efsrt' },
 
             // Pagos y Vouchers
-            { q: 'como registro mi voucher en pagos ieshercar edu pe', intent: 'pagos_vouchers' },
-            { q: 'donde se paga banco de la nacion comprobante de pago', intent: 'pagos_vouchers' },
-            { q: 'numero de operacion y como validar el boucher', intent: 'pagos_vouchers' },
-            { q: 'plataforma de pagos virtuales del instituto registro', intent: 'pagos_vouchers' },
+            { q: 'como registro mi voucher de pago en pagos ieshercar', intent: 'pagos_vouchers' },
+            { q: 'donde se paga el banco de la nacion y subir voucher', intent: 'pagos_vouchers' },
 
             // Boletas
-            { q: 'como descargo mi boleta de pago electronica', intent: 'boletas_electronicas' },
+            { q: 'como descargar mi boleta de venta electronica con dni', intent: 'boletas_electronicas' },
             { q: 'consulta de boletas en sistema ieshercar', intent: 'boletas_electronicas' },
-            { q: 'comprobante oficial de pago boletas virtuales dni', intent: 'boletas_electronicas' },
 
-            // Mesa de Partes
-            { q: 'mesa de partes virtual tramites y solicitudes', intent: 'mesa_partes_tramites' },
-            { q: 'como pido una constancia de estudios o record de notas', intent: 'mesa_partes_tramites' },
-            { q: 'tramite de certificado de egresado o titulacion fut', intent: 'mesa_partes_tramites' },
-            { q: 'secretaria academica tramites documentarios online', intent: 'mesa_partes_tramites' },
+            // Mesa de partes
+            { q: 'tramite en mesa de partes virtual constancia de estudios fut', intent: 'mesa_partes_tramites' },
+            { q: 'como solicitar record de notas o certificado modular', intent: 'mesa_partes_tramites' },
 
-            // Duracion
-            { q: 'cuanto tiempo duran las carreras tecnicas', intent: 'duracion_semestres' },
-            { q: 'cuantos anos y semestres son tres anos', intent: 'duracion_semestres' },
-            { q: 'certificaciones modulares anuales duracion ciclos', intent: 'duracion_semestres' },
+            // Beca 18
+            { q: 'tienen beca 18 de pronabec requisitos para postular', intent: 'becas_beneficios' },
+            { q: 'beca permanencia laptop y ayuda economica mensual', intent: 'becas_beneficios' },
 
-            // Convalidacion
-            { q: 'se puede convalidar con universidades licenciadas por sunedu', intent: 'convalidacion_sunedu' },
-            { q: 'convalidacion universitaria ley 30512 bachiller y licenciatura', intent: 'convalidacion_sunedu' },
-            { q: 'puedo seguir estudios en la universidad despues de egresar', intent: 'convalidacion_sunedu' },
+            // Carnet y Pasaje
+            { q: 'como tramito el carnet de medio pasaje minedu', intent: 'carnet_pasaje' },
+            { q: 'descuento de pasaje en combis para estudiantes', intent: 'carnet_pasaje' },
 
-            // Titulo Oficial
-            { q: 'el titulo es a nombre de la nacion por minedu', intent: 'titulo_oficial' },
-            { q: 'titulo profesional tecnico oficial validez nacional', intent: 'titulo_oficial' },
+            // Transporte / Cómo llegar
+            { q: 'como llego al instituto desde piura o sullana', intent: 'como_llegar_transporte' },
+            { q: 'donde queda la parada de combis urbano paita alta parque', intent: 'como_llegar_transporte' },
 
-            // Turnos y Horarios
-            { q: 'en que turnos y horarios se dictan las clases', intent: 'turnos_horarios' },
-            { q: 'hay turno tarde noche o solo manana horario diurno', intent: 'turnos_horarios' },
-            { q: 'horarios de laboratorio y talleres practicos', intent: 'turnos_horarios' },
+            // SIGA Web
+            { q: 'como entro al sistema siga para ver mis notas', intent: 'plataforma_siga' },
+            { q: 'intranet o aula virtual para ver calificaciones y asistencia', intent: 'plataforma_siga' },
 
-            // Edad Limite
-            { q: 'hay limite de edad para postular o estudiar', intent: 'edad_limite' },
-            { q: 'tengo mas de treinta anos puedo estudiar en el instituto', intent: 'edad_limite' },
-            { q: 'hasta que edad se puede ingresar secundaria completa', intent: 'edad_limite' },
+            // Biblioteca Virtual
+            { q: 'como ingreso a la biblioteca virtual para leer libros', intent: 'biblioteca_virtual' },
+            { q: 'libros digitales de computacion o comercio biblioteca drep', intent: 'biblioteca_virtual' },
 
-            // Convenios y Practicas
-            { q: 'tienen convenios para practicas preprofesionales con empresas', intent: 'convenios_practicas' },
-            { q: 'donde se hacen las practicas en el puerto de paita bolsa laboral', intent: 'convenios_practicas' },
-            { q: 'convenios con terminal portuario euroandinos y empresas pesqueras', intent: 'convenios_practicas' },
+            // Simulador y Mapa
+            { q: 'abrir el simulador de matricula y cuotas tupa', intent: 'simulador_tupa' },
+            { q: 'ver el mapa del campus e instalaciones laboratorios', intent: 'mapa_campus' },
 
-            // Becas
-            { q: 'tienen beca 18 o apoyo economico del pronabec', intent: 'becas_beneficios' },
-            { q: 'beneficios para alumnos destacados y becas de estudio', intent: 'becas_beneficios' },
+            // Quién te creó
+            { q: 'quien te creo quien es tu autor o desarrollador', intent: 'quien_te_creo' },
+            { q: 'quien desarrollo esta inteligencia artificial hercaria', intent: 'quien_te_creo' },
 
-            // Ubicacion
-            { q: 'donde queda el instituto direccion en paita', intent: 'ubicacion_contacto' },
-            { q: 'ubicacion sede paita telefonos y como llegar', intent: 'ubicacion_contacto' },
-            { q: 'avenida miguel grau urbanizacion el parque telefono', intent: 'ubicacion_contacto' },
+            // Conceptos técnicos
+            { q: 'que es programacion que lenguajes ensenan en apsti', intent: 'conceptos_tecnologia' },
+            { q: 'que es un contenedor reefer o incoterms en negocios', intent: 'conceptos_tecnologia' },
 
-            // Historia
-            { q: 'quienes fueron los hermanos carcamo resena historica', intent: 'historia_institucion' },
-            { q: 'historia del instituto proyecto gore piura 36 millones', intent: 'historia_institucion' },
+            // Convalidación
+            { q: 'puedo convalidar con una universidad licenciada por sunedu', intent: 'convalidacion_sunedu' },
 
-            // Simulador TUPA
-            { q: 'quiero simular el pago de mi matricula simulador tupa', intent: 'simulador_tupa' },
-            { q: 'calcular cuanto pagare de tasas y matricula calculadora', intent: 'simulador_tupa' },
-            { q: 'simulador de costos de tramites y constancias', intent: 'simulador_tupa' },
+            // Ubicación y Contacto
+            { q: 'donde queda el instituto direccion telefono whatsapp', intent: 'ubicacion_contacto' },
 
-            // Mapa Campus
-            { q: 'ver mapa interactivo del campus e instalaciones', intent: 'mapa_campus' },
-            { q: 'donde estan los laboratorios de computo y talleres croquis', intent: 'mapa_campus' },
-            { q: 'instalaciones pabellones y plano del instituto', intent: 'mapa_campus' },
-
-            // Saludos
-            { q: 'hola buenos dias que tal', intent: 'saludo' },
-            { q: 'buenas tardes hercaria me puedes ayudar', intent: 'saludo' },
-            { q: 'hola soy nuevo postulante', intent: 'saludo' },
-
-            // Agradecimiento
-            { q: 'muchas gracias por tu respuesta excelente ayuda', intent: 'agradecimiento' },
-            { q: 'gracias me quedo muy claro todo adios', intent: 'agradecimiento' }
+            // Saludo y Agradecimiento
+            { q: 'hola buenos dias como estas', intent: 'saludo' },
+            { q: 'muchas gracias por tu ayuda excelente orientacion', intent: 'agradecimiento' }
         ];
     }
 
-    /**
-     * Entrenamiento Ligero en Tiempo de Carga (Bootstrap Training)
-     * Ejecuta 40 épocas en menos de 45 milisegundos gracias a vectores optimizados.
-     */
-    bootstrapTraining() {
+    trainNetwork() {
         const dataset = this.getTrainingData();
-        const lr = 0.085; // Tasa de aprendizaje
-        const epochs = 35;
+        const epochs = 45;
+        const lr = 0.08;
 
-        for (let ep = 0; ep < epochs; ep++) {
+        for (let epoch = 0; epoch < epochs; epoch++) {
             let totalLoss = 0.0;
             let correct = 0;
 
-            for (let i = 0; i < dataset.length; i++) {
-                const item = dataset[i];
-                const { vector } = this.vectorize(item.q);
-                const targetIdx = this.intents.indexOf(item.intent);
+            for (let s = 0; s < dataset.length; s++) {
+                const sample = dataset[s];
+                const { vector } = this.vectorize(sample.q);
+                const targetIdx = this.intents.indexOf(sample.intent);
                 if (targetIdx === -1) continue;
 
-                // Forward
                 const { h1, h2, out } = this.forward(vector);
 
-                // Loss (Cross Entropy)
-                const targetProb = Math.max(out[targetIdx], 1e-7);
-                totalLoss += -Math.log(targetProb);
+                const prob = Math.max(out[targetIdx], 1e-7);
+                totalLoss += -Math.log(prob);
 
-                let maxOutIdx = 0;
-                for (let k = 1; k < out.length; k++) {
-                    if (out[k] > out[maxOutIdx]) maxOutIdx = k;
+                let maxOut = -1;
+                let predictedIdx = 0;
+                for (let i = 0; i < this.outputDim; i++) {
+                    if (out[i] > maxOut) {
+                        maxOut = out[i];
+                        predictedIdx = i;
+                    }
                 }
-                if (maxOutIdx === targetIdx) correct++;
+                if (predictedIdx === targetIdx) correct++;
 
-                // Backprop (Gradiente de Salida)
+                // Retropropagación (Backpropagation)
                 const dZ = new Float32Array(this.outputDim);
-                for (let k = 0; k < this.outputDim; k++) {
-                    dZ[k] = out[k] - (k === targetIdx ? 1.0 : 0.0);
+                for (let i = 0; i < this.outputDim; i++) {
+                    dZ[i] = out[i] - (i === targetIdx ? 1.0 : 0.0);
                 }
 
-                // Gradientes Capa 3 -> W3 y b3
                 const dH2 = new Float32Array(this.hidden2Dim);
                 for (let k = 0; k < this.hidden2Dim; k++) {
                     let grad = 0.0;
                     for (let l = 0; l < this.outputDim; l++) {
                         grad += dZ[l] * this.W3[k][l];
-                        this.W3[k][l] -= lr * dZ[l] * h2[k];
                     }
-                    dH2[k] = grad * (1.0 - h2[k] * h2[k]); // Derivada de Tanh
-                }
-                for (let l = 0; l < this.outputDim; l++) {
-                    this.b3[l] -= lr * dZ[l];
+                    dH2[k] = grad * this.dTanh(h2[k]);
                 }
 
-                // Gradientes Capa 2 -> W2 y b2
                 const dH1 = new Float32Array(this.hidden1Dim);
                 for (let j = 0; j < this.hidden1Dim; j++) {
                     let grad = 0.0;
                     for (let k = 0; k < this.hidden2Dim; k++) {
                         grad += dH2[k] * this.W2[j][k];
+                    }
+                    dH1[j] = grad * this.dLeakyRelu(h1[j]);
+                }
+
+                // Actualizar pesos W3 y b3
+                for (let k = 0; k < this.hidden2Dim; k++) {
+                    for (let l = 0; l < this.outputDim; l++) {
+                        this.W3[k][l] -= lr * dZ[l] * h2[k];
+                    }
+                }
+                for (let l = 0; l < this.outputDim; l++) {
+                    this.b3[l] -= lr * dZ[l];
+                }
+
+                // Actualizar pesos W2 y b2
+                for (let j = 0; j < this.hidden1Dim; j++) {
+                    for (let k = 0; k < this.hidden2Dim; k++) {
                         this.W2[j][k] -= lr * dH2[k] * h1[j];
                     }
-                    dH1[j] = grad * (h1[j] > 0 ? 1.0 : 0.01); // Derivada LeakyReLU
                 }
                 for (let k = 0; k < this.hidden2Dim; k++) {
                     this.b2[k] -= lr * dH2[k];
                 }
 
-                // Gradientes Capa 1 -> W1 y b1
-                for (let m = 0; m < this.inputDim; m++) {
-                    if (vector[m] !== 0) {
-                        for (let j = 0; j < this.hidden1Dim; j++) {
-                            this.W1[m][j] -= lr * dH1[j] * vector[m];
-                        }
+                // Actualizar pesos W1 y b1
+                for (let i = 0; i < this.inputDim; i++) {
+                    for (let j = 0; j < this.hidden1Dim; j++) {
+                        this.W1[i][j] -= lr * dH1[j] * vector[i];
                     }
                 }
                 for (let j = 0; j < this.hidden1Dim; j++) {
@@ -488,88 +479,63 @@ class HercarNeuralNetwork {
             }
 
             this.trainingLoss = totalLoss / dataset.length;
-            this.trainingAccuracy = (correct / dataset.length) * 100;
+            this.trainingAccuracy = correct / dataset.length;
         }
 
         this.isTrained = true;
-        console.log(`[Red Neuronal APSTI]: Inicializada con éxito. Loss: ${this.trainingLoss.toFixed(4)}, Precisión: ${this.trainingAccuracy.toFixed(1)}%`);
     }
 
-    /**
-     * Inferencia Neuronal en Tiempo Real
-     * @param {string} rawText Texto ingresado por el usuario
-     * @returns {Object} Resultado con intención, confianza, métricas y activaciones
-     */
-    predict(rawText) {
-        const startTime = performance.now();
-        const { vector, matchedTokens } = this.vectorize(rawText);
+    predict(rawQuery) {
+        const tStart = performance.now();
+        const { vector, matchedTokens } = this.vectorize(rawQuery);
         const { h1, h2, out } = this.forward(vector);
-        const endTime = performance.now();
+        const tEnd = performance.now();
+        const latencyMs = Math.max(0.1, Number((tEnd - tStart).toFixed(2)));
 
-        // Ordenar probabilidades de mayor a menor
-        const ranking = [];
-        for (let i = 0; i < out.length; i++) {
-            ranking.push({
+        const sorted = [];
+        for (let i = 0; i < this.outputDim; i++) {
+            sorted.push({
                 intent: this.intents[i],
                 label: this.intentLabels[this.intents[i]] || this.intents[i],
-                prob: out[i]
+                probability: out[i]
             });
         }
-        ranking.sort((a, b) => b.prob - a.prob);
+        sorted.sort((a, b) => b.probability - a.probability);
 
-        const top = ranking[0];
-        const latencyMs = Math.max(0.1, Number((endTime - startTime).toFixed(2)));
-
-        // Regla de salvaguarda semántica: si no hay tokens coincidentes y la confianza es baja
-        let finalIntent = top.intent;
-        let finalConfidence = top.prob;
-
-        if (matchedTokens.length === 0 && top.prob < 0.40) {
-            finalIntent = 'desconocido';
-            finalConfidence = 0.50;
-        }
+        const best = sorted[0];
+        const isUnknown = matchedTokens.length === 0 && best.probability < 0.25;
 
         const result = {
-            intent: finalIntent,
-            label: this.intentLabels[finalIntent] || finalIntent,
-            confidence: Number(finalConfidence.toFixed(4)),
-            confidencePercent: (finalConfidence * 100).toFixed(1) + '%',
+            query: rawQuery,
+            intent: isUnknown ? 'desconocido' : best.intent,
+            label: isUnknown ? 'Consulta General / Semántica' : best.label,
+            confidence: isUnknown ? 0.20 : best.probability,
+            confidencePercent: Math.round((isUnknown ? 0.20 : best.probability) * 100) + '%',
             latencyMs: latencyMs,
             tokens: matchedTokens,
-            topK: ranking.slice(0, 3),
-            hiddenActivations: {
-                layer1Sample: Array.from(h1.slice(0, 8)).map(v => Number(v.toFixed(3))),
-                layer2Sample: Array.from(h2.slice(0, 6)).map(v => Number(v.toFixed(3)))
-            },
-            query: rawText,
-            timestamp: new Date()
+            topK: sorted.slice(0, 5),
+            hidden1Activations: Array.from(h1),
+            hidden2Activations: Array.from(h2)
         };
 
         this.lastInference = result;
         return result;
     }
 
-    /**
-     * Devuelve las métricas técnicas del modelo para el Visor Inspector
-     */
     getNetworkMetrics() {
         return {
-            architecture: 'Multi-Layer Perceptron (MLP) Feedforward',
-            inputDimensions: this.inputDim,
-            hiddenLayer1: `${this.hidden1Dim} neuronas (LeakyReLU)`,
-            hiddenLayer2: `${this.hidden2Dim} neuronas (Tanh)`,
-            outputClasses: `${this.outputDim} clases (Softmax)`,
+            inputDim: this.inputDim,
+            hidden1Dim: this.hidden1Dim,
+            hidden2Dim: this.hidden2Dim,
+            outputDim: this.outputDim,
             totalSynapticWeights: (this.inputDim * this.hidden1Dim) + (this.hidden1Dim * this.hidden2Dim) + (this.hidden2Dim * this.outputDim),
-            vocabularySize: this.vocabulary.length,
-            trainingSamples: this.getTrainingData().length,
-            accuracy: `${this.trainingAccuracy.toFixed(1)}%`,
-            loss: this.trainingLoss.toFixed(4),
-            specialization: 'Carrera Profesional Técnica de APSTI - IESTP Hermanos Cárcamo'
+            accuracyPercent: Math.round(this.trainingAccuracy * 100) + '%',
+            lossScore: this.trainingLoss.toFixed(4)
         };
     }
 }
 
-// Exportación para navegador y entornos node
+// Export para uso en navegador y Node
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = HercarNeuralNetwork;
 }
