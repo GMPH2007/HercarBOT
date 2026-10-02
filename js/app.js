@@ -21,9 +21,14 @@ class HercarChatApp {
         this.btnNewChatEl = document.getElementById('btn-new-chat');
         this.btnStartTestSidebarEl = document.getElementById('btn-start-test-sidebar');
 
+        // Motor de Red Neuronal Artificial (APSTI)
+        this.neuralNet = new HercarNeuralNetwork();
+        this.lastNeuralInference = null;
+
         this.isTyping = false;
         this.history = [];
 
+        this.initSimuladorData();
         this.init();
     }
 
@@ -32,6 +37,7 @@ class HercarChatApp {
         window.hercarApp = this;
         window.hercarTest = this.testEngine;
         window.hercarVoice = this.voiceEngine;
+        window.hercarNeural = this.neuralNet;
 
         this.setupEventListeners();
         this.setupVoiceFeedback();
@@ -126,6 +132,61 @@ class HercarChatApp {
                 this.testEngine.iniciar();
             });
         }
+
+        // Herramientas Inteligentes APSTI en Sidebar
+        const btnOpenSim = document.getElementById('btn-open-simulador');
+        if (btnOpenSim) {
+            btnOpenSim.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
+                this.abrirSimuladorTUPA();
+            });
+        }
+
+        const btnOpenMap = document.getElementById('btn-open-mapa');
+        if (btnOpenMap) {
+            btnOpenMap.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
+                this.abrirMapaCampus();
+            });
+        }
+
+        const btnOpenNeural = document.getElementById('btn-open-neural-monitor');
+        if (btnOpenNeural) {
+            btnOpenNeural.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
+                this.abrirInspectorNeuronal();
+            });
+        }
+
+        const headerNeuralInd = document.getElementById('header-neural-indicator');
+        if (headerNeuralInd) {
+            headerNeuralInd.addEventListener('click', () => {
+                this.abrirInspectorNeuronal();
+            });
+        }
+
+        // Laboratorio / Playground de la Red Neuronal
+        const btnPlayground = document.getElementById('btn-run-playground');
+        const inputPlayground = document.getElementById('neural-playground-input');
+        if (btnPlayground && inputPlayground) {
+            const runTest = () => {
+                const val = inputPlayground.value.trim();
+                if (val) this.abrirInspectorNeuronal(val);
+            };
+            btnPlayground.addEventListener('click', runTest);
+            inputPlayground.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') runTest();
+            });
+        }
+
+        // Cerrar modales al hacer clic en el backdrop
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    this.cerrarTodosLosModales();
+                }
+            });
+        });
 
         // Toggle Sidebar en móviles (drawer con overlay) y en desktop (colapso completo)
         const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -261,9 +322,23 @@ class HercarChatApp {
         this.addUserMessage(query);
         this.mostrarTypingIndicator();
 
+        // 🧠 Inferencia en Tiempo Real de la Red Neuronal (APSTI)
+        const neuralResult = this.neuralNet.predict(query);
+        this.lastNeuralInference = neuralResult;
+        console.log('[Inferencia Red Neuronal]:', neuralResult);
+
+        // Actualizar indicador de cabecera en tiempo real
+        const headerIndicator = document.getElementById('header-neural-indicator');
+        if (headerIndicator) {
+            const textEl = headerIndicator.querySelector('.neural-header-text');
+            if (textEl) {
+                textEl.textContent = `Red Neuronal: ${neuralResult.confidencePercent}`;
+            }
+        }
+
         setTimeout(() => {
             this.removerTypingIndicator();
-            this.procesarRespuestaInteligente(query);
+            this.procesarRespuestaInteligente(query, neuralResult);
         }, 550);
     }
 
@@ -284,15 +359,27 @@ class HercarChatApp {
         this.scrollToBottom();
     }
 
-    addBotMessage(markdownText, autoSpeak = true, spokenText = '') {
+    addBotMessage(markdownText, autoSpeak = true, spokenText = '', neuralResult = null, customFollowUps = null) {
         this.activarAreaChat();
 
-        const msgObj = { sender: 'bot', text: markdownText, timestamp: new Date() };
+        const inference = neuralResult || this.lastNeuralInference || {
+            intent: 'general',
+            confidence: 0.95,
+            confidencePercent: '95.0%',
+            latencyMs: 3.8,
+            tokens: []
+        };
+
+        const msgObj = { sender: 'bot', text: markdownText, timestamp: new Date(), inference: inference };
         this.history.push(msgObj);
 
         const messageEl = document.createElement('div');
         messageEl.className = 'chat-message message-bot';
         const parsedHTML = this.parseMarkdown(markdownText);
+        const followUps = customFollowUps || this.getFollowUpSuggestions(inference.intent);
+
+        const confPct = inference.confidencePercent || (inference.confidence * 100).toFixed(1) + '%';
+        const previewQuery = (inference.query || markdownText.slice(0, 50)).replace(/'/g, "\\'");
 
         messageEl.innerHTML = `
             <div class="bot-avatar">
@@ -302,18 +389,42 @@ class HercarChatApp {
                 <div class="bot-header-meta">
                     <span class="bot-name">HercarIA</span>
                     <span class="bot-badge-tag">Orientadora Oficial</span>
+                    <button type="button" class="btn-neural-badge" title="Ver análisis neuronal de esta consulta" onclick="window.hercarApp.abrirInspectorNeuronal('${previewQuery}')">
+                        🧠 Red Neuronal: ${confPct} <span class="badge-time">(${inference.latencyMs}ms)</span>
+                    </button>
                     <span class="voice-wave-anim" style="display: none;">
                         <span></span><span></span><span></span><span></span>
                     </span>
                 </div>
                 <div class="message-text">${parsedHTML}</div>
+
+                ${followUps && followUps.length > 0 ? `
+                <div class="bot-follow-up-chips">
+                    <span class="follow-up-title">💡 Preguntas relacionadas sugeridas:</span>
+                    <div class="chips-container">
+                        ${followUps.map(chip => `
+                            <button type="button" class="btn-followup-chip" onclick="window.hercarApp.enviarConsultaDirecta('${chip.query.replace(/'/g, "\\'")}')">
+                                ${chip.icon ? `<span class="chip-icon">${chip.icon}</span>` : ''} ${chip.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
                 <div class="message-actions">
-                    <button class="msg-action-btn btn-speak" title="Escuchar respuesta en voz alta">
+                    <button type="button" class="msg-action-btn btn-speak" title="Escuchar respuesta en voz dulce">
                         🔊 Escuchar
                     </button>
-                    <button class="msg-action-btn btn-copy" title="Copiar texto">
+                    <button type="button" class="msg-action-btn btn-copy" title="Copiar texto de respuesta">
                         📋 Copiar
                     </button>
+                    <button type="button" class="msg-action-btn btn-neural-inspect" title="Inspeccionar activación de la Red Neuronal" onclick="window.hercarApp.abrirInspectorNeuronal('${previewQuery}')">
+                        🧠 Red Neuronal
+                    </button>
+                    <div class="msg-rating-group">
+                        <button type="button" class="msg-action-btn btn-rate-up" title="Respuesta útil" onclick="window.hercarApp.calificarRespuesta(this, 'up')">👍</button>
+                        <button type="button" class="msg-action-btn btn-rate-down" title="Respuesta no útil" onclick="window.hercarApp.calificarRespuesta(this, 'down')">👎</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -321,17 +432,22 @@ class HercarChatApp {
         const textoParaHablar = spokenText || markdownText;
 
         const btnSpeak = messageEl.querySelector('.btn-speak');
-        btnSpeak.addEventListener('click', () => {
-            this.voiceEngine.hablar(textoParaHablar);
-        });
+        if (btnSpeak) {
+            btnSpeak.addEventListener('click', () => {
+                this.voiceEngine.hablar(textoParaHablar);
+            });
+        }
 
         const btnCopy = messageEl.querySelector('.btn-copy');
-        btnCopy.addEventListener('click', () => {
-            navigator.clipboard.writeText(markdownText).then(() => {
-                btnCopy.innerHTML = '✅ Copiado';
-                setTimeout(() => btnCopy.innerHTML = '📋 Copiar', 2000);
+        if (btnCopy) {
+            btnCopy.addEventListener('click', () => {
+                navigator.clipboard.writeText(markdownText).then(() => {
+                    this.mostrarToast('✅ ¡Respuesta copiada al portapapeles!');
+                    btnCopy.innerHTML = '✅ Copiado';
+                    setTimeout(() => btnCopy.innerHTML = '📋 Copiar', 2000);
+                });
             });
-        });
+        }
 
         this.chatMessagesEl.appendChild(messageEl);
         this.scrollToBottom();
@@ -527,13 +643,42 @@ class HercarChatApp {
     }
 
     /**
-     * MOTOR DE RESPUESTAS NLP
+     * MOTOR DE RESPUESTAS CON RED NEURONAL ARTIFICIAL (APSTI) + ENSEMBLE SEMÁNTICO
      */
-    procesarRespuestaInteligente(rawQuery) {
+    procesarRespuestaInteligente(rawQuery, neuralResult = null) {
         const q = this.normalizarTexto(rawQuery);
+        const nr = neuralResult || this.neuralNet.predict(rawQuery);
+        this.lastNeuralInference = nr;
 
-        // 1. Detección de Test Vocacional / Orientación
+        // 1. Detección de herramientas interactivas por Red Neuronal
+        if (nr.intent === 'simulador_tupa' && nr.confidence >= 0.40) {
+            this.abrirSimuladorTUPA(nr);
+            return;
+        }
+
+        if (nr.intent === 'mapa_campus' && nr.confidence >= 0.40) {
+            this.abrirMapaCampus(nr);
+            return;
+        }
+
+        if (nr.intent === 'test_vocacional' && nr.confidence >= 0.45) {
+            this.testEngine.iniciar();
+            return;
+        }
+
+        // 2. Detección Ensamble (Red Neuronal + Reglas Semánticas)
+        if (nr.intent === 'simulador_tupa' || q.includes('simular') || q.includes('calculadora') || q.includes('calcular matricula') || q.includes('cuanto pagare')) {
+            this.abrirSimuladorTUPA(nr);
+            return;
+        }
+
+        if (nr.intent === 'mapa_campus' || q.includes('mapa del campus') || q.includes('plano') || q.includes('croquis') || q.includes('donde estan los laboratorios') || q.includes('instalaciones')) {
+            this.abrirMapaCampus(nr);
+            return;
+        }
+
         if (
+            nr.intent === 'test_vocacional' ||
             q.includes('test') || 
             q.includes('vocacional') || 
             q.includes('no se que estudiar') || 
@@ -549,25 +694,31 @@ class HercarChatApp {
             return;
         }
 
-        // 2. Registro de Pagos / Vouchers / Métodos de Pago
+        // Boletas Electrónicas
+        if (nr.intent === 'boletas_electronicas' || q.includes('boleta') || q.includes('comprobante') || q.includes('descargar boleta')) {
+            this.responderBoletasElectronicas(nr);
+            return;
+        }
+
+        // Pagos y Vouchers
         if (
+            nr.intent === 'pagos_vouchers' ||
             q.includes('pago') || 
             q.includes('pagar') || 
             q.includes('voucher') || 
             q.includes('boucher') || 
             q.includes('banco de la nacion') || 
-            q.includes('boleta') || 
-            q.includes('boletas') || 
             q.includes('metodo de pago') ||
             q.includes('donde pago') ||
             q.includes('como pago')
         ) {
-            this.responderMetodosDePago();
+            this.responderMetodosDePago(nr);
             return;
         }
 
-        // 3. Matrícula / Costos de matrícula / Cuánto cuesta
+        // Matrícula y Costos
         if (
+            nr.intent === 'matricula_costos' ||
             q.includes('matricula') || 
             q.includes('matricularme') || 
             q.includes('cuanto cuesta') || 
@@ -577,12 +728,13 @@ class HercarChatApp {
             q.includes('gratis') || 
             q.includes('costo')
         ) {
-            this.responderMatriculaYCostos();
+            this.responderMatriculaYCostos(nr);
             return;
         }
 
-        // 4. Admisión / Examen de admisión / Requisitos para ingresar
+        // Admisión
         if (
+            nr.intent === 'admision_examen' ||
             q.includes('admision') || 
             q.includes('examen') || 
             q.includes('postular') || 
@@ -591,192 +743,114 @@ class HercarChatApp {
             q.includes('academia') || 
             q.includes('requisitos para entrar')
         ) {
-            this.responderAdmision();
+            this.responderAdmision(nr);
             return;
         }
 
-        // 5. Carreras específicas
-        // APSTI (Sistemas)
-        if (
-            q.includes('apsti') || 
-            q.includes('sistema') || 
-            q.includes('sistemas') || 
-            q.includes('computacion') || 
-            q.includes('software') || 
-            q.includes('programacion') || 
-            q.includes('redes') || 
-            q.includes('ti')
-        ) {
-            this.responderCarreraDetalle('apsti');
+        // Carreras específicas
+        if (nr.intent === 'carrera_apsti' || q.includes('apsti') || q.includes('sistema') || q.includes('sistemas') || q.includes('computacion') || q.includes('software') || q.includes('programacion') || q.includes('redes') || q.includes('ti')) {
+            this.responderCarreraDetalle('apsti', nr);
             return;
         }
 
-        // ANI (Negocios Internacionales)
-        if (
-            q.includes('ani') || 
-            q.includes('negocio') || 
-            q.includes('negocios') || 
-            q.includes('internacional') || 
-            q.includes('aduanas') || 
-            q.includes('comercio exterior') || 
-            q.includes('exportacion') || 
-            q.includes('importacion')
-        ) {
-            this.responderCarreraDetalle('ani');
+        if (nr.intent === 'carrera_ani' || q.includes('ani') || q.includes('negocio') || q.includes('negocios') || q.includes('internacional') || q.includes('aduanas') || q.includes('comercio exterior') || q.includes('exportacion') || q.includes('importacion')) {
+            this.responderCarreraDetalle('ani', nr);
             return;
         }
 
-        // Contabilidad
-        if (
-            q.includes('contabilidad') || 
-            q.includes('contador') || 
-            q.includes('tributo') || 
-            q.includes('tributos') || 
-            q.includes('sunat') || 
-            q.includes('finanza') || 
-            q.includes('finanzas')
-        ) {
-            this.responderCarreraDetalle('contabilidad');
+        if (nr.intent === 'carrera_contabilidad' || q.includes('contabilidad') || q.includes('contador') || q.includes('tributo') || q.includes('tributos') || q.includes('sunat') || q.includes('finanza') || q.includes('finanzas')) {
+            this.responderCarreraDetalle('contabilidad', nr);
             return;
         }
 
-        // Desarrollo Pesquero y Acuícola (DPA)
-        if (
-            q.includes('dpa') || 
-            q.includes('pesca') || 
-            q.includes('pesquero') || 
-            q.includes('pesquera') || 
-            q.includes('acuicola') || 
-            q.includes('acuicultura') || 
-            q.includes('mar') || 
-            q.includes('embarcacion')
-        ) {
-            this.responderCarreraDetalle('dpa');
+        if (nr.intent === 'carrera_dpa' || q.includes('dpa') || q.includes('pesca') || q.includes('pesquero') || q.includes('pesquera') || q.includes('acuicola') || q.includes('acuicultura') || q.includes('mar') || q.includes('embarcacion')) {
+            this.responderCarreraDetalle('dpa', nr);
             return;
         }
 
-        // 6. Carreras en general
-        if (
-            q.includes('carrera') || 
-            q.includes('carreras') || 
-            q.includes('programas') || 
-            q.includes('especialidades') || 
-            q.includes('que hay para estudiar') ||
-            q.includes('que ensenan')
-        ) {
-            this.responderCarrerasGenerales();
+        // Oferta global
+        if (nr.intent === 'todas_carreras' || q.includes('carrera') || q.includes('carreras') || q.includes('programas') || q.includes('especialidades') || q.includes('que hay para estudiar') || q.includes('que ensenan')) {
+            this.responderCarrerasGenerales(nr);
             return;
         }
 
-        // 7. Ubicación, Horarios, Teléfono, Contacto
-        if (
-            q.includes('donde queda') || 
-            q.includes('ubicacion') || 
-            q.includes('direccion') || 
-            q.includes('horario') || 
-            q.includes('telefono') || 
-            q.includes('celular') || 
-            q.includes('whatsapp') || 
-            q.includes('contacto') || 
-            q.includes('mapa')
-        ) {
-            this.responderContactoYUbicacion();
+        // Trámites
+        if (nr.intent === 'mesa_partes_tramites' || q.includes('tramite') || q.includes('mesa de partes') || q.includes('constancia') || q.includes('certificado') || q.includes('record')) {
+            this.responderTramites(nr);
             return;
         }
 
-        // 8. Trámites / Mesa de Partes / Constancias
-        if (
-            q.includes('tramite') || 
-            q.includes('mesa de partes') || 
-            q.includes('constancia') || 
-            q.includes('certificado') || 
-            q.includes('titulo') || 
-            q.includes('notas') || 
-            q.includes('record')
-        ) {
-            this.responderTramites();
+        // Convalidación
+        if (nr.intent === 'convalidacion_sunedu' || q.includes('convalida') || q.includes('convalidar') || q.includes('universidad') || q.includes('bachiller') || q.includes('seguir estudiando')) {
+            this.responderConvalidacionUniversitaria(nr);
             return;
         }
 
-        // 9. Historia, modernización y embarcación
-        if (
-            q.includes('historia') || 
-            q.includes('quienes fueron') || 
-            q.includes('carcamo') || 
-            q.includes('licenciamiento') || 
-            q.includes('barco') || 
-            q.includes('embarcacion') || 
-            q.includes('modernizacion') ||
-            q.includes('beneficios')
-        ) {
-            this.responderHistoriaEInstitucion();
+        // Duración
+        if (nr.intent === 'duracion_semestres' || q.includes('cuanto dura') || q.includes('duracion') || q.includes('cuantos anos') || q.includes('tiempo de carrera') || q.includes('semestres')) {
+            this.responderDuracion(nr);
             return;
         }
 
-        // 10. Becas y beneficios
-        if (
-            q.includes('beca') || 
-            q.includes('becas') || 
-            q.includes('pronabec')
-        ) {
-            this.responderBecas();
+        // Título Oficial
+        if (nr.intent === 'titulo_oficial' || q.includes('titulo') || q.includes('nombre de la nacion') || q.includes('grado') || q.includes('es oficial')) {
+            this.responderTituloOficial(nr);
             return;
         }
 
-        // 11. Convalidación universitaria
-        if (q.includes('convalida') || q.includes('convalidar') || q.includes('universidad') || q.includes('bachiller') || q.includes('seguir estudiando')) {
-            this.responderConvalidacionUniversitaria();
+        // Prácticas
+        if (nr.intent === 'convenios_practicas' || q.includes('practica') || q.includes('practicas') || q.includes('convenio') || q.includes('convenios') || q.includes('bolsa de trabajo') || q.includes('bolsa laboral') || q.includes('donde trabajo')) {
+            this.responderConveniosYPracticas(nr);
             return;
         }
 
-        // 12. Duración de carreras
-        if (q.includes('cuanto dura') || q.includes('duracion') || q.includes('cuantos anos') || q.includes('tiempo de carrera') || q.includes('semestres')) {
-            this.responderDuracion();
+        // Horarios
+        if (nr.intent === 'turnos_horarios' || q.includes('turno') || q.includes('turnos') || q.includes('horario de clase') || q.includes('tarde') || q.includes('noche')) {
+            this.responderTurnosYHorarios(nr);
             return;
         }
 
-        // 13. Título oficial a Nombre de la Nación
-        if (q.includes('titulo') || q.includes('nombre de la nacion') || q.includes('grado') || q.includes('es oficial')) {
-            this.responderTituloOficial();
+        // Edad
+        if (nr.intent === 'edad_limite' || q.includes('limite de edad') || q.includes('edad maxima') || q.includes('edad para postular') || q.includes('soy mayor') || q.includes('tengo 30') || q.includes('tengo 40')) {
+            this.responderEdadLimite(nr);
             return;
         }
 
-        // 14. Prácticas y convenios laborales
-        if (q.includes('practica') || q.includes('practicas') || q.includes('convenio') || q.includes('convenios') || q.includes('bolsa de trabajo') || q.includes('bolsa laboral') || q.includes('donde trabajo')) {
-            this.responderConveniosYPracticas();
+        // Becas
+        if (nr.intent === 'becas_beneficios' || q.includes('beca') || q.includes('becas') || q.includes('pronabec')) {
+            this.responderBecas(nr);
             return;
         }
 
-        // 15. Turnos y horarios de estudio
-        if (q.includes('turno') || q.includes('turnos') || q.includes('horario de clase') || q.includes('tarde') || q.includes('noche')) {
-            this.responderTurnosYHorarios();
+        // Contacto y Ubicación
+        if (nr.intent === 'ubicacion_contacto' || q.includes('donde queda') || q.includes('ubicacion') || q.includes('direccion') || q.includes('telefono') || q.includes('celular') || q.includes('whatsapp') || q.includes('contacto')) {
+            this.responderContactoYUbicacion(nr);
             return;
         }
 
-        // 16. Límite de edad
-        if (q.includes('limite de edad') || q.includes('edad maxima') || q.includes('edad para postular') || q.includes('soy mayor') || q.includes('tengo 30') || q.includes('tengo 40')) {
-            this.responderEdadLimite();
+        // Historia
+        if (nr.intent === 'historia_institucion' || q.includes('historia') || q.includes('quienes fueron') || q.includes('carcamo') || q.includes('licenciamiento') || q.includes('barco') || q.includes('modernizacion')) {
+            this.responderHistoriaEInstitucion(nr);
             return;
         }
 
-        // 17. Saludos
-        if (
-            q.startsWith('hola') || 
-            q.includes('buenos dias') || 
-            q.includes('buenas tardes') || 
-            q.includes('buenas noches') || 
-            q.includes('saludos') ||
-            q === 'hola'
-        ) {
-            this.responderSaludo();
+        // Saludo
+        if (nr.intent === 'saludo' || q.startsWith('hola') || q.includes('buenos dias') || q.includes('buenas tardes') || q.includes('buenas noches') || q.includes('saludos') || q === 'hola') {
+            this.responderSaludo(nr);
             return;
         }
 
-        // 12. Respuesta general
-        this.responderGenerico(rawQuery);
+        // Agradecimiento
+        if (nr.intent === 'agradecimiento' || q.includes('gracias') || q.includes('muchas gracias') || q.includes('te pasaste') || q.includes('excelente')) {
+            this.responderAgradecimiento(nr);
+            return;
+        }
+
+        // Respuesta general
+        this.responderGenerico(rawQuery, nr);
     }
 
-    responderMetodosDePago() {
+    responderMetodosDePago(nr = null) {
         const respuesta = `💳 **GUÍA OFICIAL DE PAGOS Y REGISTRO DE VOUCHERS**
         
 El IESTP "Hermanos Cárcamo" cuenta con una plataforma virtual exclusiva para la recepción y verificación de pagos:
@@ -807,10 +881,10 @@ Puedes verificar y descargar tu comprobante de pago electrónico en cualquier mo
 > ⚠️ *Advertencia de Seguridad:* Nunca realices depósitos a números de cuenta de personas particulares. Todos los abonos institucionales se realizan únicamente en las cuentas oficiales del Banco de la Nación.`;
 
         const voz = "Puedes pagar en el Banco de la Nación o mediante Págalo punto pe. Luego subes la foto de tu comprobante en la plataforma oficial de pagos. ¡Es muy sencillo y seguro!";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderMatriculaYCostos() {
+    responderMatriculaYCostos(nr = null) {
         const respuesta = `📝 **MATRÍCULA Y COSTOS EDUCATIVOS**
 
 ¡Excelentes noticias para tu economía! El **IESTP "Hermanos Cárcamo" es una institución pública del Estado Peruano** (dependiente de la DREP Piura y el MINEDU):
@@ -838,10 +912,10 @@ Puedes verificar y descargar tu comprobante de pago electrónico en cualquier mo
 3. Confirmar la inscripción de unidades didácticas con su coordinación académica.`;
 
         const vozMatricula = "¡La educación en nuestro instituto es 100% pública y gratuita! No cobramos mensualidades privadas. Solo se cancela el derecho de matrícula por semestre. ¿Deseas conocer los requisitos para postular?";
-        this.addBotMessage(respuesta, true, vozMatricula);
+        this.addBotMessage(respuesta, true, vozMatricula, nr);
     }
 
-    responderAdmision() {
+    responderAdmision(nr = null) {
         const respuesta = `🎯 **PROCESO DE ADMISIÓN IESTP HERMANOS CÁRCAMO**
 
 El instituto apertura sus procesos de admisión para sus **4 carreras profesionales técnicas**:
@@ -868,10 +942,10 @@ El instituto apertura sus procesos de admisión para sus **4 carreras profesiona
 ¿Te gustaría que te ayude a saber para qué carrera tienes mayor aptitud con nuestro **Test Vocacional**?`;
 
         const vozAdmision = "Contamos con examen de admisión ordinario, exoneración para primeros puestos y Beca 18, además de ingreso directo por nuestra academia preparatoria. ¿Te gustaría saber los requisitos de postulación?";
-        this.addBotMessage(respuesta, true, vozAdmision);
+        this.addBotMessage(respuesta, true, vozAdmision, nr);
     }
 
-    responderCarrerasGenerales() {
+    responderCarrerasGenerales(nr = null) {
         const respuesta = `📚 **NUESTRAS 4 CARRERAS PROFESIONALES TÉCNICAS**
         
 Todas nuestras carreras tienen una duración de **3 años (6 semestres académicos)** y otorgan **Título Profesional Técnico a Nombre de la Nación**:
@@ -897,13 +971,13 @@ Todas nuestras carreras tienen una duración de **3 años (6 semestres académic
 <button class="btn-action-primary" onclick="window.hercarTest.iniciar()">🎓 Iniciar Test Vocacional</button>`;
 
         const vozCarreras = "Ofrecemos 4 carreras profesionales técnicas de 3 años: Ápsti, Negocios Internacionales, Contabilidad y Desarrollo Pesquero. Todas otorgan título a Nombre de la Nación. ¿De cuál de ellas te gustaría conocer más?";
-        this.addBotMessage(respuesta, true, vozCarreras);
+        this.addBotMessage(respuesta, true, vozCarreras, nr);
     }
 
-    responderCarreraDetalle(carreraId) {
+    responderCarreraDetalle(carreraId, nr = null) {
         const c = this.kb.carreras.find(item => item.id === carreraId);
         if (!c) {
-            this.responderCarrerasGenerales();
+            this.responderCarrerasGenerales(nr);
             return;
         }
 
@@ -947,15 +1021,15 @@ ${c.porQueEstudiar}
             voz = "La carrera de Administración de Negocios Internacionales dura 3 años. Aprenderás comercio exterior, aduanas y logística portuaria con gran demanda en las empresas del puerto de Paita. ¿Te gustaría saber más?";
         } else if (carreraId === 'contabilidad') {
             voz = "La carrera de Contabilidad dura 3 años. Te formarás en gestión tributaria, finanzas y auditoría con amplia salida laboral en el sector público y privado. ¿Deseas los requisitos de admisión?";
-        } else if (carreraId === 'pesquera') {
+        } else if (carreraId === 'pesquera' || carreraId === 'dpa') {
             voz = "La carrera de Desarrollo Pesquero dura 3 años. Contamos con nuestra propia embarcación con radar y visión nocturna para que realices prácticas reales en alta mar. ¿Te gustaría conocer el plan de estudios?";
         } else {
             voz = `La carrera de ${c.nombre} dura 3 años y otorga título profesional a Nombre de la Nación. ¿Deseas conocer los requisitos de matrícula?`;
         }
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderContactoYUbicacion() {
+    responderContactoYUbicacion(nr = null) {
         const i = this.kb.instituto;
         const respuesta = `📍 **UBICACIÓN, CONTACTO Y HORARIOS DE ATENCIÓN**
 
@@ -976,10 +1050,10 @@ El IESTP "Hermanos Cárcamo" te espera en su moderno campus en Paita:
 * **Biblioteca Virtual:** [biblioteca.ieshercar.edu.pe](${i.bibliotecaVirtual})`;
 
         const vozContacto = "Estamos ubicados en la Avenida Miguel Grau, Urbanización El Parque, en Paita. Atendemos de lunes a viernes de 8 de la mañana a 3 de la tarde. ¡Siempre eres bienvenido!";
-        this.addBotMessage(respuesta, true, vozContacto);
+        this.addBotMessage(respuesta, true, vozContacto, nr);
     }
 
-    responderTramites() {
+    responderTramites(nr = null) {
         const respuesta = `📄 **TRÁMITES Y MESA DE PARTES VIRTUAL**
 
 Para realizar gestiones documentarias no necesitas hacer colas físicas, puedes ingresar a la **Mesa de Partes Virtual**:
@@ -996,10 +1070,10 @@ Para realizar gestiones documentarias no necesitas hacer colas físicas, puedes 
 *Nota:* Recuerda cancelar la tasa correspondiente en el Banco de la Nación y adjuntar el voucher en tu solicitud.`;
 
         const vozTramites = "A través de nuestra Mesa de Partes Virtual puedes tramitar constancias de estudio, certificados y récords de notas desde cualquier dispositivo sin hacer colas.";
-        this.addBotMessage(respuesta, true, vozTramites);
+        this.addBotMessage(respuesta, true, vozTramites, nr);
     }
 
-    responderHistoriaEInstitucion() {
+    responderHistoriaEInstitucion(nr = null) {
         const i = this.kb.instituto;
         const respuesta = `🏛️ **HISTORIA Y LOGROS DEL IESTP "HERMANOS CÁRCAMO"**
 
@@ -1012,10 +1086,10 @@ ${i.historia}
 * **Compromiso Social:** Brindar educación superior tecnológica de calidad sin barreras económicas a toda la juventud de Paita, Piura y la región.`;
 
         const vozHistoria = "El instituto fue fundado en 1987 en honor a los heroicos hermanos Cárcamo de Paita. Actualmente contamos con una inversión de 36 millones en modernos laboratorios y una embarcación propia para prácticas en alta mar.";
-        this.addBotMessage(respuesta, true, vozHistoria);
+        this.addBotMessage(respuesta, true, vozHistoria, nr);
     }
 
-    responderBecas() {
+    responderBecas(nr = null) {
         const respuesta = `🎓 **BECAS Y BENEFICIOS PARA ESTUDIANTES**
 
 En el IESTP "Hermanos Cárcamo" tienes acceso a múltiples beneficios económicos y académicos:
@@ -1026,10 +1100,10 @@ En el IESTP "Hermanos Cárcamo" tienes acceso a múltiples beneficios económico
 4. **Bolsa Laboral y Prácticas:** Convenios con agencias marítimas, aduaneras, plantas pesqueras y agroindustrias de Paita y Piura para tu rápida inserción al mercado de trabajo.`;
 
         const vozBecas = "¡Sí! En nuestro instituto puedes estudiar con Beca 18 de Pronabec con todos los gastos cubiertos, además de becas por excelencia académica y carnet de medio pasaje.";
-        this.addBotMessage(respuesta, true, vozBecas);
+        this.addBotMessage(respuesta, true, vozBecas, nr);
     }
 
-    responderDuracion() {
+    responderDuracion(nr = null) {
         const respuesta = `⏳ **DURACIÓN Y ESTRUCTURA DE LAS CARRERAS**
 
 En el **IESTP "Hermanos Cárcamo"**, todas las carreras profesionales técnicas tienen una duración oficial de:
@@ -1041,10 +1115,10 @@ En el **IESTP "Hermanos Cárcamo"**, todas las carreras profesionales técnicas 
 ¿Te gustaría conocer la malla curricular o el perfil de alguna carrera en específico?`;
 
         const voz = "Todas nuestras carreras técnicas duran 3 años divididos en 6 semestres. Además, al culminar cada año recibes una certificación modular oficial para incorporarte al trabajo de inmediato. ¿Deseas conocer alguna carrera?";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderConvalidacionUniversitaria() {
+    responderConvalidacionUniversitaria(nr = null) {
         const respuesta = `🏛️ **CONVALIDACIÓN CON UNIVERSIDADES**
 
 ¡Sí, totalmente! De acuerdo con la **Ley de Institutos y Escuelas de Educación Superior (Ley N° 30512)**:
@@ -1054,10 +1128,10 @@ En el **IESTP "Hermanos Cárcamo"**, todas las carreras profesionales técnicas 
 * 💼 **Ventaja Competitiva:** Ya ingresarás a la universidad con experiencia práctica y trabajando como profesional técnico calificado.`;
 
         const voz = "¡Sí, totalmente! Gracias a la Ley de Educación Superior, puedes convalidar tus estudios técnicos con universidades públicas y privadas licenciadas por SUNEDU para obtener tu ingeniería o licenciatura en menor tiempo.";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderTituloOficial() {
+    responderTituloOficial(nr = null) {
         const respuesta = `🎖️ **VALOR OFICIAL DEL TÍTULO PROFESIONAL**
 
 Al culminar satisfactoriamente tus 3 años (6 ciclos) y aprobar tu proceso de titulación en el IESTP "Hermanos Cárcamo":
@@ -1067,10 +1141,10 @@ Al culminar satisfactoriamente tus 3 años (6 ciclos) y aprobar tu proceso de ti
 * 📋 **Inscripción en el Registro Nacional de Grados y Títulos:** Tu título queda registrado de forma pública y oficial.`;
 
         const voz = "Al culminar tus 3 años y sustentar tu proyecto obtienes el Título Profesional Técnico a Nombre de la Nación con valor oficial del Ministerio de Educación en todo el Perú.";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderTurnosYHorarios() {
+    responderTurnosYHorarios(nr = null) {
         const respuesta = `⏰ **HORARIOS DE CLASES Y TURNOS**
 
 * ☀️ **Turno de Clases:** Turno diurno regular.
@@ -1080,10 +1154,10 @@ Al culminar satisfactoriamente tus 3 años (6 ciclos) y aprobar tu proceso de ti
 ¿Deseas saber más sobre las inscripciones o el examen de admisión?`;
 
         const voz = "Nuestras clases se imparten en turno diurno regular, con modernas aulas y talleres tecnológicos. Atendemos de lunes a viernes de 8 de la mañana a 3 de la tarde.";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderEdadLimite() {
+    responderEdadLimite(nr = null) {
         const respuesta = `🎂 **¿HAY LÍMITE DE EDAD PARA POSTULAR?**
 
 ¡**NO HAY LÍMITE DE EDAD**! La educación superior tecnológica pública en el Perú está abierta para todos:
@@ -1093,10 +1167,10 @@ Al culminar satisfactoriamente tus 3 años (6 ciclos) y aprobar tu proceso de ti
 * 📑 **Único requisito fundamental:** Haber concluido satisfactoriamente la educación secundaria (EBR o EBA) con certificados de estudios.`;
 
         const voz = "¡No hay ningún límite de edad! Cualquier persona que haya terminado la secundaria puede postular y estudiar cualquiera de nuestras 4 carreras profesionales técnicas.";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderConveniosYPracticas() {
+    responderConveniosYPracticas(nr = null) {
         const respuesta = `🤝 **CONVENIOS DE PRÁCTICAS Y EMPLEABILIDAD**
 
 El IESTP "Hermanos Cárcamo" cuenta con una sólida alianza con el sector productivo de Paita y Piura:
@@ -1107,26 +1181,59 @@ El IESTP "Hermanos Cárcamo" cuenta con una sólida alianza con el sector produc
 * 🌐 **Bolsa Laboral Activa:** [bolsa-laboral.ieshercar.edu.pe](https://bolsa-laboral.ieshercar.edu.pe/)`;
 
         const voz = "Contamos con convenios institucionales con empresas del puerto de Paita, agencias aduaneras y plantas pesqueras para que realices prácticas preprofesionales desde tus primeros ciclos.";
-        this.addBotMessage(respuesta, true, voz);
+        this.addBotMessage(respuesta, true, voz, nr);
     }
 
-    responderSaludo() {
-        const respuesta = `¡Hola! Qué gusto saludarte. 😊 Soy **HercarIA**, la asistente virtual del **Instituto Hermanos Cárcamo de Paita**.
+    responderBoletasElectronicas(nr = null) {
+        const respuesta = `🧾 **CONSULTA Y DESCARGA DE BOLETAS ELECTRÓNICAS**
+
+Una vez que has registrado tu voucher bancario en la plataforma de pagos institucional, puedes consultar y descargar tu comprobante de pago oficial:
+
+### 🔗 Enlace Directo al Sistema de Boletas:
+👉 [sistema.ieshercar.com/Consulta_Boletas/index.php](https://sistema.ieshercar.com/Consulta_Boletas/index.php)
+
+### 📋 Pasos para Descargar:
+1. Digita tu **número de DNI** en el recuadro de consulta.
+2. Presiona en **"Buscar Comprobantes"**.
+3. El sistema listará tus boletas validadas con fecha, concepto y monto.
+4. Haz clic en **"Descargar PDF"** para imprimir tu comprobante oficial con valor tributario.
+
+*Nota:* La validación administrativa en el sistema toma habitualmente de 24 a 48 horas hábiles tras registrar el voucher.`;
+
+        const voz = "Puedes consultar y descargar tu boleta electrónica oficial ingresando tu DNI en sistema.ieshercar.com. ¡Es totalmente digital y seguro!";
+        this.addBotMessage(respuesta, true, voz, nr);
+    }
+
+    responderSaludo(nr = null) {
+        const respuesta = `¡Hola! Qué gusto saludarte. 😊 Soy **HercarIA**, la orientadora virtual del **Instituto Hermanos Cárcamo de Paita**.
 
 Estoy lista para ayudarte con:
 * 🎓 **Test Vocacional Interactivo** (si tienes dudas sobre qué estudiar).
-* 💼 Información completa de nuestras **4 carreras profesionales técnicas**.
-* 📝 **Matrículas, requisitos y costos** (¡educación superior pública gratuita!).
+* 💻 Información de la carrera de **APSTI** (Sistemas, Desarrollo Web y Cloud).
+* 💼 Nuestras otras carreras: **Negocios Internacionales**, **Contabilidad** y **Desarrollo Pesquero**.
+* 📝 **Matrículas, requisitos y costos** (¡educación pública gratuita!).
 * 💳 **Registro de pagos y vouchers** en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
-* 📍 **Ubicación y horarios de atención en Paita.**
+* 🧮 **Simulador de Matrícula y Cuotas TUPA 2026**.
+* 🗺️ **Mapa interactivo del campus e instalaciones**.
 
-¿Qué consulta te gustaría realizar en este momento?`;
+¿Qué tema te gustaría consultar hoy?`;
 
         const vozSaludo = "¡Hola! Qué gusto saludarte. Soy HercarIA, tu orientadora virtual del Instituto Hermanos Cárcamo de Paita. ¿Qué te gustaría consultar hoy?";
-        this.addBotMessage(respuesta, true, vozSaludo);
+        this.addBotMessage(respuesta, true, vozSaludo, nr);
     }
 
-    responderGenerico(query) {
+    responderAgradecimiento(nr = null) {
+        const respuesta = `🤝 **¡HA SIDO UN PLACER AYUDARTE!**
+
+En el **IESTP "Hermanos Cárcamo"** nos alegra orientarte en tu camino hacia una carrera técnica profesional de excelencia.
+
+Recuerda que estoy disponible las **24 horas del día** para resolver cualquier duda sobre admisiones, convalidaciones universitarias, gratuidad y trámites. ¡Muchos éxitos en tus metas académicas! 🌟`;
+
+        const vozAgradece = "¡De nada! Ha sido un placer orientarte. Recuerda que estoy disponible las 24 horas para resolver tus dudas. ¡Muchos éxitos!";
+        this.addBotMessage(respuesta, true, vozAgradece, nr);
+    }
+
+    responderGenerico(query, nr = null) {
         const respuesta = `Comprendo tu consulta sobre *"**${this.escapeHTML(query)}**"*. 
 
 Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte con exactitud en cualquiera de estos temas:
@@ -1135,12 +1242,329 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
 * 💻 **Carreras Técnicas de 3 años:** APSTI (Sistemas/Software), Negocios Internacionales, Contabilidad o Desarrollo Pesquero y Acuícola.
 * 📝 **Matrícula y Admisión:** Requisitos para cachimbos, exonerados y fechas.
 * 💳 **Pagos y Vouchers:** Depósitos en Banco de la Nación y validación en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
+* 🧮 **Simulador TUPA:** Calcula el costo de matrícula o constancias.
+* 🗺️ **Mapa del Campus:** Explora nuestros laboratorios de cómputo y talleres.
 * 📞 **Contacto directo:** Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita o al **+51 969 100 257**.
 
 ¿Te gustaría que te detalle alguna carrera o iniciamos el test vocacional?`;
 
         const vozGenerica = "Puedo orientarte sobre nuestras 4 carreras técnicas de 3 años, requisitos de matrícula gratuita, registro de pagos en el Banco de la Nación o iniciar tu test vocacional. ¿En qué tema te gustaría que te ayude?";
-        this.addBotMessage(respuesta, true, vozGenerica);
+        this.addBotMessage(respuesta, true, vozGenerica, nr);
+    }
+
+    /* ==========================================================================
+       HERRAMIENTAS INTERACTIVAS Y MODALES (APSTI)
+       ========================================================================== */
+
+    getFollowUpSuggestions(intent) {
+        switch (intent) {
+            case 'carrera_apsti':
+                return [
+                    { text: 'Malla Curricular de APSTI', query: '¿Cuál es la malla curricular y cursos de APSTI?', icon: '📖' },
+                    { text: 'Costos y Matrícula', query: '¿Cuánto cuesta la matrícula y cuáles son los requisitos?', icon: '📝' },
+                    { text: 'Laboratorios en el Mapa', query: 'Ver mapa interactivo del campus e instalaciones', icon: '🗺️' },
+                    { text: 'Test Vocacional', query: 'Iniciar test vocacional', icon: '🎯' }
+                ];
+            case 'carrera_ani':
+                return [
+                    { text: 'Campo Laboral en Puerto Paita', query: '¿Cuál es el campo laboral de Negocios Internacionales en Paita?', icon: '🚢' },
+                    { text: 'Requisitos de Matrícula', query: '¿Cuáles son los requisitos de matrícula?', icon: '📝' },
+                    { text: 'Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                ];
+            case 'carrera_contabilidad':
+                return [
+                    { text: 'Módulos y Certificaciones', query: '¿Qué se aprende en la carrera de Contabilidad?', icon: '📊' },
+                    { text: 'Convalidación SUNEDU', query: '¿Se puede convalidar con universidades licenciadas por SUNEDU?', icon: '🎓' },
+                    { text: 'Simulador de Matrícula', query: 'Abrir el simulador de matrícula', icon: '🧮' }
+                ];
+            case 'carrera_dpa':
+                return [
+                    { text: 'Prácticas en Barco Propio', query: 'Cuéntame sobre la embarcación pesquera y prácticas de DPA', icon: '🐟' },
+                    { text: 'Convenios con Pesqueras', query: '¿Qué convenios tiene el instituto con empresas pesqueras?', icon: '🤝' },
+                    { text: 'Requisitos de Admisión', query: '¿Cuándo es el examen de admisión y requisitos?', icon: '📝' }
+                ];
+            case 'matricula_costos':
+                return [
+                    { text: 'Abrir Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
+                    { text: '¿Cómo registro mi Voucher?', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' },
+                    { text: 'Descargar Boleta Oficial', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' }
+                ];
+            case 'pagos_vouchers':
+            case 'boletas_electronicas':
+                return [
+                    { text: 'Descargar Boleta Electrónica', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' },
+                    { text: 'Mesa de Partes Virtual', query: '¿Cómo ingreso a la Mesa de Partes Virtual?', icon: '📁' },
+                    { text: 'Simulador de Cuotas', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                ];
+            case 'convalidacion_sunedu':
+            case 'titulo_oficial':
+                return [
+                    { text: 'Carrera de APSTI', query: 'Cuéntame sobre la carrera de APSTI', icon: '💻' },
+                    { text: 'Duración y Semestres', query: '¿Cuánto tiempo duran las carreras técnicas?', icon: '⏳' },
+                    { text: 'Trámites en Mesa de Partes', query: '¿Cómo tramito una constancia de estudios o título?', icon: '📁' }
+                ];
+            case 'ubicacion_contacto':
+            case 'turnos_horarios':
+                return [
+                    { text: 'Ver Mapa del Campus', query: 'Ver mapa interactivo del campus e instalaciones', icon: '🗺️' },
+                    { text: 'Simulador de Matrícula', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
+                    { text: 'Las 4 Carreras Técnicas', query: 'Cuéntame sobre todas las carreras técnicas', icon: '🎓' }
+                ];
+            default:
+                return [
+                    { text: 'Las 4 Carreras Técnicas', query: 'Cuéntame sobre todas las carreras técnicas que ofrece el instituto', icon: '💻' },
+                    { text: 'Test Vocacional Interactivo', query: 'Iniciar test vocacional', icon: '🎯' },
+                    { text: 'Simulador TUPA 2026', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                ];
+        }
+    }
+
+    /**
+     * VISOR / INSPECTOR DE RED NEURONAL ARTIFICIAL APSTI
+     */
+    abrirInspectorNeuronal(queryCustom = '') {
+        const modal = document.getElementById('modal-neural-inspector');
+        if (!modal) return;
+
+        let inference = this.lastNeuralInference;
+        if (queryCustom && queryCustom.trim()) {
+            inference = this.neuralNet.predict(queryCustom);
+        } else if (!inference) {
+            inference = this.neuralNet.predict("¿Qué carreras ofrece el instituto?");
+        }
+
+        const metricIntent = document.getElementById('neural-metric-intent');
+        const metricConf = document.getElementById('neural-metric-confidence');
+        const metricLat = document.getElementById('neural-metric-latency');
+        const metricWeights = document.getElementById('neural-metric-weights');
+
+        if (metricIntent) metricIntent.textContent = (inference.label || inference.intent).split('(')[0].trim();
+        if (metricConf) metricConf.textContent = inference.confidencePercent;
+        if (metricLat) metricLat.textContent = inference.latencyMs + ' ms';
+        if (metricWeights) {
+            const stats = this.neuralNet.getNetworkMetrics();
+            metricWeights.textContent = stats.totalSynapticWeights.toLocaleString();
+        }
+
+        const probContainer = document.getElementById('neural-prob-bars');
+        if (probContainer && inference.topK) {
+            probContainer.innerHTML = inference.topK.map(item => `
+                <div class="prob-bar-item">
+                    <div class="prob-bar-header">
+                        <span>${item.label}</span>
+                        <span class="prob-bar-pct">${(item.prob * 100).toFixed(1)}%</span>
+                    </div>
+                    <div class="prob-bar-track">
+                        <div class="prob-bar-fill" style="width: ${Math.max(item.prob * 100, 6)}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        const tokensContainer = document.getElementById('neural-tokens-cloud');
+        if (tokensContainer) {
+            if (inference.tokens && inference.tokens.length > 0) {
+                tokensContainer.innerHTML = inference.tokens.map(t => `<span class="token-badge">🏷️ ${t}</span>`).join('');
+            } else {
+                tokensContainer.innerHTML = `<span class="token-empty">Clasificación por sesgo general (sin coincidencia léxica directa)</span>`;
+            }
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    /**
+     * SIMULADOR DE MATRÍCULA Y TASAS TUPA
+     */
+    initSimuladorData() {
+        this.simuladorItems = {
+            cachimbo: [
+                { id: 'c_mat', name: 'Derecho de Matrícula (Ingresante Cachimbo Sem. I)', price: 180, checked: true, req: true },
+                { id: 'c_car', name: 'Carnet de Medio Pasaje Oficial (MINEDU)', price: 15, checked: true, req: false },
+                { id: 'c_pro', name: 'Carpeta y Prospecto de Admisión', price: 30, checked: true, req: false },
+                { id: 'c_seg', name: 'Seguro Estudiantil contra Accidentes', price: 20, checked: false, req: false }
+            ],
+            regular: [
+                { id: 'r_mat', name: 'Derecho de Matrícula Semestral (Sem. II - VI)', price: 150, checked: true, req: true },
+                { id: 'r_car', name: 'Renovación de Carnet de Estudiante MINEDU', price: 15, checked: true, req: false },
+                { id: 'r_seg', name: 'Seguro Estudiantil contra Accidentes', price: 20, checked: false, req: false }
+            ],
+            tramites: [
+                { id: 't_con', name: 'Constancia de Estudios Oficial', price: 25, checked: true, req: false },
+                { id: 't_rec', name: 'Récord de Notas Académico Completo', price: 30, checked: false, req: false },
+                { id: 't_egr', name: 'Certificado de Egresado Oficial', price: 45, checked: false, req: false },
+                { id: 't_mod', name: 'Certificado Modular Progresivo (por Año)', price: 40, checked: false, req: false },
+                { id: 't_tit', name: 'Derecho de Titulación Profesional Técnico', price: 160, checked: false, req: false }
+            ]
+        };
+        this.perfilSimuladorActual = 'cachimbo';
+    }
+
+    abrirSimuladorTUPA(nr = null) {
+        const modal = document.getElementById('modal-simulador-tupa');
+        if (!modal) return;
+        this.renderizarItemsSimulador();
+        modal.style.display = 'flex';
+
+        if (nr) {
+            this.addBotMessage(
+                `🧮 **SIMULADOR DE MATRÍCULA Y TASAS TUPA 2026**\n\nHe desplegado en pantalla el simulador oficial de pagos. Puedes seleccionar tu perfil (Cachimbo, Regular o Trámites) y activar conceptos para calcular el importe exacto a depositar en el Banco de la Nación.\n\n*Recuerda:* La enseñanza es **100% gratuita** (S/ 0.00 mensualidades).`,
+                true,
+                "He abierto en pantalla el simulador interactivo de matrícula y tasas TUPA. Puedes calcular el monto exacto para tu inscripción en el Banco de la Nación.",
+                nr
+            );
+        }
+    }
+
+    cambiarPerfilSimulador(perfil) {
+        this.perfilSimuladorActual = perfil;
+        document.querySelectorAll('.sim-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.profile === perfil);
+        });
+        this.renderizarItemsSimulador();
+    }
+
+    renderizarItemsSimulador() {
+        const container = document.getElementById('simulador-items-list');
+        if (!container) return;
+
+        const items = this.simuladorItems[this.perfilSimuladorActual] || [];
+        container.innerHTML = items.map((it, idx) => `
+            <div class="sim-item-row" onclick="window.hercarApp.toggleItemSimulador('${it.id}')">
+                <div class="sim-item-left">
+                    <input type="checkbox" class="sim-checkbox" id="chk_${it.id}" ${it.checked ? 'checked' : ''} onclick="event.stopPropagation(); window.hercarApp.toggleItemSimulador('${it.id}')">
+                    <span class="sim-item-title">${it.name} ${it.req ? '<em style="color:#d97706; font-size:11px;">(Obligatorio)</em>' : ''}</span>
+                </div>
+                <div class="sim-item-price">S/ ${it.price.toFixed(2)}</div>
+            </div>
+        `).join('');
+
+        this.calcularSimuladorTotal();
+    }
+
+    toggleItemSimulador(itemId) {
+        const items = this.simuladorItems[this.perfilSimuladorActual] || [];
+        const item = items.find(i => i.id === itemId);
+        if (item) {
+            item.checked = !item.checked;
+            this.renderizarItemsSimulador();
+        }
+    }
+
+    calcularSimuladorTotal() {
+        const items = this.simuladorItems[this.perfilSimuladorActual] || [];
+        const total = items.reduce((sum, i) => i.checked ? sum + i.price : sum, 0);
+        const totalEl = document.getElementById('simulador-total-val');
+        if (totalEl) totalEl.textContent = `S/ ${total.toFixed(2)}`;
+        return total;
+    }
+
+    copiarResumenSimulador() {
+        const items = this.simuladorItems[this.perfilSimuladorActual] || [];
+        const checked = items.filter(i => i.checked);
+        const total = this.calcularSimuladorTotal();
+        let text = `📋 RESUMEN DE TASAS TUPA - IESTP HERMANOS CÁRCAMO (PAITA)\nPerfil: ${this.perfilSimuladorActual.toUpperCase()}\n------------------------------------\n`;
+        checked.forEach(c => {
+            text += `• ${c.name}: S/ ${c.price.toFixed(2)}\n`;
+        });
+        text += `------------------------------------\nTOTAL A PAGAR (BANCO DE LA NACIÓN): S/ ${total.toFixed(2)}\n*Enseñanza 100% gratuita (S/ 0.00 mensualidades)`;
+        navigator.clipboard.writeText(text).then(() => {
+            this.mostrarToast('✅ Resumen de simulación copiado al portapapeles');
+        });
+    }
+
+    consultarSobreSimulacion() {
+        this.cerrarTodosLosModales();
+        const total = this.calcularSimuladorTotal();
+        this.enviarConsultaDirecta(`Calculé en el simulador un total de S/ ${total.toFixed(2)} para ${this.perfilSimuladorActual}. ¿Cómo realizo el pago y qué requisitos presento?`);
+    }
+
+    /**
+     * MAPA INTERACTIVO DEL CAMPUS
+     */
+    abrirMapaCampus(nr = null) {
+        const modal = document.getElementById('modal-mapa-campus');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        this.seleccionarHotspotMapa('apsti');
+
+        if (nr) {
+            this.addBotMessage(
+                `🗺️ **MAPA INTERACTIVO DEL CAMPUS E INSTALACIONES**\n\nAquí tienes el plano de distribución del **IESTP "Hermanos Cárcamo"** en Paita (Av. Miguel Grau – Urb. El Parque).\n\nEn pantalla puedes hacer clic en cada pabellón para conocer los laboratorios de cómputo de APSTI, el taller pesquero de DPA, las aulas multimedia de ANI y Contabilidad, o la Dirección y Mesa de Partes.`,
+                true,
+                "He desplegado el mapa interactivo del campus. Puedes explorar cada pabellón y laboratorio del instituto directamente en pantalla.",
+                nr
+            );
+        }
+    }
+
+    seleccionarHotspotMapa(sectorId) {
+        const titleEl = document.getElementById('sector-title');
+        const descEl = document.getElementById('sector-description');
+        if (!titleEl || !descEl) return;
+
+        document.querySelectorAll('.map-sector').forEach(s => s.classList.remove('active'));
+        const target = document.querySelector(`.sector-${sectorId}`);
+        if (target) target.classList.add('active');
+
+        const data = {
+            apsti: {
+                title: '💻 Pabellón A: Arquitectura de Plataformas y Servicios TI (APSTI)',
+                desc: 'Alberga 4 modernos laboratorios de cómputo con conectividad de alta velocidad, gabinetes de servidores rack Linux/Windows, centro de telecomunicaciones con routers y switches CISCO para prácticas de redes, y estaciones para desarrollo de software web y móvil.'
+            },
+            dpa: {
+                title: '🐟 Módulo Marítimo: Desarrollo Pesquero y Acuícola (DPA)',
+                desc: 'Comprende el taller de artes y aparejos de pesca, laboratorio de maricultura y acuicultura con tanques de ensayo, maquetas de maniobras náuticas y acceso al programa de prácticas a bordo de la embarcación pesquera de instrucción del instituto.'
+            },
+            ani: {
+                title: '🚢 Pabellón B: Administración de Negocios Internacionales y Contabilidad',
+                desc: 'Aulas con tecnología multimedia para simulación de operaciones de comercio exterior, despacho aduanero portuario y laboratorios contables equipados con software tributario y de libros electrónicos SUNAT.'
+            },
+            admin: {
+                title: '🏛️ Edificio Administrativo: Dirección y Mesa de Partes',
+                desc: 'Oficinas de Dirección General, Jefatura de Unidad Académica, Secretaría Académica, Ventanilla de Caja y Mesa de Partes para recepción y trámite presencial de documentos y certificados.'
+            },
+            biblio: {
+                title: '📚 Biblioteca Central y Auditorio Institucional',
+                desc: 'Amplia sala de lectura con terminales de acceso a la Biblioteca Virtual (biblioteca.ieshercar.edu.pe), bibliografía técnica especializada de las 4 carreras y auditorio climatizado para conferencias y ponencias académicas.'
+            },
+            deportes: {
+                title: '⚽ Complejo Polideportivo y Áreas de Recreación',
+                desc: 'Losa deportiva multiusos acondicionada para fútbol, básquetbol y vóleibol, rodeada de áreas de esparcimiento e integración comunitaria para la vida universitaria saludable.'
+            }
+        };
+
+        const sec = data[sectorId] || data['apsti'];
+        titleEl.textContent = sec.title;
+        descEl.textContent = sec.desc;
+    }
+
+    cerrarTodosLosModales() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    mostrarToast(mensaje, duracion = 2500) {
+        const toast = document.getElementById('toast-notification');
+        if (!toast) return;
+        toast.textContent = mensaje;
+        toast.classList.add('show');
+        clearTimeout(this._toastTimeout);
+        this._toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, duracion);
+    }
+
+    calificarRespuesta(btn, tipo) {
+        const parent = btn.closest('.msg-rating-group');
+        if (parent) {
+            parent.querySelectorAll('.msg-action-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        if (tipo === 'up') {
+            this.mostrarToast('👍 ¡Gracias por tu valoración positiva!');
+        } else {
+            this.mostrarToast('🙏 Tomaremos en cuenta tu feedback para seguir mejorando.');
+        }
     }
 
     normalizarTexto(txt) {
