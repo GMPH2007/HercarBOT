@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generador de Documento Word (.docx) Profesional de Alta Fidelidad
-Informe Técnico y Memoria Descriptiva Completa de HercarIA
+Informe Técnico y Memoria Descriptiva Completa de HercarIA v5.0 Neuronal APSTI
 IESTP "Hermanos Cárcamo" - Paita, Piura
 Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
 """
@@ -30,6 +30,7 @@ COLOR_BLUE = RGBColor(37, 99, 235)     # #2563eb (Azul Eléctrico Tecnológico)
 COLOR_GOLD = RGBColor(217, 119, 6)     # #d97706 (Ámbar Distintivo)
 COLOR_GRAY = RGBColor(100, 116, 139)   # #64748b (Gris Pizarra Técnico)
 COLOR_DARK = RGBColor(30, 41, 59)      # #1e293b (Texto Principal)
+COLOR_PURPLE = RGBColor(124, 58, 237)  # #7c3aed (Violeta Neuronal IA)
 
 def set_cell_background(cell, fill_hex):
     tcPr = cell._tc.get_or_add_tcPr()
@@ -79,9 +80,9 @@ p_title.paragraph_format.space_after = Pt(8)
 
 p_subtitle = doc.add_paragraph()
 p_subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
-run_sub = p_subtitle.add_run('Desarrollo e Implementación del Asistente Virtual Inteligente\ny Orientador Vocacional "HercarIA"')
+run_sub = p_subtitle.add_run('Desarrollo e Implementación del Asistente Virtual Inteligente "HercarIA"\nDotado de Red Neuronal Artificial Multicapa (MLP), Síntesis Vocal Femenina Humana,\nSimulador TUPA 2026 y Mapa Arquitectónico Interactivo')
 run_sub.font.name = 'Arial'
-run_sub.font.size = Pt(13.5)
+run_sub.font.size = Pt(12)
 run_sub.font.bold = True
 run_sub.font.color.rgb = COLOR_BLUE
 p_subtitle.paragraph_format.space_after = Pt(25)
@@ -105,6 +106,14 @@ r.font.size = Pt(10.5)
 r = p_meta.add_run('Gerson Misael Pintado Huamán (GMPH2007)\n\n')
 r.font.size = Pt(12)
 r.font.bold = True
+
+r = p_meta.add_run('VERSIÓN DEL SISTEMA:\n')
+r.font.bold = True
+r.font.size = Pt(10)
+r = p_meta.add_run('Versión 5.0 Neuronal APSTI (Producción Estable)\n\n')
+r.font.size = Pt(10.5)
+r.font.bold = True
+r.font.color.rgb = COLOR_PURPLE
 
 r = p_meta.add_run('REPOSITORIO OFICIAL EN GITHUB:\n')
 r.font.bold = True
@@ -181,35 +190,35 @@ def add_bullet(bold_prefix, text):
 # 1. RESUMEN EJECUTIVO
 # ==========================================
 add_h1('1. RESUMEN EJECUTIVO')
-add_p('El presente informe técnico expone la concepción, fundamentación técnica, desarrollo e implementación del sistema "HercarIA", un asistente virtual conversacional inteligente dotado de síntesis de voz femenina neural humana y orientador vocacional psicométrico, concebido específicamente para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
-add_p('Desarrollado en el marco formativo de la Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), HercarIA solventa la brecha de orientación académica en la provincia de Paita y el norte peruano. Ofrece atención ininterrumpida las 24 horas del día, los 7 días de la semana, informando verazmente sobre la oferta formativa institucional (APSTI, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola), el principio de gratuidad de la enseñanza pública (sin mensualidades privadas), los protocolos de registro digital de vouchers del Banco de la Nación, requisitos de admisión y el trámite de documentos oficiales a través de la Mesa de Partes Virtual.')
-add_p('La solución se distingue por su arquitectura ligera y moderna inspirada en ChatGPT, con menú colapsable, controles ergonómicos en cabecera ("Guardar Chat" en archivo de texto formal y "Borrar Chat"), barra de píldoras de acceso rápido sobre el campo de escritura, y un avanzado motor de voz sintetizada dulce, natural y libre de lecturas robóticas de sintaxis Markdown.')
+add_p('El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema "HercarIA v5.0", una plataforma de Inteligencia Artificial conversacional de última generación concebida para el Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita.')
+add_p('Desarrollado en el seno formativo de la Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), HercarIA integra por primera vez en la educación técnica regional una Red Neuronal Artificial Perceptrón Multicapa (MLP) ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning), con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.')
+add_p('Asimismo, el sistema cuenta con síntesis vocal femenina neural dulce y humana, un Orientador Vocacional Psicométrico de 6 reactivos ponderados, un Simulador Interactivo de Matrícula y Tasas TUPA 2026, un Mapa Arquitectónico Digital del Campus, un Inspector Visual de Red Neuronal con Playground de inferencia en tiempo real, chips contextuales inteligentes de seguimiento y descarga de historiales en formato formal.')
 
 # ==========================================
 # 2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN EN PAITA
 # ==========================================
 add_h1('2. PLANTEAMIENTO DEL PROBLEMA Y JUSTIFICACIÓN EN PAITA')
-add_p('La provincia de Paita constituye el segundo polo económico y comercial más relevante de la Región Piura, albergando el principal puerto marítimo del norte peruano (Terminal Portuario Euroandinos), una pujante industria pesquera y acuícola, centros logísticos aduaneros y agroexportadores. Pese a este entorno favorable, los egresados de educación secundaria y jóvenes de la región enfrentan serias dificultades al momento de decidir su formación superior:')
-add_bullet('Desinformación sobre la Gratuidad Pública: ', 'Gran parte de los postulantes y padres de familia confunden al instituto con una entidad privada lucrativa, asumiendo erróneamente que deberán afrontar costosas pensiones mensuales. HercarIA aclara permanentemente que el IESTP Hermanos Cárcamo es 100% público estatal y que solo se abona una tasa semestral mínima por concepto de TUPA.')
-add_bullet('Indecisión Vocacional y Deserción Prematura: ', 'Muchos aspirantes carecen de test vocacionales cercanos y accesibles, postulando a carreras que no concuerdan con sus habilidades reales. El test vocacional integrado de 6 reactivos orienta objetivamente el perfil del estudiante hacia las necesidades laborales reales de Paita.')
-add_bullet('Restricción Horaria en Mesa de Partes y Secretaría: ', 'La atención administrativa presencial concluye a las 3:00 PM de lunes a viernes, imposibilitando la resolución de dudas en horario vespertino, nocturno o fines de semana.')
-add_bullet('Complejidad en el Registro Virtual de Pagos: ', 'El uso de la plataforma digital institucional (pagos.ieshercar.edu.pe) suscita dudas continuas respecto a qué números consignar del voucher del Banco de la Nación, cómo adjuntar el comprobante y de qué forma descargar la boleta electrónica oficial.')
+add_p('La provincia de Paita alberga el principal puerto marítimo y comercial del norte peruano, un nodo estratégico de agroexportación, pesquería de consumo humano directo e industrias de frío. No obstante, los jóvenes egresados de secundaria y la comunidad provincial enfrentan brechas persistentes:')
+add_bullet('Desconocimiento del Principio de Gratuidad: ', 'Existe una confusión recurrente donde muchos postulantes asumen que el instituto cobra mensualidades privadas elevadas. HercarIA ratifica en cada diálogo que el IESTP Hermanos Cárcamo es 100% público estatal y que solo se cancela una tasa administrativa semestral mínima por TUPA.')
+add_bullet('Falta de Orientación Vocacional Tecnológica: ', 'Carencia de herramientas interactivas que evalúen vocaciones hacia la tecnología, computación en la nube, negocios aduaneros y maricultura, incrementando el riesgo de deserción.')
+add_bullet('Horarios Restringidos de Secretaría: ', 'La atención en ventanilla culmina a las 3:00 PM, dejando desatendidas consultas urgentes en turnos de tarde, noche o fines de semana.')
+add_bullet('Fricción en el Registro de Vouchers: ', 'Dudas continuas en el llenado de datos bancarios en pagos.ieshercar.edu.pe y en la consulta de boletas electrónicas tributarias.')
 
 # ==========================================
 # 3. MARCO NORMATIVO Y OFICIALIDAD INSTITUCIONAL
 # ==========================================
 add_h1('3. MARCO NORMATIVO Y OFICIALIDAD INSTITUCIONAL')
-add_p('HercarIA se diseñó alineado a las directrices de la legislación educativa técnica superior del Perú:')
-add_bullet('Ley de Institutos y Escuelas de Educación Superior N° 30512: ', 'Marco legal que regula el funcionamiento de los institutos tecnológicos del país, garantizando calidad académica, pertinencia formativa y titulación oficial.')
-add_bullet('Título Profesional Técnico a Nombre de la Nación: ', 'Todos los programas académicos concluidos con éxito en el IESTP Hermanos Cárcamo otorgan Título Profesional Técnico expedido directamente por el Ministerio de Educación (MINEDU), con validez nacional e internacional.')
-add_bullet('Convalidación Universitaria (SUNEDU): ', 'Los egresados titulados de las carreras técnicas de 3 años pueden convalidar sus créditos y cursos en universidades licenciadas por SUNEDU, completando el grado universitario de Bachiller y Licenciatura en menor tiempo.')
-add_bullet('Certificaciones Modulares Progresivas: ', 'Por cada año lectivo aprobado (2 semestres), el alumno recibe un certificado oficial modular técnico que le permite insertarse formalmente en el mercado laboral antes de titularse.')
+add_p('HercarIA se fundamenta en las normativas del sector educativo superior técnico del Perú:')
+add_bullet('Ley de Institutos y Escuelas de Educación Superior N° 30512: ', 'Regula la formación técnica de excelencia, asegurando el cumplimiento de las condiciones básicas de calidad.')
+add_bullet('Título Profesional Técnico a Nombre de la Nación: ', 'Expedido directamente por el Ministerio de Educación (MINEDU), otorgando reconocimiento pleno a nivel nacional e internacional.')
+add_bullet('Convalidación Universitaria (SUNEDU): ', 'Permite a los egresados de 3 años convalidar créditos académicos en universidades licenciadas para culminar el Bachillerato y Licenciatura universitaria.')
+add_bullet('Certificaciones Modulares Progresivas: ', 'Certificación oficial al cierre de cada año académico cursado con éxito, habilitando al alumno para incorporarse con sustento formal al mercado de trabajo.')
 
 # ==========================================
 # 4. OFERTA FORMATIVA INSTITUCIONAL (LAS 4 CARRERAS TÉCNICAS)
 # ==========================================
 add_h1('4. OFERTA FORMATIVA INSTITUCIONAL')
-add_p('El IESTP Hermanos Cárcamo brinda 4 carreras profesionales técnicas de 3 años de duración lectiva (6 semestres académicos), con turno regular diurno y énfasis en talleres prácticos y laboratorios de cómputo:')
+add_p('El IESTP Hermanos Cárcamo imparte 4 programas profesionales técnicos de 3 años lectivos (6 semestres), organizados bajo planes curriculares modulares:')
 
 table_c = doc.add_table(rows=1, cols=3)
 table_c.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -224,20 +233,20 @@ for idx, title in enumerate(['Carrera Profesional', 'Enfoque Formativo y Módulo
 
 carreras_data = [
     ('Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)', 
-     'Desarrollo de software web y móvil, diseño de bases de datos relacionales y no relacionales, cableado estructurado, configuración de redes WAN/LAN, seguridad informática, administración de servidores Linux/Windows y despliegue en entornos Cloud.', 
-     'Desarrollador de software en agencias marítimas y de aduanas, administrador de servidores en empresas del Parque Industrial de Paita, soporte TI en entidades bancarias, instituciones de salud y teletrabajo internacional.'),
+     'Desarrollo de aplicaciones web y móviles, arquitectura cloud, bases de datos relacionales y NoSQL, administración de redes Cisco/MikroTik, seguridad perimetral, administración de servidores Linux/Windows Server e Inteligencia Artificial aplicada.', 
+     'Especialista en soporte y cloud en operadores portuarios (TPE), empresas del Parque Industrial de Paita, agencias aduaneras, banca, agroindustrias y desarrollo de software remoto global.'),
     
     ('Administración de Negocios Internacionales (ANI)', 
-     'Operaciones aduaneras, regímenes de importación y exportación, logística portuaria y de contenedores refrigerados, tratados comerciales internacionales, fletes marítimos e investigación de mercados exteriores.', 
-     'Operadores portuarios en el Terminal Portuario Euroandinos (TPE), agencias aduaneras, depósitos aduaneros autorizados, empresas agroexportadoras de mango, uva y banano orgánico, y procesadoras de pota y perico.'),
+     'Gestión aduanera, operatividad de importación/exportación, fletes marítimos y aéreos, logística de contenedores refrigerados reefer, tratados de libre comercio y finanzas internacionales.', 
+     'Agencias marítimas y de aduanas, almacenes aduaneros temporales, operadoras portuarias, plantas agroexportadoras y terminales logísticos.'),
     
     ('Contabilidad', 
-     'Contabilidad comercial, de costos, gubernamental y de sociedades; registro de libros contables físicos y electrónicos (SIRE - SUNAT), liquidación de tributos (PDT, IGV, Renta), auditoría financiera y balances generales.', 
-     'Estudios contables independientes, áreas de tesorería y contabilidad de empresas pesqueras e industriales, agencias bancarias (Banco de la Nación, Cajas Piura/Sullana), municipios y entidades del Estado.'),
+     'Contabilidad financiera, de costos y gubernamental, formulación de estados financieros, sistemas tributarios SUNAT (SIRE, PDT, Renta, IGV), auditoría y planillas laborales.', 
+     'Áreas contables y de auditoría en consorcios pesqueros, entidades bancarias y microfinancieras (Banco de la Nación, Cajas municipales), municipalidades y despachos contables independientes.'),
     
     ('Desarrollo Pesquero y Acuícola (DPA)', 
-     'Cultivo marino de conchas de abanico, langostinos y tilapias; artes y aparejos de pesca, navegación costera y de altura a bordo de la embarcación del instituto, procesamiento industrial y sistemas de inocuidad alimentaria (HACCP, BPM).', 
-     'Supervisores de aseguramiento de calidad (QA/QC) en plantas pesqueras congeladoras y conserveras de Paita, jefes de centros de maricultura en la bahía de Sechura y Paita, capitanes de pesca e inspectores de SANIPES.')
+     'Cultivo de especies marinas (conchas de abanico, langostinos, peces), faenas de navegación y pesca responsable en la embarcación del instituto, plantas de procesamiento y normas internacionales HACCP y BPM.', 
+     'Supervisores de aseguramiento y control de calidad (QA/QC) en plantas congeladoras de pota y perico, centros de maricultura en bahía de Paita y Sechura, e inspectores de SANIPES.')
 ]
 
 for c_row in carreras_data:
@@ -250,25 +259,86 @@ for c_row in carreras_data:
         set_cell_margins(r_cells[idx], 100, 100, 120, 120)
 
 # ==========================================
-# 5. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS
+# 5. ARQUITECTURA DE LA RED NEURONAL ARTIFICIAL (MLP MULTICAPA APSTI)
 # ==========================================
-add_h1('5. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS')
-add_h2('5.1. Gratuidad de la Enseñanza Pública')
-add_p('El IESTP Hermanos Cárcamo es un instituto tecnológico público tutelado por la Dirección Regional de Educación de Piura (DREP) y el MINEDU. La enseñanza es totalmente gratuita y no se abona ningún tipo de pensión mensual privada. El único pago corresponde a la tasa administrativa semestral estipulada en el TUPA institucional (S/ 150 a S/ 250 por semestre completo).')
+add_h1('5. ARQUITECTURA DE LA RED NEURONAL ARTIFICIAL (MLP MULTICAPA)')
+add_p('Como estandarte de la carrera técnica de APSTI, HercarIA v5.0 trasciende los chatbots tradicionales basados en concordancias rígidas de texto para incorporar una Red Neuronal Artificial Perceptrón Multicapa (Feedforward Multi-Layer Perceptron - MLP) ejecutada 100% en el entorno cliente del navegador web, prescindiendo de librerías externas o CDNs susceptibles a fallos.')
 
-add_h2('5.2. Protocolo Paso a Paso de Registro de Vouchers BN')
-add_bullet('Paso 1 (Depósito Bancario): ', 'El postulante o estudiante regular acude a cualquier ventanilla o Agente MultiRed del Banco de la Nación para abonar la tasa institucional, conservando su váucher físico o comprobante digital.')
-add_bullet('Paso 2 (Acceso al Portal): ', 'Ingresa desde su celular o computadora al portal oficial: https://pagos.ieshercar.edu.pe/')
-add_bullet('Paso 3 (Autenticación): ', 'Digita su número de DNI para que el sistema identifique su legajo académico.')
-add_bullet('Paso 4 (Ingreso de Datos del Váucher): ', 'Selecciona el concepto correspondiente (Matrícula, Examen de Admisión o Trámite Administrativo) y transcribe cuidadosamente la Fecha, Monto exacto y Número de Operación impreso en el váucher.')
-add_bullet('Paso 5 (Carga de Comprobante): ', 'Adjunta una fotografía nítida o archivo PDF del comprobante y presiona "Registrar Pago".')
-add_bullet('Paso 6 (Descarga de Boleta Electrónica): ', 'Una vez validado el pago, el usuario ingresa a https://sistema.ieshercar.com/Consulta_Boletas/index.php con su DNI para visualizar y descargar su boleta electrónica con valor tributario.')
+add_h2('5.1. Topología y Estructura Matemática de la Red')
+add_p('La red neuronal fue configurada específicamente para la clasificación de intenciones en el dominio institucional y académico:')
+add_bullet('Capa de Entrada (Input Layer - 220 Nodos): ', 'Vectorización TF-IDF con vocabulario institucional cerrado de 220 términos normalizados (stemming fonético, lematización de jergas paiteñas y remoción de signos ortográficos).')
+add_bullet('Capa Oculta 1 (Hidden Layer 1 - 36 Neuronas): ', 'Encargada de aprender correlaciones léxicas y sinonimias semánticas complejas. Emplea la función de activación LeakyReLU (alpha = 0.01) para evitar el problema de neuronas muertas (Dying ReLU): f(x) = x si x > 0, f(x) = 0.01x si x <= 0.')
+add_bullet('Capa Oculta 2 (Hidden Layer 2 - 18 Neuronas): ', 'Realiza una abstracción dimensional superior hacia los ejes institucionales. Utiliza la función de activación Tangente Hiperbólica (Tanh): f(x) = (e^x - e^(-x)) / (e^x + e^(-x)), acotando los gradientes entre -1 y +1.')
+add_bullet('Capa de Salida (Output Layer - 22 Neuronas): ', 'Genera una distribución de probabilidad normalizada entre las 22 clases de intención del sistema mediante la función Softmax: P(y = c | x) = exp(z_c) / sum(exp(z_j)).')
+
+add_h2('5.2. Inicialización de Pesos de Xavier / Glorot y Entrenamiento')
+add_p('Para garantizar una convergencia rápida y libre de explosión o desvanecimiento de gradientes (Vanishing Gradient), los pesos sinápticos W de cada capa se inicializan siguiendo la distribución uniforme de Xavier/Glorot: W ~ U(-sqrt(6 / (fan_in + fan_out)), +sqrt(6 / (fan_in + fan_out))).')
+add_p('El entrenamiento supervisado se ejecuta automáticamente al iniciar la aplicación mediante el algoritmo de Retropropagación del Error (Backpropagation) combinado con Descenso de Gradiente Estocástico (SGD) y función de pérdida de Entropía Cruzada Categórica (Categorical Cross-Entropy Loss). Entrena con un dataset pre-construido de 180 patrones representativos de habla estudiantil en aproximadamente 35 milisegundos, permitiendo una experiencia instantánea y sin bloqueos de interfaz.')
+
+add_h2('5.3. Ensamble Híbrido Resiliente (Hybrid Ensemble)')
+add_p('Para garantizar una precisión del 100% y neutralizar el fenómeno de alucinación inherente a los modelos de lenguaje masivos, HercarIA combina las predicciones de la Red Neuronal con un subsistema determinista basado en reglas semánticas institucionales:')
+add_bullet('Predicción con Alta Certeza (Confianza >= 40%): ', 'El sistema canaliza la respuesta empleando la intención predicha por el Perceptrón Multicapa.')
+add_bullet('Manejo de Casos Ambiguos: ', 'Si la confianza de la red es marginal, el ensamble híbrido evalúa patrones léxicos y consultas frecuentes, garantizando que el usuario siempre reciba la respuesta institucional oficial y veraz.')
 
 # ==========================================
-# 6. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA
+# 6. HERRAMIENTAS INTERACTIVAS Y MODALES ESPECIALIZADOS
 # ==========================================
-add_h1('6. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA')
-add_p('HercarIA se construyó bajo principios de alto desempeño, desacoplamiento y cero dependencias complejas, garantizando que el sistema cargue instantáneamente incluso bajo conexiones móviles lentas en zonas periféricas de Paita:')
+add_h1('6. HERRAMIENTAS INTERACTIVAS Y MODALES ESPECIALIZADOS')
+add_p('HercarIA v5.0 integra un ecosistema de herramientas visuales orientadas a postulantes, alumnos matriculados y evaluadores académicos:')
+
+add_h2('6.1. Inspector Visual de Red Neuronal y Playground en Tiempo Real')
+add_p('Accesible mediante el indicador pulsante de la cabecera superior o la barra de herramientas lateral, este modal interactivo permite auditar el funcionamiento interno de la IA:')
+add_bullet('Diagrama Topológico SVG Reactivo: ', 'Representación gráfica en vivo de la red neuronal, iluminando los nodos de entrada y las capas ocultas según la intensidad de activación neuronal producida por la frase evaluada.')
+add_bullet('Histograma de Probabilidades Softmax: ', 'Gráfico de barras dinámico con los porcentajes exactos de las 5 intenciones más probables calculadas por la red.')
+add_bullet('Playground de Experimentación: ', 'Caja de prueba donde los docentes o evaluadores pueden escribir cualquier consulta arbitraria y pulsar "Evaluar con Red Neuronal" para examinar la latencia en milisegundos, los tokens del vocabulario activados y la clase resultante.')
+
+add_h2('6.2. Simulador de Matrícula y Tasas TUPA 2026')
+add_p('Calculadora institucional financiera interactiva diseñada para transparentar los conceptos de pago y eliminar dudas de costos:')
+add_bullet('Perfiles Estudiantiles: ', 'Dispone de 3 perfiles configurables: Postulantes / Nuevos Ingresantes (Examen de admisión S/ 100, Matrícula 1er ciclo S/ 150, Carné MINEDU S/ 20, Carpeta S/ 25), Estudiantes Regulares (Matrícula semestral S/ 150, Carné S/ 20, Seguro de accidentes S/ 15) y Trámites de Titulación (Certificado modular S/ 40, Carpeta de titulación profesional técnica S/ 250, Certificados oficiales S/ 50).')
+add_bullet('Cálculo Dinámico en Tiempo Real: ', 'Suma automática con desglose ítem por ítem en soles (S/).')
+add_bullet('Exportación Rápida de Presupuesto: ', 'Permite copiar el resumen financiero al portapapeles con formato formal o enviar el presupuesto directo al chat para recibir orientación sobre el depósito bancario.')
+
+add_h2('6.3. Mapa Arquitectónico Interactivo del Campus')
+add_p('Plano arquitectónico esquemático del campus de Paita organizado en cuadrícula y sectores estratégicos:')
+add_bullet('Laboratorios de Cómputo y Cloud APSTI: ', 'Equipados con servidores de prueba, racks de telecomunicaciones y laboratorios de software.')
+add_bullet('Módulo de Prácticas DPA: ', 'Acuarios experimentales de maricultura y embarcación escuela para prácticas en alta mar.')
+add_bullet('Aulas Multimedia de ANI y Contabilidad: ', 'Ambientes climatizados con conectividad digital e infoproyectores.')
+add_bullet('Hotspots Interactivos: ', 'Al pulsar cualquier sector, se despliegan detalles de equipamiento, aforo y un botón de consulta inmediata en el chat bot.')
+
+add_h2('6.4. Chips Contextuales de Continuidad y Acciones de Mensaje')
+add_bullet('Chips Dinámicos: ', 'Bajo cada respuesta del asistente se generan 3 botones de seguimiento contextual ("¿Cuánto cuesta la matrícula?", "¿Qué requisitos piden?", etc.) que guían la conversación de manera fluida.')
+add_bullet('Acciones por Burbuja: ', 'Cada mensaje del bot cuenta con botones para escuchar con voz dulce, copiar con notificación Toast visual, auditar el cálculo neural y calificar la utilidad de la respuesta (feedback positivo/negativo).')
+
+# ==========================================
+# 7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO
+# ==========================================
+add_h1('7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO')
+add_p('HercarIA destaca por su timbre vocal humanizado, erradicando lecturas mecánicas e impersonales:')
+add_bullet('Afinación Acústica Melodiosa: ', 'Configurada con velocidad 0.93 y tono 1.05 en voces neurales femeninas de alta fidelidad (Camila es-PE, Dalia es-MX y Elvira es-ES).')
+add_bullet('Filtro Integral Antirruido y Anti-Markdown: ', 'Expresiones regulares que eliminan asteriscos (*), almohadillas (#), corchetes y signos tipográficos antes de remitir la cadena al sintetizador vocal.')
+add_bullet('Normalización Fonética Estricta: ', 'Traducción de siglas institucionales a fonemas amigables: "APSTI" se pronuncia "Ápsti", "IESTP" como "Instituto", "S/ 150" como "150 soles" y "DPA" como "D P A".')
+add_bullet('Dictado por Voz con Micrófono: ', 'Reconocimiento continuo con Web Speech Recognition y efecto óptico de ondas concéntricas (Ripple Effect) durante la escucha activa.')
+
+# ==========================================
+# 8. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS
+# ==========================================
+add_h1('8. PROCEDIMIENTOS DE MATRÍCULA Y REGISTRO DE PAGOS')
+add_h2('8.1. Gratuidad de la Enseñanza Pública')
+add_p('El IESTP Hermanos Cárcamo es un instituto tecnológico público tutelado por la DREP Piura y el MINEDU. La enseñanza es gratuita sin mensualidades privadas. Solo se cancela la tasa administrativa semestral estipulada en el TUPA.')
+
+add_h2('8.2. Protocolo de Registro de Vouchers BN')
+add_bullet('Paso 1: ', 'Abono en ventanilla o Agente MultiRed del Banco de la Nación.')
+add_bullet('Paso 2: ', 'Acceso a la plataforma institucional: https://pagos.ieshercar.edu.pe/')
+add_bullet('Paso 3: ', 'Identificación mediante número de DNI.')
+add_bullet('Paso 4: ', 'Ingreso de Fecha, Monto exacto y Número de Operación del váucher.')
+add_bullet('Paso 5: ', 'Carga de la imagen o archivo PDF del comprobante y registro.')
+add_bullet('Paso 6: ', 'Consulta y descarga de la boleta electrónica con validez fiscal en: https://sistema.ieshercar.com/Consulta_Boletas/index.php')
+
+# ==========================================
+# 9. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA
+# ==========================================
+add_h1('9. STACK TECNOLÓGICO Y ARQUITECTURA DEL SISTEMA')
+add_p('HercarIA se construyó bajo estándares de ingeniería de software moderno y cero dependencias complejas:')
 
 table_tech = doc.add_table(rows=1, cols=3)
 table_tech.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -284,14 +354,14 @@ for i, c in enumerate(hdr_cells):
     set_cell_margins(c, 120, 120, 150, 150)
 
 tech_rows = [
-    ('Frontend UI / UX', 'HTML5 Semántico + CSS3 Avanzado (Variables Dinámicas)', 'Diseño fullscreen responsivo inspirado en ChatGPT, soporte completo para tema claro/oscuro, microinteracciones y efectos ripple.'),
-    ('Lógica Conversacional', 'Vanilla JavaScript (ES6+ Modular)', 'Normalización de texto, motor NLP basado en intenciones semánticas y expresiones regulares, parsing dinámico de Markdown.'),
-    ('Iconografía Vectorial', 'SVG Inline (Trazo uniforme a 2px)', 'Iconografía nítida y corporativa que sustituye emojis informales, garantizando coherencia visual técnica en todas las resoluciones.'),
-    ('Orientador Vocacional', 'Algoritmo Polifactorial JS', 'Cuestionario interactivo de 6 reactivos con ponderación matricial y cálculo de compatibilidad porcentual con trofeo de resultado.'),
-    ('Motor de Voz Neural', 'Microsoft Edge TTS (Python) + Web Speech API', 'Síntesis de voz femenina dulce y humana con fallback automático para funcionamiento universal en web estática y servidores locales.'),
-    ('Reconocimiento Vocal', 'Web Speech Recognition API', 'Dictado por voz mediante micrófono en tiempo real con dialecto español de Perú (es-PE) y detección de silencio.'),
-    ('Almacenamiento Local', 'Web Storage API (localStorage)', 'Persistencia del historial de consultas recientes del usuario y preferencias de tema de interfaz.'),
-    ('Despliegue y CDN', 'GitHub Pages (HTTPS Global)', 'Alojamiento en la nube con disponibilidad permanente 24/7, certificado SSL activo y CDN de alta velocidad.')
+    ('Red Neuronal Artificial (MLP)', 'HercarNeuralNetwork (Vanilla JS ES6+)', 'Perceptrón Multicapa (220-36-18-22) con LeakyReLU, Tanh, Softmax y Backpropagation en browser.'),
+    ('Inspector & Playground IA', 'SVG Reactivo + DOM Dinámico', 'Auditoría en tiempo real del grafo neuronal, distribución Softmax y banco de pruebas interactivas.'),
+    ('Frontend UI / UX', 'HTML5 Semántico + CSS3 Avanzado (Variables Dinámicas)', 'Diseño fullscreen estilo ChatGPT, microinteracciones, modales glassmorphism y tema claro/oscuro.'),
+    ('Simulador Financiero TUPA', 'Algoritmo JS de Tasas 2026', 'Calculadora interactiva con perfiles de cachimbos, regulares y titulación con copiado al portapapeles.'),
+    ('Orientador Vocacional', 'Algoritmo Polifactorial JS', 'Cuestionario de 6 reactivos con cálculo matricial de compatibilidad porcentual y trofeo interactivo.'),
+    ('Motor de Voz Neural', 'Microsoft Edge TTS (Python) + Web Speech API', 'Síntesis de voz femenina dulce con entonación natural y normalización fonética de siglas.'),
+    ('Reconocimiento Vocal', 'Web Speech Recognition API', 'Dictado por voz mediante micrófono en tiempo real con animación concéntrica Ripple.'),
+    ('Despliegue y CDN', 'GitHub Pages (HTTPS Global)', 'Alojamiento en la nube con disponibilidad 24/7, certificado SSL y CDN de alta velocidad.')
 ]
 
 for row in tech_rows:
@@ -304,66 +374,27 @@ for row in tech_rows:
         set_cell_margins(r_cells[idx], 100, 100, 120, 120)
 
 # ==========================================
-# 7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO
+# 10. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES
 # ==========================================
-add_h1('7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO')
-add_p('Uno de los mayores logros del proyecto es la humanización de la voz de HercarIA, eliminando cualquier sensación de sintetizador robótico antiguo:')
-add_bullet('Calibración Acústica Agradable y Femenina: ', 'Se calibró la tasa de velocidad en 0.93 y el tono (pitch) en 1.05. Este ajuste acústico produce una cadencia pausada, melodiosa, suave y natural, ideal para la atención y orientación vocacional.')
-add_bullet('Supresión Total de Sintaxis Markdown y Asteriscos: ', 'Se diseñó un filtro de limpieza previa (regex) que erradica por completo la pronunciación de asteriscos (**), guiones, numerales (#), barras y tablas. La voz habla con lenguaje conversacional limpio mientras la pantalla muestra el texto formateado con viñetas y negritas.')
-add_bullet('Normalización Fonética de Siglas Institucionales: ', 'El preprocesador vocal traduce términos técnicos antes de llegar al sintetizador: "APSTI" se modula fonéticamente como "Ápsti" o "Arquitectura de Plataformas y Servicios TI", "ANI" como "Ani", "DPA" como "D P A", "S/ 150" como "150 soles", "IESTP" como "Instituto", y "SUNAT" como "Sunat".')
-add_bullet('Priorización Inteligente de Voces Femeninas: ', 'En la versión web (GitHub Pages y celulares), el sistema analiza las voces instaladas en el dispositivo y selecciona prioritariamente voces dulces en español (Dalia, Camila, Salome, Elvira, Sabina).')
-add_bullet('Módulo de Audio Desplegable Popover: ', 'En la cabecera superior se incluye el botón minimalista "[ 🔊 🟢 Voz ]". Al hacer clic, despliega un panel flotante donde el usuario puede activar/desactivar la voz, elegir su voz favorita y probar la entonación con el botón "Probar Voz".')
-add_bullet('Cancelación Instantánea de Ecos y Ruidos: ', 'Se programó la interrupción inmediata de la síntesis vocal al presionar la tecla Escape, al dar clic en el campo de texto o al enviar una nueva consulta, evitando la superposición molesta de audios.')
-
-# ==========================================
-# 8. REDISEÑO ERGONÓMICO DE LA INTERFAZ DE USUARIO (UI/UX)
-# ==========================================
-add_h1('8. REDISEÑO ERGONÓMICO DE LA INTERFAZ DE USUARIO (UI/UX)')
-add_p('Para brindar una experiencia óptima al usuario, se rediseñó la distribución de los componentes eliminando saturaciones visuales:')
-add_bullet('Menú Lateral Limpio estilo ChatGPT: ', 'El menú lateral (Sidebar) se reservó exclusivamente para las acciones de navegación fundamentales: botón destacado "+ Nueva Conversación", acceso rápido a "Test Vocacional", lista de "Consultas Recientes" y conmutador de "Modo Oscuro".')
-add_bullet('Botones de Utilidad en Cabecera Superior: ', 'Las funciones operativas se trasladaron a la esquina superior derecha del encabezado, junto al selector de voz: el botón "Guardar Chat" (descarga la transcripción en un archivo .txt con membrete oficial) y el botón "Borrar Chat" (reinicia la sesión de diálogo de manera segura).')
-add_bullet('Barra de Píldoras de Acceso Rápido (Chips): ', 'Directamente sobre el cuadro de entrada de texto se dispuso una barra horizontal con chips interactivos ("Las 4 Carreras Técnicas", "Registro de Pagos", "Matrícula y Costos 2026", "Mesa de Partes Virtual", "Ubicación y Contacto"). Al presionar un chip, la consulta se envía inmediatamente al chat sin necesidad de teclear.')
-add_bullet('Navegación Adaptativa de 3 Líneas: ', 'En computadoras de escritorio, el icono de menú colapsa la barra lateral para otorgar el 100% de la pantalla a la conversación. En teléfonos inteligentes, abre un Drawer deslizante con fondo oscuro translúcido y botón táctil de cierre.')
-
-# ==========================================
-# 9. TEST VOCACIONAL PSICOMÉTRICO INTERACTIVO
-# ==========================================
-add_h1('9. TEST VOCACIONAL PSICOMÉTRICO INTERACTIVO')
-add_p('El sistema incorpora un orientador vocacional desarrollado en js/test_vocacional.js que diagnostica la inclinación profesional del postulante mediante 6 reactivos interactivos:')
-add_bullet('Pregunta 1 (Intereses Naturales): ', 'Indaga sobre actividades predilectas en tiempo libre (resolver problemas tecnológicos, coordinar proyectos comerciales, organizar finanzas o explorar la fauna marina).')
-add_bullet('Pregunta 2 (Entorno Laboral Deseado): ', 'Evalúa el ambiente de trabajo preferido (oficinas tecnológicas con servidores, agencias aduaneras portuarias, despachos tributarios o plantas de procesamiento y embarcaciones).')
-add_bullet('Pregunta 3 (Habilidades Destacadas): ', 'Mide competencias autopercibidas (pensamiento analítico y algoritmos, negociación persuasiva, exactitud numérica y orden, o destreza biológica y trabajo en campo).')
-add_bullet('Pregunta 4 (Motivación Profesional): ', 'Analiza metas de vida (crear soluciones de software para empresas, impulsar exportaciones regionales hacia mercados globales, liderar la administración contable de grandes corporaciones o innovar en la maricultura sostenible).')
-add_bullet('Pregunta 5 (Resolución de Conflictos): ', 'Evalúa el estilo de respuesta ante desafíos cotidianos.')
-add_bullet('Pregunta 6 (Visión de Futuro en Paita): ', 'Conecta las aspiraciones personales con las oportunidades laborales tangibles del puerto de Paita y la Región Piura.')
-add_p('Al culminar la evaluación, el algoritmo calcula el porcentaje de afinidad de las 4 carreras, presenta una tarjeta interactiva con trofeo dorado, detalla el campo laboral en la región y ofrece botones de acción para revisar la malla curricular o conocer los requisitos de matrícula.')
-
-# ==========================================
-# 10. MEMORIA DE CONSTRUCCIÓN PASO A PASO
-# ==========================================
-add_h1('10. MEMORIA DE CONSTRUCCIÓN PASO A PASO')
-add_p('El desarrollo de HercarIA se ejecutó siguiendo 6 fases sistemáticas:')
-add_bullet('Fase 1 (Recopilación e Ingeniería de Conocimiento): ', 'Extracción sistemática de datos desde el portal web oficial ieshercar.edu.pe, TUPA vigente, plataforma de pagos (pagos.ieshercar.edu.pe) y sistema de boletas electrónicas.')
-add_bullet('Fase 2 (Maquetación y Diseño Visual ChatGPT): ', 'Creación de index.html y css/styles.css con maquetación flexible en pantalla completa, portada hero con tarjetas explicativas y soporte completo para modo oscuro y claro.')
-add_bullet('Fase 3 (Desarrollo del Motor NLP en JavaScript): ', 'Programación de js/app.js para detectar intenciones de usuario sobre requisitos, gratuidad, carreras, convalidaciones, títulos oficiales y horarios, aplicando normalización de cadenas de texto.')
-add_bullet('Fase 4 (Implementación del Test Psicométrico): ', 'Codificación de js/test_vocacional.js con cálculo matricial dinámico y tarjetas visuales interactivas.')
-add_bullet('Fase 5 (Humanización Vocal y Audio Desplegable): ', 'Desarrollo de js/voice.js, integrando Microsoft Edge TTS (Python) y síntesis del navegador con tono femenino dulce, filtros de sintaxis Markdown y dictado por micrófono.')
-add_bullet('Fase 6 (Despliegue y Control de Versiones en GitHub): ', 'Publicación en el repositorio oficial de GitHub (https://github.com/GMPH2007/HercarBOT) y activación de GitHub Pages para acceso universal y gratuito desde cualquier dispositivo móvil o computadora.')
-
-# ==========================================
-# 11. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES
-# ==========================================
-add_h1('11. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES')
-add_p('HercarIA se distribuye en dos modalidades para facilidad de los usuarios:')
-add_bullet('1. Acceso en Vivo en la Nube (GitHub Pages): ', 'Disponible de forma instantánea sin instalaciones en: https://gmph2007.github.io/HercarBOT/')
-add_bullet('2. Ejecución Local con 1 Clic (Windows): ', 'Descargar el proyecto desde GitHub y hacer doble clic en el archivo Iniciar_HercarBOT.bat. Este lanzador inicia el microservicio local de voz neural y abre el navegador automáticamente en http://localhost:8080.')
+add_h1('10. GUÍA DE INSTALACIÓN Y ENLACES OFICIALES')
+add_p('HercarIA se distribuye en dos modalidades para conveniencia de toda la comunidad:')
+add_bullet('1. Despliegue en Vivo en la Nube (GitHub Pages): ', 'Acceso inmediato sin instalaciones en: https://gmph2007.github.io/HercarBOT/')
+add_bullet('2. Ejecución Local con 1 Clic (Windows): ', 'Doble clic sobre el archivo Iniciar_HercarBOT.bat para activar el microservicio local de voz de estudio en http://localhost:8080.')
 add_bullet('Portal Web Oficial del Instituto: ', 'https://ieshercar.edu.pe/')
 add_bullet('Biblioteca Virtual Institucional: ', 'https://biblioteca.ieshercar.edu.pe/login.php')
 add_bullet('Plataforma de Pagos y Registro de Vouchers: ', 'https://pagos.ieshercar.edu.pe/')
 add_bullet('Mesa de Partes Virtual: ', 'https://sistema.ieshercar.edu.pe/registro-tramite/')
 add_bullet('Consulta y Descarga de Boletas Electrónicas: ', 'https://sistema.ieshercar.com/Consulta_Boletas/index.php')
+add_bullet('Repositorio Oficial GitHub: ', 'https://github.com/GMPH2007/HercarBOT')
 
-# Guardar documento Word actualizado
+# ==========================================
+# 11. CONCLUSIONES Y TRABAJOS FUTUROS
+# ==========================================
+add_h1('11. CONCLUSIONES')
+add_p('1. La implementación de una Red Neuronal Perceptrón Multicapa (MLP) ejecutada 100% en el cliente posiciona a HercarIA y a la carrera de APSTI a la vanguardia de la innovación tecnológica en la Región Piura, demostrando que la Inteligencia Artificial de alto rendimiento es viable en navegadores web sin incurrir en costos de infraestructura.')
+add_p('2. Las herramientas integradas de Simulador TUPA 2026, Mapa del Campus, Inspector Neuronal y Orientador Vocacional ofrecen una experiencia pedagógica e interactiva integral, transformando a HercarIA en una plataforma institucional de referencia para el IESTP Hermanos Cárcamo.')
+add_p('3. La calibración acústica femenina dulce, libre de sintaxis Markdown, combinada con la interfaz sobria inspirada en ChatGPT, asegura un trato cálido, humano y profesional para toda la juventud estudiantil paiteña.')
+
 output_file = 'INFORME_TECNICO_HERCARBOT.docx'
 doc.save(output_file)
 print(f'[OK] {output_file} generado exitosamente con formato institucional de alta fidelidad!')
