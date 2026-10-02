@@ -1,14 +1,14 @@
 # INFORME TÉCNICO Y MEMORIA DESCRIPTIVA DE PROYECTO
 
-## DESARROLLO E IMPLEMENTACIÓN DEL ASISTENTE VIRTUAL INTELIGENTE "HERCARIA v5.0"
-### Dotado de Red Neuronal Artificial Multicapa (MLP), Inspector Visual con Playground, Simulador de Matrícula TUPA 2026, Mapa del Campus y Síntesis Vocal Femenina Humana
+## DESARROLLO E IMPLEMENTACIÓN DEL ASISTENTE VIRTUAL INTELIGENTE "HERCARIA v5.1"
+### Dotado de Red Neuronal Artificial Multicapa (MLP), Base Enciclopédica Institucional, Simulador TUPA 2026, Mapa del Campus, Interfaz Limpia Ergonométrica y Síntesis Vocal Femenina Humana
 ### Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" — Paita, Piura
 
 ---
 
 * **Carrera Profesional Técnica:** Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
 * **Autor / Desarrollador:** Gerson Misael Pintado Huamán (GMPH2007)
-* **Versión del Sistema:** v5.0 Neuronal APSTI (Producción Estable)
+* **Versión del Sistema:** v5.1 Neuronal APSTI Ampliada (Producción Estable)
 * **Institución Beneficiaria:** I.E.S.T.P. "Hermanos Cárcamo" de Paita ([ieshercar.edu.pe](https://ieshercar.edu.pe/))
 * **Fecha:** Octubre de 2026
 * **Repositorio Oficial:** [https://github.com/GMPH2007/HercarBOT](https://github.com/GMPH2007/HercarBOT)
@@ -18,17 +18,18 @@
 
 ## 1. RESUMEN EJECUTIVO
 
-El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema **HercarIA v5.0**, una plataforma de Inteligencia Artificial conversacional de última generación concebida para el **Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita**.
+El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema **HercarIA v5.1**, una plataforma de Inteligencia Artificial conversacional de última generación concebida para el **Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita**.
 
-Desarrollado en el marco formativo de la **Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)**, HercarIA integra por primera vez en la educación técnica regional una **Red Neuronal Artificial Perceptrón Multicapa (MLP)** ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning), con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.
+Desarrollado en el marco formativo de la **Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)**, HercarIA integra una **Red Neuronal Artificial Perceptrón Multicapa (MLP)** ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning) con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.
 
-Asimismo, el sistema cuenta con:
-1. **Inspector Visual de Red Neuronal y Playground en Vivo:** Diagrama reactivo de topología y banco de pruebas de inferencia para docentes y evaluadores.
-2. **Simulador de Matrícula y Tasas TUPA 2026:** Calculadora institucional interactiva con perfiles para cachimbos, regulares y trámites de titulación.
-3. **Mapa Arquitectónico Digital del Campus:** Plano esquemático interactivo con puntos de interés de laboratorios de cómputo APSTI, acuicultura y navegación DPA.
-4. **Motor de Síntesis Vocal Femenina Humana y Dulce:** Voces neurales de alta fidelidad (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`), sin lectura robótica de Markdown y con pronunciación fonética nativa.
-5. **Orientador Vocacional Psicométrico:** 6 reactivos ponderados con cálculo matricial de compatibilidad porcentual.
-6. **Chips Contextuales Dinámicos y Acciones de Mensaje:** Preguntas sugeridas de seguimiento y botones de escucha, copiado con notificación Toast y calificación de satisfacción.
+Asimismo, la versión 5.1 incorpora:
+1. **Base de Conocimiento Enciclopédica y Semántica:** Respuestas minuciosas sobre mallas curriculares ciclo por ciclo de las 4 carreras, temario oficial del examen de admisión, requisitos de titulación y prácticas preprofesionales (EFSRT), Beca 18 (PRONABEC), carné de medio pasaje, rutas de transporte desde Piura y Sullana, sistema SIGA web y biblioteca virtual.
+2. **Ergonomía Visual Limpia y Humanizada:** Ocultamiento de botones e indicadores de IA toscos en cabecera y barra lateral para una interfaz pulcra y amigable estilo ChatGPT, manteniendo el acceso a la red neuronal mediante el comando `/inspector`.
+3. **Simulador de Matrícula y Tasas TUPA 2026:** Calculadora institucional interactiva con perfiles para cachimbos, regulares y trámites de titulación.
+4. **Mapa Arquitectónico Digital del Campus:** Plano esquemático interactivo con puntos de interés de laboratorios de cómputo APSTI, acuicultura y navegación DPA.
+5. **Motor de Síntesis Vocal Femenina Humana y Dulce:** Voces neurales de alta fidelidad (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`), sin lectura robótica de Markdown y con pronunciación fonética nativa.
+6. **Orientador Vocacional Psicométrico:** 6 reactivos ponderados con cálculo matricial de compatibilidad porcentual.
+7. **Chips Contextuales Dinámicos y Acciones de Mensaje:** Preguntas sugeridas de seguimiento y botones de escucha, copiado con notificación Toast y calificación de satisfacción.
 
 ---
 
