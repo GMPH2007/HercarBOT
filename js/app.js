@@ -366,6 +366,10 @@ class HercarChatApp {
         this.lastNeuralInference = neuralResult;
         console.log('[Inferencia Red Neuronal]:', neuralResult);
 
+        if (neuralResult && neuralResult.confidence < 0.40) {
+            this.registrarConsultaSinResponder(query, neuralResult);
+        }
+
         // Actualizar indicador de cabecera en tiempo real
         const headerIndicator = document.getElementById('header-neural-indicator');
         if (headerIndicator) {
@@ -707,25 +711,74 @@ class HercarChatApp {
                 item.className = 'sidebar-history-item';
                 item.title = q;
                 item.innerHTML = `
-                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px; flex-shrink: 0; opacity: 0.7;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    <span>${this.escapeHTML(q)}</span>
+                    <div class="history-item-left">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px; flex-shrink: 0; opacity: 0.7;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>${this.escapeHTML(q)}</span>
+                    </div>
+                    <button type="button" class="btn-delete-single-history" title="Borrar esta consulta del historial">✕</button>
                 `;
-                item.addEventListener('click', () => {
-                    this.cerrarSidebarMovilSiAplica();
-                    this.enviarConsultaDirecta(q);
-                });
+
+                const leftEl = item.querySelector('.history-item-left');
+                if (leftEl) {
+                    leftEl.addEventListener('click', () => {
+                        this.cerrarSidebarMovilSiAplica();
+                        this.enviarConsultaDirecta(q);
+                    });
+                }
+
+                const btnDel = item.querySelector('.btn-delete-single-history');
+                if (btnDel) {
+                    btnDel.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.eliminarConsultaHistorial(q);
+                    });
+                }
+
                 historyList.appendChild(item);
             });
         } catch (e) {}
     }
 
+    eliminarConsultaHistorial(query) {
+        try {
+            let queries = JSON.parse(localStorage.getItem('hercar_recent_queries') || '[]');
+            queries = queries.filter(item => item !== query);
+            localStorage.setItem('hercar_recent_queries', JSON.stringify(queries));
+            this.renderizarHistorialSidebar();
+            this.mostrarToast('🗑️ Consulta eliminada del historial');
+        } catch (e) {}
+    }
+
     vaciarHistorialReciente() {
+        if (!confirm('¿Deseas vaciar todo el historial de consultas recientes?')) return;
         localStorage.removeItem('hercar_recent_queries');
         const historySection = document.getElementById('sidebar-history-section');
         if (historySection) historySection.style.display = 'none';
+        this.mostrarToast('🗑️ Historial de consultas vaciado');
+    }
+
+    registrarConsultaSinResponder(query, neuralResult = null) {
+        if (!query || query.trim().length < 3) return;
+        try {
+            let unanswered = JSON.parse(localStorage.getItem('hercar_unanswered_queries') || '[]');
+            const trimmed = query.trim();
+            const exists = unanswered.some(u => u.query.toLowerCase() === trimmed.toLowerCase());
+            if (!exists) {
+                unanswered.unshift({
+                    id: 'unans_' + Date.now(),
+                    query: trimmed,
+                    confidence: neuralResult ? neuralResult.confidencePercent : 'Baja',
+                    intent: neuralResult ? neuralResult.intent : 'desconocido',
+                    timestamp: new Date().toLocaleDateString('es-PE') + ' ' + new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+                    answered: false
+                });
+                if (unanswered.length > 60) unanswered = unanswered.slice(0, 60);
+                localStorage.setItem('hercar_unanswered_queries', JSON.stringify(unanswered));
+            }
+        } catch (e) {}
     }
 
     /**
@@ -1459,6 +1512,9 @@ Recuerda que estoy disponible las **24 horas del día** para resolver cualquier 
     }
 
     responderGenerico(query, nr = null) {
+        // Registrar en consultas sin responder para que el administrador la vea en el panel admin.html y pueda responderla
+        this.registrarConsultaSinResponder(query, nr);
+
         const respuesta = `Comprendo tu consulta sobre *"**${this.escapeHTML(query)}**"*. 
 
 Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte con exactitud en cualquiera de estos temas:
@@ -1837,6 +1893,11 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
             if (this.metrics) {
                 this.metrics.downvotes = (this.metrics.downvotes || 0) + 1;
                 this.guardarMetricas();
+            }
+            // Registrar la última consulta del usuario para revisión en admin.html
+            const lastUserMsg = [...this.history].reverse().find(m => m.sender === 'user');
+            if (lastUserMsg && lastUserMsg.text) {
+                this.registrarConsultaSinResponder(lastUserMsg.text, { confidencePercent: 'Feedback 👎', intent: 'consulta_a_mejorar' });
             }
         }
         this.actualizarDashboardMetricas();
