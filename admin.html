@@ -134,18 +134,44 @@
                     <div class="mode-options-grid">
                         <label class="mode-card selected" id="mode-card-hybrid">
                             <input type="radio" name="admin_mode" value="hybrid" checked>
-                            <div class="mode-card-header">⚡ Modo Híbrido Inteligente</div>
-                            <div class="mode-card-desc"><strong>Recomendado:</strong> Consulta tu Cloud API para preguntas abiertas complejas. Si no hay conexión o se agota la cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI sin interrumpir el servicio.</div>
+                            <div class="mode-card-top">
+                                <div class="mode-icon-circle icon-hybrid">⚡</div>
+                                <span class="mode-badge-tag tag-recommended">⭐ RECOMENDADO</span>
+                            </div>
+                            <div class="mode-card-header">Modo Híbrido Inteligente</div>
+                            <div class="mode-card-desc">Consulta Cloud API para razonamiento amplio. Si no hay conexión o se agota la cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI sin caída de servicio.</div>
+                            <div class="mode-card-footer-pill">
+                                <span class="custom-radio-indicator"></span>
+                                <span class="mode-active-text">Modo Híbrido Activo</span>
+                            </div>
                         </label>
+
                         <label class="mode-card" id="mode-card-cloud">
                             <input type="radio" name="admin_mode" value="cloud">
-                            <div class="mode-card-header">☁️ Modo Cloud Exclusivo</div>
+                            <div class="mode-card-top">
+                                <div class="mode-icon-circle icon-cloud">☁️</div>
+                                <span class="mode-badge-tag tag-cloud">LLM EXTERNO</span>
+                            </div>
+                            <div class="mode-card-header">Modo Cloud Exclusivo</div>
                             <div class="mode-card-desc">Canaliza todas las preguntas directamente al proveedor de nube seleccionado (Gemini, OpenAI, Groq). Requiere API Key válida activa.</div>
+                            <div class="mode-card-footer-pill">
+                                <span class="custom-radio-indicator"></span>
+                                <span class="mode-active-text">Modo Cloud Activo</span>
+                            </div>
                         </label>
+
                         <label class="mode-card" id="mode-card-local">
                             <input type="radio" name="admin_mode" value="local">
-                            <div class="mode-card-header">🧠 Red Neuronal Local APSTI</div>
-                            <div class="mode-card-desc"><strong>100% Gratuito y Offline:</strong> Realiza inferencias directas con el Perceptrón Multicapa en el navegador, sin consumir cuota externa ni enviar datos fuera del cliente.</div>
+                            <div class="mode-card-top">
+                                <div class="mode-icon-circle icon-local">🧠</div>
+                                <span class="mode-badge-tag tag-offline">100% OFFLINE</span>
+                            </div>
+                            <div class="mode-card-header">Red Neuronal Local APSTI</div>
+                            <div class="mode-card-desc">Inferencia matemática pura en el navegador (Perceptrón Multicapa MLP). Sin costo, sin tokens externos y con latencia ultrarrápida (&lt;5ms).</div>
+                            <div class="mode-card-footer-pill">
+                                <span class="custom-radio-indicator"></span>
+                                <span class="mode-active-text">Modo Local Activo</span>
+                            </div>
                         </label>
                     </div>
                 </div>
@@ -181,10 +207,20 @@
                             <button type="button" class="btn-toggle-key" id="btn-toggle-key" title="Mostrar/Ocultar clave">👁️</button>
                         </div>
                         <div class="help-links-row">
-                            🔑 Obtén tu clave gratis:
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio (Gratis)</a> •
-                            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI Console</a> •
-                            <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">Groq Console</a>
+                            <span class="help-links-label">🔑 Obtén tu API Key gratuita:</span>
+                            <div class="provider-key-chips">
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="key-chip chip-gemini">
+                                    <span>✨ Google AI Studio</span>
+                                    <span class="chip-badge-free">Gratis</span>
+                                </a>
+                                <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="key-chip chip-openai">
+                                    <span>🟢 OpenAI Console</span>
+                                </a>
+                                <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="key-chip chip-groq">
+                                    <span>⚡ Groq Cloud</span>
+                                    <span class="chip-badge-free">Ultra Rápido</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -197,7 +233,7 @@
 
                     <div class="form-row" style="margin-top: 18px;">
                         <div class="form-group">
-                            <label class="form-label" for="slider-temp">Temperatura (Creatividad): <span id="label-temp-val" style="color: var(--primary);">0.7</span></label>
+                            <label class="form-label" for="slider-temp">Temperatura (Creatividad): <span id="label-temp-val" style="color: var(--primary); font-weight: 800;">0.7</span></label>
                             <input type="range" id="slider-temp" min="0.1" max="1.0" step="0.1" value="0.7" style="width: 100%; accent-color: var(--primary);">
                         </div>
                         <div class="form-group">
@@ -214,6 +250,7 @@
                     <div class="actions-footer-bar">
                         <button type="button" class="btn-save-main" id="btn-save-api">💾 Guardar Configuración de API</button>
                         <button type="button" class="btn-clear-main" id="btn-clear-api">🗑️ Eliminar API Key Guardada</button>
+                        <span id="save-status-indicator" class="save-status-indicator"></span>
                     </div>
                 </div>
             </section>
