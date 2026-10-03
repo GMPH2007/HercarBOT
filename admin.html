@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración & Entrenamiento IA • HercarIA v6.0 APSTI</title>
+    <link rel="icon" type="image/png" href="assets/logo-crest.png">
+    <link rel="stylesheet" href="css/admin.css?v=6.0">
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
+    <header class="admin-navbar">
+        <div class="navbar-brand">
+            <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" class="brand-crest">
+            <div class="brand-text">
+                <h1>
+                    HercarIA • Panel de Administración
+                    <span class="version-tag">v6.0 APSTI</span>
+                </h1>
+                <p>I.E.S.T.P. "Hermanos Cárcamo" — Paita, Piura | Carrera de Arquitectura de Plataformas y Servicios TI</p>
+            </div>
+        </div>
+        <div class="navbar-actions">
+            <a href="index.html" class="btn-nav-action btn-nav-chat">
+                <span>💬 Abrir Chatbot Oficial</span>
+                <span style="font-size: 0.8rem;">↗</span>
+            </a>
+            <button type="button" class="btn-nav-action" id="theme-toggle-admin">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-text">Modo Oscuro</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- CUERPO PRINCIPAL DEL DASHBOARD -->
+    <div class="admin-layout">
+        
+        <!-- BARRA LATERAL DE NAVEGACIÓN -->
+        <aside class="admin-sidebar">
+            <ul class="nav-menu">
+                <li>
+                    <button type="button" class="nav-item-btn active" data-tab="tab-api-cloud">
+                        <div class="item-content">
+                            <span>⚡</span>
+                            <span>APIs & Proveedores</span>
+                        </div>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-unanswered">
+                        <div class="item-content">
+                            <span>❓</span>
+                            <span>Preguntas Sin Resolver</span>
+                        </div>
+                        <span class="sidebar-badge badge-pending" id="badge-unanswered-count">0</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-knowledge-base">
+                        <div class="item-content">
+                            <span>📚</span>
+                            <span>Base de Conocimiento</span>
+                        </div>
+                        <span class="sidebar-badge" id="badge-kb-count" style="background: rgba(37,99,235,0.15); color: #2563eb;">0</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-neural-lab">
+                        <div class="item-content">
+                            <span>🧠</span>
+                            <span>Red Neuronal APSTI</span>
+                        </div>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-analytics">
+                        <div class="item-content">
+                            <span>📊</span>
+                            <span>Métricas & Auditoría</span>
+                        </div>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-prompt-editor">
+                        <div class="item-content">
+                            <span>📝</span>
+                            <span>System Prompt Oficial</span>
+                        </div>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-item-btn" data-tab="tab-chat-tester">
+                        <div class="item-content">
+                            <span>💬</span>
+                            <span>Simulador de Pruebas</span>
+                        </div>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="sidebar-status-box">
+                <div class="status-row">
+                    <span style="color: var(--text-muted);">Modo Operativo:</span>
+                    <strong id="status-sidebar-mode" style="color: var(--primary);">Híbrido</strong>
+                </div>
+                <div class="status-row">
+                    <span style="color: var(--text-muted);">Proveedor:</span>
+                    <strong id="status-sidebar-provider">Google Gemini</strong>
+                </div>
+                <div class="status-row">
+                    <span style="color: var(--text-muted);">Red Neuronal:</span>
+                    <span style="color: var(--success); font-weight: 700;">🟢 Lista (Local)</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE CONTENIDO DINÁMICO -->
+        <main class="admin-main-content">
+
+            <!-- ==============================================================
+                 VISTA 1: CONFIGURACIÓN DE APIS Y PROVEEDORES CLOUD
+                 ============================================================== -->
+            <section class="admin-tab-view active" id="tab-api-cloud">
+                <div class="view-header">
+                    <h2>⚡ Configuración de APIs y Modelos Cloud</h2>
+                    <p>Gestiona la conexión con proveedores de modelos generativos (Gemini, OpenAI, Groq) y el respaldo con la Red Neuronal Local APSTI.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Modo Operativo del Chatbot</div>
+                    <div class="dashboard-card-desc">Define cómo interactúa el bot con las peticiones externas y la red neuronal interna.</div>
+
+                    <div class="mode-options-grid">
+                        <label class="mode-card selected" id="mode-card-hybrid">
+                            <input type="radio" name="admin_mode" value="hybrid" checked>
+                            <div class="mode-card-header">⚡ Modo Híbrido Inteligente</div>
+                            <div class="mode-card-desc"><strong>Recomendado:</strong> Consulta tu Cloud API para preguntas abiertas complejas. Si no hay conexión o se agota la cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI sin interrumpir el servicio.</div>
+                        </label>
+                        <label class="mode-card" id="mode-card-cloud">
+                            <input type="radio" name="admin_mode" value="cloud">
+                            <div class="mode-card-header">☁️ Modo Cloud Exclusivo</div>
+                            <div class="mode-card-desc">Canaliza todas las preguntas directamente al proveedor de nube seleccionado (Gemini, OpenAI, Groq). Requiere API Key válida activa.</div>
+                        </label>
+                        <label class="mode-card" id="mode-card-local">
+                            <input type="radio" name="admin_mode" value="local">
+                            <div class="mode-card-header">🧠 Red Neuronal Local APSTI</div>
+                            <div class="mode-card-desc"><strong>100% Gratuito y Offline:</strong> Realiza inferencias directas con el Perceptrón Multicapa en el navegador, sin consumir cuota externa ni enviar datos fuera del cliente.</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Proveedor y Clave Secreta de API</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="select-provider">Proveedor del Servicio de IA:</label>
+                            <select id="select-provider" class="form-select">
+                                <option value="gemini" selected>Google Gemini (Recomendado - Gratuito)</option>
+                                <option value="openai">OpenAI (ChatGPT / GPT-4o)</option>
+                                <option value="groq">Groq (Inferencia Llama 3 Ultra Rápida)</option>
+                                <option value="openrouter">OpenRouter (Multi-Modelos)</option>
+                                <option value="deepseek">DeepSeek API</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="select-model">Modelo de Lenguaje a Utilizar:</label>
+                            <select id="select-model" class="form-select">
+                                <option value="gemini-1.5-flash">gemini-1.5-flash (Rápido y Gratuito)</option>
+                                <option value="gemini-1.5-pro">gemini-1.5-pro (Máxima Capacidad)</option>
+                                <option value="gemini-2.0-flash">gemini-2.0-flash (Última Generación)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="input-api-key">API Key (Clave Secreta del Proveedor):</label>
+                        <div class="key-input-container">
+                            <input type="password" id="input-api-key" class="form-input" placeholder="Pega aquí tu API Key (ej. AIzaSy... o sk-...)">
+                            <button type="button" class="btn-toggle-key" id="btn-toggle-key" title="Mostrar/Ocultar clave">👁️</button>
+                        </div>
+                        <div class="help-links-row">
+                            🔑 Obtén tu clave gratis:
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio (Gratis)</a> •
+                            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI Console</a> •
+                            <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">Groq Console</a>
+                        </div>
+                    </div>
+
+                    <div class="connection-test-container">
+                        <button type="button" class="btn-test-action" id="btn-test-api">
+                            <span>⚡ Probar Conexión con la API en Tiempo Real</span>
+                        </button>
+                        <span class="test-result-pill" id="test-result-badge"></span>
+                    </div>
+
+                    <div class="form-row" style="margin-top: 18px;">
+                        <div class="form-group">
+                            <label class="form-label" for="slider-temp">Temperatura (Creatividad): <span id="label-temp-val" style="color: var(--primary);">0.7</span></label>
+                            <input type="range" id="slider-temp" min="0.1" max="1.0" step="0.1" value="0.7" style="width: 100%; accent-color: var(--primary);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="select-tokens">Límite Máximo de Tokens:</label>
+                            <select id="select-tokens" class="form-select">
+                                <option value="400">400 tokens (~300 palabras)</option>
+                                <option value="800" selected>800 tokens (~600 palabras)</option>
+                                <option value="1200">1200 tokens (~900 palabras)</option>
+                                <option value="2000">2000 tokens (Extenso)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="actions-footer-bar">
+                        <button type="button" class="btn-save-main" id="btn-save-api">💾 Guardar Configuración de API</button>
+                        <button type="button" class="btn-clear-main" id="btn-clear-api">🗑️ Eliminar API Key Guardada</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 2: PREGUNTAS SIN RESOLVER / CENTRO DE ENTRENAMIENTO
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-unanswered">
+                <div class="view-header">
+                    <h2>❓ Preguntas de Estudiantes Sin Resolver o con Baja Confianza</h2>
+                    <p>Consultas reales formuladas por usuarios en el chatbot que obtuvieron baja certeza (&lt;40%), recibieron calificación negativa o cayeron en respuesta genérica. Respóndelas aquí para que HercarIA aprenda de inmediato.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">
+                        <span>Bandeja de Consultas Pendientes de Enseñar</span>
+                        <button type="button" class="btn-clear-main" id="btn-clear-all-unanswered" style="padding: 4px 12px; font-size: 0.8rem;">Vaciar Bandeja</button>
+                    </div>
+                    <div class="dashboard-card-desc">Al hacer clic en "Responder y Enseñar", redactas la respuesta oficial institucional y se integrará automáticamente a la Base de Conocimiento con prioridad absoluta.</div>
+
+                    <div id="unanswered-list-container">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 3: BASE DE CONOCIMIENTO EXTRA (CUSTOM KB)
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-knowledge-base">
+                <div class="view-header">
+                    <h2>📚 Base de Conocimiento Oficial Personalizada</h2>
+                    <p>Agrega o edita preguntas y respuestas oficiales ad hoc (ej. fechas de sustentación, requisitos especiales) que HercarIA responderá con prioridad directa.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Añadir Nuevo Conocimiento Institucional</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="kb-input-question">Pregunta o Frase Clave que harán los estudiantes:</label>
+                        <input type="text" id="kb-input-question" class="form-input" placeholder="Ej: ¿Cuándo inician las inscripciones para el segundo semestre 2026?">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="kb-input-answer">Respuesta Oficial Detallada (Admite formato Markdown con negritas y viñetas):</label>
+                        <textarea id="kb-input-answer" class="form-textarea" rows="5" placeholder="Escribe aquí la respuesta oficial que dará HercarIA a cualquier alumno que pregunte esto..."></textarea>
+                    </div>
+
+                    <button type="button" class="btn-save-main" id="btn-add-custom-knowledge">➕ Guardar y Enseñar al Asistente</button>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">
+                        <span>Preguntas Personalizadas Almacenadas</span>
+                        <input type="text" id="search-custom-kb" class="form-input" placeholder="🔍 Buscar en preguntas guardadas..." style="max-width: 280px; padding: 6px 12px; font-size: 0.82rem;">
+                    </div>
+                    
+                    <div id="custom-kb-cards-container" style="margin-top: 14px;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 4: RED NEURONAL ARTIFICIAL APSTI (MONITOR & LABORATORIO)
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-neural-lab">
+                <div class="view-header">
+                    <h2>🧠 Red Neuronal Artificial APSTI (Perceptrón Multicapa)</h2>
+                    <p>Auditoría topológica, cálculo de gradientes y banco de pruebas de inferencia profunda ejecutado 100% en el navegador.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Topología de la Red Neuronal (Deep Learning Client-Side)</div>
+                    <div class="dashboard-card-desc">Red feedforward desarrollada en Vanilla JS ES6+ con inicialización Xavier/Glorot y activación LeakyReLU/Tanh:</div>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; overflow-x: auto; padding: 14px 0;">
+                        <div style="padding: 14px; background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; text-align: center; min-width: 130px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">CAPA DE ENTRADA</div>
+                            <div style="font-size: 1.4rem; font-weight: 900; color: var(--primary); margin: 4px 0;">260 Nodos</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">TF-IDF Léxico Institucional</div>
+                        </div>
+                        <span style="font-size: 1.2rem; color: var(--text-muted);">➔</span>
+                        <div style="padding: 14px; background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; text-align: center; min-width: 130px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">CAPA OCULTA 1</div>
+                            <div style="font-size: 1.4rem; font-weight: 900; color: #8b5cf6; margin: 4px 0;">36 Neuronas</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">LeakyReLU (α = 0.01)</div>
+                        </div>
+                        <span style="font-size: 1.2rem; color: var(--text-muted);">➔</span>
+                        <div style="padding: 14px; background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; text-align: center; min-width: 130px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">CAPA OCULTA 2</div>
+                            <div style="font-size: 1.4rem; font-weight: 900; color: #ec4899; margin: 4px 0;">18 Neuronas</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">Tanh ([-1, 1])</div>
+                        </div>
+                        <span style="font-size: 1.2rem; color: var(--text-muted);">➔</span>
+                        <div style="padding: 14px; background: var(--bg-card-alt); border: 1px solid var(--primary); border-radius: 8px; text-align: center; min-width: 130px;">
+                            <div style="font-size: 0.75rem; color: var(--primary); font-weight: 700;">CAPA DE SALIDA</div>
+                            <div style="font-size: 1.4rem; font-weight: 900; color: #10b981; margin: 4px 0;">34 Clases</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">Softmax Normalizada</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Playground de Inferencia Neuronal en Tiempo Real</div>
+                    <div class="dashboard-card-desc">Escribe cualquier frase para evaluar cómo la clasifica la red neuronal, su tiempo de respuesta en milisegundos y los tokens léxicos activados.</div>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                        <input type="text" id="neural-test-input" class="form-input" placeholder="Escribe una pregunta para probar la red neuronal..." value="¿Cuánto cuesta la matrícula de primer ciclo?">
+                        <button type="button" class="btn-save-main" id="btn-run-neural-test" style="white-space: nowrap;">⚡ Evaluar Frase</button>
+                    </div>
+
+                    <div id="neural-test-results-box" style="display: none; padding: 16px; background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Intención Predicha:</span>
+                                <h3 id="res-neural-intent" style="color: var(--primary); font-size: 1.1rem;">-</h3>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Certeza / Confianza:</span>
+                                <h3 id="res-neural-conf" style="color: var(--success); font-size: 1.1rem;">-</h3>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Latencia:</span>
+                                <h3 id="res-neural-lat" style="color: #8b5cf6; font-size: 1.1rem;">-</h3>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span style="font-size: 0.8rem; font-weight: 700;">Tokens del Vocabulario Activados:</span>
+                            <div id="res-neural-tokens" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 5: MÉTRICAS, ESTADÍSTICAS Y AUDITORÍA
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-analytics">
+                <div class="view-header">
+                    <h2>📊 Métricas de Uso y Registro de Auditoría Forense</h2>
+                    <p>Cuadro de mando con total de interacciones, balance Cloud vs. Local, satisfacción estudiantil y trazabilidad de consultas.</p>
+                </div>
+
+                <div class="metrics-stat-grid">
+                    <div class="metric-stat-card">
+                        <div class="metric-stat-val text-blue" id="analytics-total">0</div>
+                        <div class="metric-stat-label">Total de Consultas</div>
+                    </div>
+                    <div class="metric-stat-card">
+                        <div class="metric-stat-val text-green" id="analytics-cloud">0</div>
+                        <div class="metric-stat-label">Procesadas por Cloud API</div>
+                    </div>
+                    <div class="metric-stat-card">
+                        <div class="metric-stat-val text-purple" id="analytics-local">0</div>
+                        <div class="metric-stat-label">Procesadas por Red Neuronal</div>
+                    </div>
+                    <div class="metric-stat-card">
+                        <div class="metric-stat-val text-amber" id="analytics-sat">100%</div>
+                        <div class="metric-stat-label">Satisfacción de Usuarios (👍)</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Distribución de Consultas por Carrera</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">
+                                <span>💻 APSTI (Sistemas / Cloud / Software)</span>
+                                <span id="bar-num-apsti">35%</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(148,163,184,0.2); border-radius: 4px; overflow: hidden;">
+                                <div id="bar-fill-apsti" style="height: 100%; width: 35%; background: #2563eb; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">
+                                <span>🚢 ANI (Negocios Internacionales / Aduanas)</span>
+                                <span id="bar-num-ani">25%</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(148,163,184,0.2); border-radius: 4px; overflow: hidden;">
+                                <div id="bar-fill-ani" style="height: 100%; width: 25%; background: #0ea5e9; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">
+                                <span>📊 Contabilidad (Tributación / Finanzas)</span>
+                                <span id="bar-num-conta">20%</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(148,163,184,0.2); border-radius: 4px; overflow: hidden;">
+                                <div id="bar-fill-conta" style="height: 100%; width: 20%; background: #10b981; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">
+                                <span>🐟 DPA (Desarrollo Pesquero y Acuícola)</span>
+                                <span id="bar-num-dpa">20%</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(148,163,184,0.2); border-radius: 4px; overflow: hidden;">
+                                <div id="bar-fill-dpa" style="height: 100%; width: 20%; background: #06b6d4; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">
+                        <span>Registro de Auditoría de Consultas Recientes</span>
+                        <button type="button" class="btn-nav-action" id="btn-export-audit-json" style="padding: 4px 12px; font-size: 0.82rem;">📥 Exportar Auditoría JSON</button>
+                    </div>
+
+                    <div style="overflow-x: auto; margin-top: 14px;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.84rem;">
+                            <thead>
+                                <tr style="background: var(--bg-card-alt); border-bottom: 1px solid var(--border-color); text-align: left;">
+                                    <th style="padding: 10px;">Hora</th>
+                                    <th style="padding: 10px;">Consulta del Usuario</th>
+                                    <th style="padding: 10px;">Motor de IA Utilizado</th>
+                                    <th style="padding: 10px;">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-audit-tbody">
+                                <!-- Se llena dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 6: SYSTEM PROMPT OFICIAL
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-prompt-editor">
+                <div class="view-header">
+                    <h2>📝 Editor de Prompt del Sistema Institucional (APSTI)</h2>
+                    <p>Instrucciones de identidad, restricciones institucionales y directrices de respuesta enviadas a los modelos en la nube.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">Directrices del Sistema para Modelos de Lenguaje</div>
+                    <div class="dashboard-card-desc">Este texto se inyecta como contexto del sistema en Gemini, OpenAI y Groq para asegurar que las respuestas sean formales, institucionales y verídicas.</div>
+
+                    <textarea id="system-prompt-textarea" class="form-textarea" rows="14" style="font-family: monospace; font-size: 0.85rem; line-height: 1.5;"></textarea>
+
+                    <div class="actions-footer-bar">
+                        <button type="button" class="btn-save-main" id="btn-save-prompt">💾 Guardar Cambios en System Prompt</button>
+                        <button type="button" class="btn-clear-main" id="btn-reset-prompt">🔄 Restablecer al Prompt Predeterminado Oficial</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VISTA 7: SIMULADOR DE PRUEBAS DE CHAT
+                 ============================================================== -->
+            <section class="admin-tab-view" id="tab-chat-tester">
+                <div class="view-header">
+                    <h2>💬 Simulador de Pruebas en Vivo</h2>
+                    <p>Prueba consultas interactivas directamente aquí para verificar cómo responde HercarIA con la configuración actual sin salir del panel.</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="admin-chat-preview-box">
+                        <div class="chat-preview-messages" id="chat-preview-messages">
+                            <div class="chat-preview-msg chat-preview-bot">
+                                👋 ¡Hola Administrador! Este es el entorno de pruebas en vivo. Escribe cualquier pregunta para comprobar las respuestas del bot según la configuración activa.
+                            </div>
+                        </div>
+                        <div class="chat-preview-input-row">
+                            <input type="text" id="chat-preview-input" class="form-input" placeholder="Escribe una pregunta para probar el bot...">
+                            <button type="button" class="btn-save-main" id="btn-chat-preview-send" style="padding: 8px 18px;">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL EMERGENTE: RESPONDER Y ENSEÑAR PREGUNTA -->
+    <div class="admin-modal-overlay" id="modal-answer-unanswered" style="display: none;">
+        <div class="admin-modal-box">
+            <div class="admin-modal-head">
+                <h3>➕ Responder y Enseñar al Chatbot</h3>
+                <button type="button" style="background: none; border: none; font-size: 1.3rem; cursor: pointer;" id="btn-close-teach-modal">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <div class="form-group">
+                    <label class="form-label">Pregunta que formuló el estudiante:</label>
+                    <input type="text" id="teach-modal-question" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Respuesta Oficial Institucional que dará HercarIA:</label>
+                    <textarea id="teach-modal-answer" class="form-textarea" rows="6" placeholder="Escribe la respuesta oficial detallada que resolverá esta duda..."></textarea>
+                </div>
+            </div>
+            <div class="admin-modal-foot">
+                <button type="button" class="btn-clear-main" id="btn-cancel-teach-modal">Cancelar</button>
+                <button type="button" class="btn-save-main" id="btn-confirm-teach-modal">✅ Guardar y Enseñar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+    <div class="admin-toast" id="admin-toast"></div>
+
+    <!-- SCRIPTS -->
+    <script src="js/neural_network.js?v=6.0"></script>
+    <script src="js/knowledge.js?v=6.0"></script>
+    <script src="js/admin.js?v=6.0"></script>
+</body>
+</html>
