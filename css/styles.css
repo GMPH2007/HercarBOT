@@ -2005,44 +2005,121 @@ body.dark-mode .header-neural-indicator {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-/* Herramientas del Sidebar */
+/* Herramientas del Sidebar (Módulos Interactivos de Alto Contraste) */
 .sidebar-tools-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border-color);
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.sidebar-tools-header {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+    padding: 0 4px 2px 4px;
+}
+
 .btn-sidebar-subtool {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 9px 12px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: var(--radius-md);
+    color: #f1f5f9;
     font-size: 13px;
     font-weight: 600;
     text-align: left;
     cursor: pointer;
     transition: var(--transition);
 }
-.btn-sidebar-subtool .svg-icon {
-    width: 18px;
-    height: 18px;
-    color: var(--text-muted);
+
+.subtool-icon-wrapper {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     transition: var(--transition);
 }
-.btn-sidebar-subtool:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--border-color);
+
+.subtool-icon-wrapper.icon-tupa {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
 }
-.btn-sidebar-subtool:hover .svg-icon {
-    color: var(--primary);
+
+.subtool-icon-wrapper.icon-mapa {
+    background: rgba(56, 189, 248, 0.18);
+    color: #38bdf8;
+}
+
+.subtool-icon-wrapper .svg-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.subtool-name {
+    flex: 1;
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.subtool-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-emerald {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.badge-blue {
+    background: rgba(56, 189, 248, 0.2);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.btn-sidebar-subtool:hover {
+    background: rgba(255, 255, 255, 0.11);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-sidebar-subtool.btn-subtool-tupa:hover {
+    border-color: rgba(16, 185, 129, 0.45);
+}
+
+.btn-sidebar-subtool.btn-subtool-tupa:hover .subtool-icon-wrapper {
+    background: rgba(16, 185, 129, 0.3);
+    transform: scale(1.06);
+}
+
+.btn-sidebar-subtool.btn-subtool-mapa:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+}
+
+.btn-sidebar-subtool.btn-subtool-mapa:hover .subtool-icon-wrapper {
+    background: rgba(56, 189, 248, 0.3);
+    transform: scale(1.06);
 }
 .btn-sidebar-neural {
     position: relative;
