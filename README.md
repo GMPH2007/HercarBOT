@@ -2,12 +2,12 @@
 
   <img src="assets/logo-crest.png" alt="Insignia IESTP Hermanos Cárcamo" width="140" />
 
-  # 🧠 HercarIA v5.1 • Red Neuronal & Asistente Virtual Oficial
+  # 🧠 HercarIA v6.0 • Arquitectura Híbrida Multi-API & Red Neuronal APSTI
   ### Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo"
   **Paita — Piura, Perú**
 
   <p align="center">
-    <i>Plataforma de Inteligencia Artificial para la Carrera Profesional Técnica de APSTI, dotada de Red Neuronal Artificial Multicapa (MLP) en navegador, Base de Conocimientos Enciclopédica (Mallas curriculares ciclo por ciclo, Beca 18, Titulación EFSRT, Temario de admisión), Simulador TUPA 2026, Mapa del Campus, Orientador Vocacional Psicométrico, Interfaz Limpia Estilo ChatGPT y Síntesis Vocal Femenina Humana.</i>
+    <i>Plataforma de Inteligencia Artificial para la Carrera Profesional Técnica de APSTI, dotada de Arquitectura Híbrida Multi-API (Google Gemini, OpenAI, Groq, OpenRouter, DeepSeek), Red Neuronal Artificial Local Multicapa (MLP) con Fallback Automático, Panel de Administración con Métricas y Auditoría JSON, Base de Conocimiento Extra (Custom KB), Simulador TUPA 2026, Mapa del Campus, Orientador Vocacional Psicométrico y Síntesis Vocal Femenina Humana.</i>
   </p>
 
   <p align="center">
@@ -23,11 +23,12 @@
   </p>
 
   <p align="center">
+    <img src="https://img.shields.io/badge/Arquitectura-H%C3%ADbrida%20Multi--API%20%2B%20Local-2563eb?style=flat-square&logo=googlecloud&logoColor=white" alt="Hybrid Architecture" />
     <img src="https://img.shields.io/badge/Red%20Neuronal-MLP%20(260--36--18--34)-7c3aed?style=flat-square&logo=diagram-next&logoColor=white" alt="Neural Network" />
-    <img src="https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20JS%20ES6+-orange?style=flat-square" alt="Frontend" />
+    <img src="https://img.shields.io/badge/Panel%20Admin-M%C3%A9tricas%20%26%20Auditor%C3%ADa-10b981?style=flat-square&logo=googleanalytics&logoColor=white" alt="Admin Panel" />
     <img src="https://img.shields.io/badge/Voz%20Femenina-es--PE--CamilaNeural%20%2F%20Dalia-blueviolet?style=flat-square" alt="Voice" />
     <img src="https://img.shields.io/badge/Carrera-APSTI%20Oficial-13357b?style=flat-square" alt="APSTI" />
-    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20v5.1-success?style=flat-square" alt="Status" />
+    <img src="https://img.shields.io/badge/Estado-Producci%C3%B3n%20v6.0-success?style=flat-square" alt="Status" />
   </p>
 
   ---
@@ -47,6 +48,7 @@
 ## 📌 Tabla de Contenidos
 
 - [🎯 ¿Qué es HercarIA y qué problema resuelve?](#-qu%C3%A9-es-hercaria-y-qu%C3%A9-problema-resuelve)
+- [⚙️ Panel de Administración y Arquitectura Híbrida Multi-API (v6.0)](#️-panel-de-administración-y-arquitectura-híbrida-multi-api-v60)
 - [🧠 Arquitectura de la Red Neuronal Artificial (MLP)](#-arquitectura-de-la-red-neuronal-artificial-mlp)
 - [🌟 Características Principales](#-caracter%C3%ADsticas-principales)
 - [🧮 Simulador de Matrícula y Tasas TUPA 2026](#-simulador-de-matr%C3%ADcula-y-tasas-tupa-2026)
@@ -74,6 +76,54 @@ Además, las dudas sobre trámites, validación de vouchers de Banco de la Naci�
 3. **Simulador de Matrícula TUPA 2026:** Cálculo interactivo y transparente de pagos institucionales.
 4. **Atención Continua 24/7:** Resuelve dudas sobre admisión, carreras, trámites y pagos en cualquier momento.
 5. **Experiencia Humana:** Voz dulce femenina y dictado por micrófono para consultar hablando con naturalidad.
+6. **Control y Escalabilidad Multi-API (v6.0):** Panel Admin para configurar API Keys de Google Gemini, OpenAI o Groq, con fallback instantáneo a la Red Neuronal Local APSTI.
+
+---
+
+## ⚙️ Panel de Administración y Arquitectura Híbrida Multi-API (v6.0)
+
+HercarIA v6.0 implementa una **arquitectura híbrida de dos niveles** que combina la potencia de razonamiento de los Modelos de Lenguaje de Nube (LLMs) con la disponibilidad offline ininterrumpida de su **Red Neuronal Perceptrón Multicapa (MLP)**:
+
+```text
+                               ┌────────────────────────────────────────────────────────┐
+                               │                    CONSULTA DE USUARIO                 │
+                               └──────────────────────────┬─────────────────────────────┘
+                                                          │
+                                                          ▼
+                               ┌────────────────────────────────────────────────────────┐
+                               │       ¿Coincidencia en Base Personalizada (Custom KB)? │
+                               └──────────────────────────┬─────────────────────────────┘
+                                           SÍ ┌───────────┴───────────┐ NO
+                                              ▼                       ▼
+                                   ┌──────────────────────┐  ┌───────────────────────────────────┐
+                                   │  Respuesta Inmediata │  │ ¿Modo Cloud / Híbrido con API Key?│
+                                   └──────────────────────┘  └─────────────────┬─────────────────┘
+                                                                 SÍ ┌──────────┴──────────┐ NO
+                                                                    ▼                     ▼
+                                                        ┌───────────────────────┐  ┌──────────────────────┐
+                                                        │  Llamada a Cloud API  │  │  Red Neuronal Local  │
+                                                        │  (Gemini/OpenAI/Groq) │  │  APSTI (MLP In-Browser)
+                                                        └───────────┬───────────┘  └──────────────────────┘
+                                                        ÉXITO ┌─────┴─────┐ ERROR (Fallback <50ms)
+                                                              ▼           ▼
+                                                       [Respuesta LLM] ──> [Respuesta Red Neuronal]
+```
+
+### 🎛️ Funcionalidades del Panel de Administración (`/admin`):
+- **Acceso:** Mediante el comando `/admin` o `/panel` en el chat, o pulsando el botón `⚙️ Panel Admin` en el pie del menú lateral.
+- **Proveedores Soportados:**
+  - **Google Gemini:** `gemini-1.5-flash` (gratuito y veloz), `gemini-1.5-pro`, `gemini-2.0-flash`.
+  - **OpenAI:** `gpt-4o-mini`, `gpt-4o`, `gpt-3.5-turbo`.
+  - **Groq:** `llama-3.1-8b-instant`, `llama-3.3-70b-versatile`, `mixtral-8x7b-32768`.
+  - **OpenRouter & DeepSeek API:** `deepseek-chat`, `deepseek-reasoner`.
+- **Modos Operativos:**
+  1. **⚡ Modo Híbrido Inteligente (Recomendado):** Consulta la API en la nube y, ante cualquier error o corte de red, conmuta a la Red Neuronal Local APSTI en milisegundos sin caída de servicio.
+  2. **☁️ Modo Cloud Exclusivo:** Deriva 100% de consultas al LLM configurado.
+  3. **🧠 Modo Red Neuronal Local APSTI:** Inferencia 100% local en navegador, sin consumo de tokens ni peticiones externas.
+- **⚡ Prueba de Conexión en Vivo:** Botón de diagnóstico que verifica la clave con la API seleccionada y mide la latencia de respuesta en milisegundos.
+- **📊 Tablero de Métricas y Auditoría:** Gráfico de distribución de consultas por carrera, ratio Cloud vs. Local, índice de satisfacción y descarga de auditoría forense en `JSON`.
+- **➕ Base de Conocimiento Personalizada (Custom KB):** Permite al administrador crear preguntas y respuestas ad hoc con prioridad absoluta almacenadas en `localStorage`.
+- **📝 Editor de System Prompt Institucional:** Personalización del prompt base con botón de restablecimiento al oficial de APSTI en 1 clic.
 
 ---
 
