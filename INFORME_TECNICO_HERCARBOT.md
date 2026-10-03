@@ -107,14 +107,14 @@ Como estandarte de la carrera técnica de **APSTI**, HercarIA v5.0 implementa un
 └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘
 ```
 
-1. **Capa de Entrada (220 dimensiones):** Vector de frecuencias TF-IDF normalizado que representa la presencia e importancia de los 220 términos del vocabulario cerrado institucional (lematización, n-gramas léxicos y remoción de signos).
+1. **Capa de Entrada (260 dimensiones):** Vector de frecuencias TF-IDF normalizado que representa la presencia e importancia de los términos del vocabulario cerrado institucional (lematización, n-gramas léxicos y remoción de signos).
 2. **Capa Oculta 1 (36 neuronas):** Aprende relaciones semánticas intermedias y sinónimos. Utiliza la función de activación **LeakyReLU** con factor de fuga $\alpha = 0.01$:
    $$f(x) = \begin{cases} x & \text{si } x > 0 \\ 0.01x & \text{si } x \le 0 \end{cases}$$
    Esto evita la degeneración del gradiente o el fenómeno de neuronas muertas (*Dying ReLU*).
 3. **Capa Oculta 2 (18 neuronas):** Abstrae las características hacia macroconceptos institucionales (académico, financiero, normativo, geográfico). Utiliza la función **Tangente Hiperbólica ($\tanh$)**:
    $$f(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$
    Acota las respuestas en el rango $[-1, 1]$, estabilizando el paso a la capa final.
-4. **Capa de Salida (22 neuronas):** Corresponde a las 22 clases de intención del sistema (`carrera_apsti`, `carrera_ani`, `carrera_contabilidad`, `carrera_dpa`, `costos_gratuidad`, `registro_pagos_bn`, `boletas_electronicas`, `simulador_tupa`, `mapa_campus`, `admision_requisitos`, etc.). Aplica la función de activación **Softmax**:
+4. **Capa de Salida (34 neuronas):** Corresponde a las 34 clases de intención del sistema (`carrera_apsti`, `carrera_ani`, `carrera_contabilidad`, `carrera_dpa`, `costos_gratuidad`, `registro_pagos_bn`, `boletas_electronicas`, `simulador_tupa`, `mapa_campus`, `admision_requisitos`, etc.). Aplica la función de activación **Softmax**:
    $$P(y = c \mid \mathbf{x}) = \frac{e^{z_c}}{\sum_{j=1}^{K} e^{z_j}}$$
 
 ### 4.2. Inicialización de Pesos de Xavier / Glorot
@@ -167,6 +167,16 @@ Plano esquemático interactivo de las instalaciones del IESTP Hermanos Cárcamo:
   - 📋 Copiar respuesta con notificación Toast visual animada.
   - 🧠 Inspeccionar el vector neural en el modal del Inspector.
   - 👍/👎 Calificar la utilidad de la respuesta.
+
+### 5.5. Panel de Administración Dedicado (`admin.html`), Autoaprendizaje y Control Multi-API (v6.0)
+La versión 6.0 introduce un entorno de supervisión y gestión avanzado tanto para docentes como para administradores de APSTI:
+* **Portal Independiente `admin.html`:** Tablero de control autónomo con interfaz ejecutiva, navegación por pestañas y diseño adaptable a dispositivos móviles.
+* **Bandeja de Preguntas Sin Resolver ("Responder y Enseñar"):** Recolecta automáticamente las consultas en las que la Red Neuronal obtuvo baja confianza (<40%) o las respuestas calificadas negativamente por los estudiantes (👎). El administrador puede revisar la duda, hacer clic en "Responder y Enseñar", redactar la respuesta institucional oficial y guardarla directamente en la Base de Conocimiento (Custom KB).
+* **Gestión Granular del Historial y Borrado:** Inclusión del botón directo `🗑️ Borrar Conversación` en la barra lateral del chatbot y botones individuales `✕` en cada consulta del historial reciente para una depuración ágil sin recargar la página.
+* **Arquitectura Híbrida Multi-API:** Integración con Google Gemini (`gemini-1.5-flash`, `gemini-1.5-pro`), OpenAI (`gpt-4o-mini`, `gpt-4o`), Groq (`llama-3.1-8b`, `llama-3.3-70b`), OpenRouter y DeepSeek, con diagnóstico de latencia en milisegundos y conmutación automática (fallback <50ms) a la Red Neuronal Local APSTI ante fallas de red.
+* **Métricas y Auditoría Forense:** Monitoreo en tiempo real del total de consultas, ratio Cloud vs. Local, distribución por carrera técnica y exportación de registros forenses en formato JSON.
+* **Editor de System Prompt Oficial:** Permite ajustar el comportamiento pedagógico del bot con opción de restauración en 1 clic.
+* **Simulador de Pruebas de Chat:** Entorno integrado para validar la respuesta del bot antes de poner cambios en producción.
 
 ---
 
