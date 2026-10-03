@@ -80,7 +80,7 @@ p_title.paragraph_format.space_after = Pt(8)
 
 p_subtitle = doc.add_paragraph()
 p_subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
-run_sub = p_subtitle.add_run('Desarrollo e Implementación del Asistente Virtual Inteligente "HercarIA"\nDotado de Red Neuronal Artificial Multicapa (MLP), Síntesis Vocal Femenina Humana,\nSimulador TUPA 2026 y Mapa Arquitectónico Interactivo')
+run_sub = p_subtitle.add_run('Desarrollo e Implementación del Asistente Virtual Inteligente "HercarIA"\nDotado de Arquitectura Híbrida Multi-API (Gemini, OpenAI, Groq), Red Neuronal Local APSTI (MLP),\nPanel de Administración con Métricas, Síntesis Vocal Femenina Humana y Simulador TUPA 2026')
 run_sub.font.name = 'Arial'
 run_sub.font.size = Pt(12)
 run_sub.font.bold = True
@@ -110,7 +110,7 @@ r.font.bold = True
 r = p_meta.add_run('VERSIÓN DEL SISTEMA:\n')
 r.font.bold = True
 r.font.size = Pt(10)
-r = p_meta.add_run('Versión 5.1 Neuronal APSTI Ampliada (Producción Estable)\n\n')
+r = p_meta.add_run('Versión 6.0 Arquitectura Híbrida Multi-API & Red Neuronal APSTI (Producción Estable)\n\n')
 r.font.size = Pt(10.5)
 r.font.bold = True
 r.font.color.rgb = COLOR_PURPLE
@@ -309,6 +309,15 @@ add_h2('6.4. Chips Contextuales de Continuidad y Acciones de Mensaje')
 add_bullet('Chips Dinámicos: ', 'Bajo cada respuesta del asistente se generan 3 botones de seguimiento contextual ("¿Cuánto cuesta la matrícula?", "¿Qué requisitos piden?", etc.) que guían la conversación de manera fluida.')
 add_bullet('Acciones por Burbuja: ', 'Cada mensaje del bot cuenta con botones para escuchar con voz dulce, copiar con notificación Toast visual, auditar el cálculo neural y calificar la utilidad de la respuesta (feedback positivo/negativo).')
 
+add_h2('6.5. Panel de Administración & Arquitectura Híbrida Multi-API (v6.0 APSTI)')
+add_p('Para dotar a la institución y a los evaluadores de APSTI de control total sobre el motor de inteligencia, la versión 6.0 introduce un completo Panel de Administración y Configuración institucional, accesible desde el botón "⚙️ Panel Admin" del menú lateral o mediante el comando directo "/admin":')
+add_bullet('Soporte Multi-Proveedor de Modelos Cloud: ', 'Conexión nativa mediante Fetch API en el navegador a Google Gemini (gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash), OpenAI (gpt-4o, gpt-4o-mini, gpt-3.5-turbo), Groq (Llama 3.1 8B, Llama 3.3 70B, Mixtral 8x7B), OpenRouter y DeepSeek API.')
+add_bullet('Modo Híbrido Resiliente con Fallback Automático: ', 'Si se provee una API Key, el sistema aprovecha el modelo generativo en la nube para consultas complejas. Ante caídas de conexión externa o agotamiento de cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI (MLP) sin que el usuario experimente interrupción alguna.')
+add_bullet('Prueba de Conexión en Tiempo Real: ', 'Verificación instantánea del estado de la clave API con cálculo de latencia de red en milisegundos y retroalimentación mediante insignias visuales.')
+add_bullet('Tablero de Métricas y Registro Forense de Auditoría: ', 'Cuadro de mando en vivo con total de consultas, ratio Cloud vs. Local, índice de satisfacción estudiantil (👍/👎), distribución porcentual por carrera y tabla cronológica de consultas con opción de descarga de reporte en formato JSON.')
+add_bullet('Base de Conocimiento Personalizada (Custom KB): ', 'Módulo para ingresar preguntas y respuestas oficiales ad hoc (ej. fechas de sustentación, eventos institucionales) almacenadas en LocalStorage con máxima prioridad de respuesta.')
+add_bullet('Editor de Prompt del Sistema Institucional: ', 'Área de edición de directrices de identidad y restricciones del asistente, con botón de restauración al texto institucional predeterminado de APSTI con un solo clic.')
+
 # ==========================================
 # 7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO
 # ==========================================
@@ -355,6 +364,9 @@ for i, c in enumerate(hdr_cells):
 
 tech_rows = [
     ('Red Neuronal Artificial (MLP)', 'HercarNeuralNetwork (Vanilla JS ES6+)', 'Perceptrón Multicapa (220-36-18-22) con LeakyReLU, Tanh, Softmax y Backpropagation en browser.'),
+    ('Panel de Administración Multi-API', 'Fetch API Nativo (CORS Directo)', 'Integración client-side directa sin servidores intermedios para Google Gemini, OpenAI, Groq, OpenRouter y DeepSeek.'),
+    ('Métricas y Registro de Auditoría', 'HTML5 LocalStorage + JSON Export', 'Panel de métricas en tiempo real, trazabilidad forense de consultas e índice de satisfacción del usuario.'),
+    ('Base de Conocimiento y Respaldo', 'Memoria Institucional + Custom KB', 'Respuestas inmediatas oficiales, banco de preguntas personalizables y fallback instantáneo ante fallas externas.'),
     ('Inspector & Playground IA', 'SVG Reactivo + DOM Dinámico', 'Auditoría en tiempo real del grafo neuronal, distribución Softmax y banco de pruebas interactivas.'),
     ('Frontend UI / UX', 'HTML5 Semántico + CSS3 Avanzado (Variables Dinámicas)', 'Diseño fullscreen estilo ChatGPT, microinteracciones, modales glassmorphism y tema claro/oscuro.'),
     ('Simulador Financiero TUPA', 'Algoritmo JS de Tasas 2026', 'Calculadora interactiva con perfiles de cachimbos, regulares y titulación con copiado al portapapeles.'),
