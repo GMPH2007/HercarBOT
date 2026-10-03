@@ -109,36 +109,37 @@ HercarIA v6.0 implementa una **arquitectura híbrida de dos niveles** que combin
                                                        [Respuesta LLM] ──> [Respuesta Red Neuronal]
 ```
 
-### 🎛️ Funcionalidades del Panel de Administración (`/admin`):
-- **Acceso:** Mediante el comando `/admin` o `/panel` en el chat, o pulsando el botón `⚙️ Panel Admin` en el pie del menú lateral.
-- **Proveedores Soportados:**
-  - **Google Gemini:** `gemini-1.5-flash` (gratuito y veloz), `gemini-1.5-pro`, `gemini-2.0-flash`.
-  - **OpenAI:** `gpt-4o-mini`, `gpt-4o`, `gpt-3.5-turbo`.
-  - **Groq:** `llama-3.1-8b-instant`, `llama-3.3-70b-versatile`, `mixtral-8x7b-32768`.
-  - **OpenRouter & DeepSeek API:** `deepseek-chat`, `deepseek-reasoner`.
+### 🎛️ Funcionalidades del Panel de Administración Autónomo (`admin.html`):
+- **Acceso:** Mediante enlace directo en el menú lateral (`⚙️ Panel Admin`), el comando `/admin` en el chat, o navegando a [`admin.html`](admin.html).
+- **Página Independiente con 7 Módulos:**
+  1. ⚡ **APIs Cloud & Proveedores:** Configuración de credenciales seguras para Google Gemini (`gemini-1.5-flash`, `gemini-1.5-pro`, `gemini-2.0-flash`), OpenAI (`gpt-4o-mini`, `gpt-4o`, `gpt-3.5-turbo`), Groq (`llama-3.1-8b`, `llama-3.3-70b`, `mixtral-8x7b`), OpenRouter y DeepSeek.
+  2. ❓ **Bandeja de Preguntas Sin Resolver ("Responder y Enseñar"):** Captura en tiempo real de consultas con baja confianza (<40%) o con calificación negativa de los estudiantes (👎). Permite al administrador responderlas y guardarlas instantáneamente en la base de conocimiento para que el bot las aprenda al instante.
+  3. 📚 **Base de Conocimiento Personalizada (Custom KB):** Registro, búsqueda y eliminación de preguntas/respuestas oficiales prioritarias almacenadas en `localStorage`.
+  4. 🧠 **Red Neuronal APSTI:** Resumen de topología e inferencia interactiva en tiempo real.
+  5. 📊 **Métricas y Auditoría Forense:** Contadores de consultas, ratio Cloud vs. Local, satisfacción estudiantil, gráfico de carreras y exportación a JSON.
+  6. 📝 **Editor de System Prompt:** Modificación del prompt base institucional con restauración en 1 clic.
+  7. 💬 **Simulador de Pruebas de Chat:** Entorno integrado para ensayar respuestas sin salir del panel.
 - **Modos Operativos:**
-  1. **⚡ Modo Híbrido Inteligente (Recomendado):** Consulta la API en la nube y, ante cualquier error o corte de red, conmuta a la Red Neuronal Local APSTI en milisegundos sin caída de servicio.
+  1. **⚡ Modo Híbrido Inteligente (Recomendado):** Consulta la API en la nube y, ante cualquier error o corte de red, conmuta a la Red Neuronal Local APSTI en milisegundos (<50ms) sin caída de servicio.
   2. **☁️ Modo Cloud Exclusivo:** Deriva 100% de consultas al LLM configurado.
   3. **🧠 Modo Red Neuronal Local APSTI:** Inferencia 100% local en navegador, sin consumo de tokens ni peticiones externas.
-- **⚡ Prueba de Conexión en Vivo:** Botón de diagnóstico que verifica la clave con la API seleccionada y mide la latencia de respuesta en milisegundos.
-- **📊 Tablero de Métricas y Auditoría:** Gráfico de distribución de consultas por carrera, ratio Cloud vs. Local, índice de satisfacción y descarga de auditoría forense en `JSON`.
-- **➕ Base de Conocimiento Personalizada (Custom KB):** Permite al administrador crear preguntas y respuestas ad hoc con prioridad absoluta almacenadas en `localStorage`.
-- **📝 Editor de System Prompt Institucional:** Personalización del prompt base con botón de restablecimiento al oficial de APSTI en 1 clic.
+- **⚡ Prueba de Conexión en Vivo:** Diagnóstico que verifica la clave con la API seleccionada y mide la latencia de respuesta en milisegundos.
+- **🗑️ Gestión Granular de Privacidad y Borrado:** Botón directo `🗑️ Borrar Conversación` en el menú lateral y botón individual `✕` en cada consulta del historial reciente.
 
 ---
 
 ## 🧠 Arquitectura de la Red Neuronal Artificial (MLP)
 
-HercarIA incorpora una **Red Neuronal Artificial Perceptrón Multicapa (Feedforward MLP)** desarrollada en JavaScript puro ([`js/neural_network.js`](file:///c:/Users/misae/Downloads/HercarBOT%20O%20CHAT%20BOT%20HERCAR/js/neural_network.js)) que opera 100% en el cliente:
+HercarIA incorpora una **Red Neuronal Artificial Perceptrón Multicapa (Feedforward MLP)** desarrollada en JavaScript puro ([`js/neural_network.js`](js/neural_network.js)) que opera 100% en el cliente:
 
 ```text
 ┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
 │     CAPA DE ENTRADA     │     │      CAPA OCULTA 1      │     │      CAPA OCULTA 2      │     │     CAPA DE SALIDA      │
-│   220 Nodos (TF-IDF)    │ ──> │   36 Neuronas LeakyReLU │ ──> │    18 Neuronas Tanh     │ ──> │   22 Clases (Softmax)   │
+│   260 Nodos (TF-IDF)    │ ──> │   36 Neuronas LeakyReLU │ ──> │    18 Neuronas Tanh     │ ──> │   34 Clases (Softmax)   │
 └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘
 ```
 
-- **Vectorización:** 220 dimensiones léxicas institucionales con ponderación TF-IDF y normalización de texto.
+- **Vectorización:** 260 dimensiones léxicas institucionales con ponderación TF-IDF y normalización de texto.
 - **Capa Oculta 1:** 36 neuronas con función de activación **LeakyReLU** ($\alpha = 0.01$) para prevenir neuronas muertas.
 - **Capa Oculta 2:** 18 neuronas con función de activación **Tanh** para comprimir representaciones en $[-1, 1]$.
 - **Capa de Salida:** 22 neuronas de intención con función de activación **Softmax** para distribución probabilística normalizada.
@@ -269,14 +270,17 @@ HercarBOT/
 │   ├── logo-hercar.png              # Logo del IESTP Hermanos Cárcamo
 │   └── logo-iestp.png               # Escudo institucional original
 ├── css/
-│   └── styles.css                   # Hoja de estilos (Design system, Red Neuronal, Modales, Ripple, Dark Mode)
+│   ├── styles.css                   # Hoja de estilos principal (Design system, Chat, Modales, Ripple, Dark Mode)
+│   └── admin.css                    # Hoja de estilos del Panel de Administración autónomo
 ├── js/
-│   ├── neural_network.js            # Red Neuronal Artificial MLP (220-36-18-22, LeakyReLU, Tanh, Softmax)
+│   ├── neural_network.js            # Red Neuronal Artificial MLP (260-36-18-34, LeakyReLU, Tanh, Softmax)
 │   ├── knowledge.js                 # Base de conocimientos institucional estructurada
 │   ├── test_vocacional.js           # Algoritmo psicométrico vocacional con trofeo
 │   ├── voice.js                     # Motor de voz dulce femenina TTS y reconocimiento STT
-│   └── app.js                       # Controlador del chat, ensamble híbrido, simulador TUPA y mapa
-├── index.html                       # Interfaz gráfica moderna (Landing hero, Chat fullscreen y modales)
+│   ├── app.js                       # Controlador del chat, ensamble híbrido, simulador TUPA, mapa y registro de consultas
+│   └── admin.js                     # Controlador del Panel Admin (Cloud APIs, Bandeja No Resueltas, Custom KB, Auditoría)
+├── index.html                       # Interfaz gráfica principal del Chatbot institucional
+├── admin.html                       # Portal de Administración autónomo para docentes y supervisores APSTI
 ├── server.py                        # Servidor HTTP Python con endpoint /api/tts para Edge-TTS
 ├── Iniciar_HercarBOT.bat            # Script de lanzamiento con 1 clic para Windows
 ├── generar_word.py                  # Generador del informe técnico formal en formato Word (.docx)
