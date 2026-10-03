@@ -309,14 +309,18 @@ add_h2('6.4. Chips Contextuales de Continuidad y Acciones de Mensaje')
 add_bullet('Chips Dinámicos: ', 'Bajo cada respuesta del asistente se generan 3 botones de seguimiento contextual ("¿Cuánto cuesta la matrícula?", "¿Qué requisitos piden?", etc.) que guían la conversación de manera fluida.')
 add_bullet('Acciones por Burbuja: ', 'Cada mensaje del bot cuenta con botones para escuchar con voz dulce, copiar con notificación Toast visual, auditar el cálculo neural y calificar la utilidad de la respuesta (feedback positivo/negativo).')
 
-add_h2('6.5. Panel de Administración & Arquitectura Híbrida Multi-API (v6.0 APSTI)')
-add_p('Para dotar a la institución y a los evaluadores de APSTI de control total sobre el motor de inteligencia, la versión 6.0 introduce un completo Panel de Administración y Configuración institucional, accesible desde el botón "⚙️ Panel Admin" del menú lateral o mediante el comando directo "/admin":')
+add_h2('6.5. Panel de Administración Dedicado (admin.html) & Arquitectura Híbrida Multi-API (v6.0 APSTI)')
+add_p('Para dotar a la institución y a los evaluadores de APSTI de control total sobre el motor de inteligencia, la versión 6.0 introduce una página ejecutiva independiente (admin.html) y controles avanzados de administración:')
+add_bullet('Página Independiente admin.html: ', 'Portal de control autónomo con diseño administrativo profesional, accesible desde el botón "⚙️ Panel Admin" o el comando "/admin", con enlace directo de retorno al chatbot institucional.')
+add_bullet('Bandeja de Consultas de Estudiantes Sin Resolver: ', 'Registro automático de preguntas formuladas por los usuarios que obtuvieron baja confianza (<40%) o feedback negativo (👎). Permite al administrador pulsar "Responder y Enseñar", redactar la respuesta institucional oficial y guardarla con prioridad absoluta en la Base de Conocimiento.')
+add_bullet('Gestión Granular de Historial y Borrado: ', 'Botón destacado de "Borrar Conversación" en el menú lateral e íconos de eliminación individual (✕) en cada consulta del historial reciente para una limpieza ágil y ergonómica.')
 add_bullet('Soporte Multi-Proveedor de Modelos Cloud: ', 'Conexión nativa mediante Fetch API en el navegador a Google Gemini (gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash), OpenAI (gpt-4o, gpt-4o-mini, gpt-3.5-turbo), Groq (Llama 3.1 8B, Llama 3.3 70B, Mixtral 8x7B), OpenRouter y DeepSeek API.')
 add_bullet('Modo Híbrido Resiliente con Fallback Automático: ', 'Si se provee una API Key, el sistema aprovecha el modelo generativo en la nube para consultas complejas. Ante caídas de conexión externa o agotamiento de cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI (MLP) sin que el usuario experimente interrupción alguna.')
 add_bullet('Prueba de Conexión en Tiempo Real: ', 'Verificación instantánea del estado de la clave API con cálculo de latencia de red en milisegundos y retroalimentación mediante insignias visuales.')
 add_bullet('Tablero de Métricas y Registro Forense de Auditoría: ', 'Cuadro de mando en vivo con total de consultas, ratio Cloud vs. Local, índice de satisfacción estudiantil (👍/👎), distribución porcentual por carrera y tabla cronológica de consultas con opción de descarga de reporte en formato JSON.')
 add_bullet('Base de Conocimiento Personalizada (Custom KB): ', 'Módulo para ingresar preguntas y respuestas oficiales ad hoc (ej. fechas de sustentación, eventos institucionales) almacenadas en LocalStorage con máxima prioridad de respuesta.')
 add_bullet('Editor de Prompt del Sistema Institucional: ', 'Área de edición de directrices de identidad y restricciones del asistente, con botón de restauración al texto institucional predeterminado de APSTI con un solo clic.')
+add_bullet('Simulador de Pruebas de Chat Integrado: ', 'Entorno interactivo dentro de admin.html para probar en vivo las respuestas y verificar el comportamiento del bot sin salir de la vista de gestión.')
 
 # ==========================================
 # 7. MOTOR DE HUMANIZACIÓN VOCAL FEMENINA Y DICTADO
