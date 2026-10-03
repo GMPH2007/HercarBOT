@@ -213,11 +213,24 @@ body {
     padding: 2px 8px;
     border-radius: 12px;
     font-weight: 700;
+    transition: all 0.2s ease;
 }
 
 .badge-pending {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-active-kb {
+    background: rgba(37, 99, 235, 0.15);
+    color: #2563eb;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.badge-zero {
+    background: rgba(148, 163, 184, 0.15);
+    color: var(--text-muted);
 }
 
 .sidebar-status-box {
@@ -308,59 +321,177 @@ body {
     margin-bottom: 16px;
 }
 
-/* Modos Operativos (Radio Cards) */
+/* Modos Operativos (Radio Cards Modernas y Ejecutivas) */
 .mode-options-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-bottom: 16px;
+    gap: 16px;
+    margin-bottom: 18px;
 }
 
 .mode-card {
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    padding: 18px;
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     background: var(--bg-card);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    user-select: none;
 }
 
 .mode-card:hover {
-    border-color: rgba(37, 99, 235, 0.4);
+    border-color: rgba(37, 99, 235, 0.45);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .mode-card input[type="radio"] {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    accent-color: var(--primary);
-    width: 18px;
-    height: 18px;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .mode-card.selected {
     border-color: var(--primary);
     background: var(--primary-light);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
+}
+
+body.dark-mode .mode-card.selected {
+    background: rgba(37, 99, 235, 0.18);
+    border-color: #3b82f6;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+}
+
+.mode-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.mode-icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.icon-hybrid {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.icon-cloud {
+    background: rgba(14, 165, 233, 0.15);
+    color: #0ea5e9;
+}
+
+.icon-local {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8b5cf6;
+}
+
+.mode-badge-tag {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tag-recommended {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(124, 58, 237, 0.2));
+    color: #2563eb;
+    border: 1px solid rgba(37, 99, 235, 0.35);
+}
+body.dark-mode .tag-recommended {
+    color: #60a5fa;
+}
+
+.tag-cloud {
+    background: rgba(14, 165, 233, 0.15);
+    color: #0284c7;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+}
+body.dark-mode .tag-cloud {
+    color: #38bdf8;
+}
+
+.tag-offline {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+body.dark-mode .tag-offline {
+    color: #34d399;
 }
 
 .mode-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 6px;
 }
 
 .mode-card-desc {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
-    line-height: 1.4;
+    line-height: 1.45;
+    flex: 1;
+    margin-bottom: 14px;
+}
+
+.mode-card-footer-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.custom-radio-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.mode-card.selected .custom-radio-indicator {
+    border-color: var(--primary);
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.mode-card.selected .custom-radio-indicator::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.mode-card.selected .mode-active-text {
+    color: var(--primary);
+    font-weight: 700;
+}
+body.dark-mode .mode-card.selected .mode-active-text {
+    color: #60a5fa;
 }
 
 /* Formularios */
@@ -424,19 +555,57 @@ body {
 }
 
 .help-links-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.help-links-label {
     font-size: 0.78rem;
+    font-weight: 700;
     color: var(--text-muted);
-    margin-top: 4px;
 }
 
-.help-links-row a {
-    color: var(--primary);
-    text-decoration: none;
+.provider-key-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.key-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.78rem;
     font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-.help-links-row a:hover {
-    text-decoration: underline;
+.key-chip:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+
+.chip-badge-free {
+    background: rgba(16, 185, 129, 0.2);
+    color: #059669;
+    font-size: 0.68rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+body.dark-mode .chip-badge-free {
+    color: #34d399;
 }
 
 /* Barra de Prueba de Conexión */
@@ -531,6 +700,16 @@ body {
 
 .btn-clear-main:hover {
     background: rgba(239, 68, 68, 0.1);
+}
+
+.save-status-indicator {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--success);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 /* Tarjetas de Métricas */
