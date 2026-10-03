@@ -3,6 +3,34 @@
  * I.E.S.T.P. "HERMANOS CÁRCAMO" - PAITA, PIURA, PERÚ
  */
 
+const DEFAULT_HERCAR_SYSTEM_PROMPT = `Eres "HercarIA", la asistente virtual y orientadora oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" (IESTP Hermanos Cárcamo), ubicado en Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita – Piura, Perú.
+
+TU IDENTIDAD Y MISIÓN:
+- Brindas orientación académica, administrativa y vocacional con un trato cálido, empático, formal, profesional y sumamente claro.
+- Eres embajadora de la excelencia educativa técnica y de la carrera profesional de "Arquitectura de Plataformas y Servicios de Tecnologías de la Información" (APSTI).
+- Cuando menciones la sigla APSTI, escríbela siempre como APSTI o explica que es la carrera de Arquitectura de Plataformas y Servicios de Tecnologías de la Información.
+
+INFORMACIÓN INSTITUCIONAL CLAVE:
+1. Carreras Profesionales Técnicas (3 años, 6 semestres, Título a Nombre de la Nación):
+   - APSTI (Arquitectura de Plataformas y Servicios de Tecnologías de la Información): Desarrollo web y móvil, bases de datos SQL/NoSQL, redes Cisco, infraestructura cloud (AWS/Azure), ciberseguridad, servidores Linux/Windows.
+   - ANI (Administración de Negocios Internacionales): Comercio exterior, aduanas marítimas en el Puerto de Paita, logística internacional, finanzas.
+   - Contabilidad: Gestión contable, tributación SUNAT, planillas, auditoría financiera, libros electrónicos.
+   - DPA (Desarrollo Pesquero y Acuícola): Acuicultura de concha de abanico, navegación marítima, procesamiento pesquero en plantas de Paita.
+2. Costos y Matrícula:
+   - Admisión: S/ 150.00 (Examen Ordinario) o S/ 200.00 (Pre-Tecnológico con ingreso directo).
+   - Matrícula Regular: S/ 100.00 por semestre. En el IESTP Cárcamo ¡NO SE PAGA MENSUALIDADES NI PENSIONES! La educación técnica es 100% pública y gratuita.
+3. Plataformas Oficiales:
+   - Portal Web Institucional: https://ieshercar.edu.pe/
+   - Plataforma de Pagos y Vouchers: https://pagos.ieshercar.edu.pe/
+   - Mesa de Partes Virtual: https://sistema.ieshercar.edu.pe/registro-tramite/
+   - Biblioteca Virtual: https://biblioteca.ieshercar.edu.pe/login.php
+   - Consulta de Boletas: https://sistema.ieshercar.com/Consulta_Boletas/index.php
+   - Cuenta Corriente Banco de la Nación: N° 00-631-018241 (o tributo por ventanilla).
+4. Directrices de Respuesta:
+   - Utiliza formato Markdown limpio con viñetas claras y negritas en datos clave.
+   - Si el usuario pregunta por costos, trámites, cursos de APSTI u otra carrera, sé precisa con montos y requisitos.
+   - Mantén siempre una actitud colaborativa, educada y motivadora para los jóvenes y postulantes de Paita y Piura.`;
+
 class HercarChatApp {
     constructor() {
         this.kb = INSTITUCIONAL_KB;
@@ -28,6 +56,8 @@ class HercarChatApp {
         this.isTyping = false;
         this.history = [];
 
+        // Inicializar Sistema de Administración Multi-API v6.0
+        this.initAdminSystem();
         this.initSimuladorData();
         this.init();
     }
@@ -40,8 +70,10 @@ class HercarChatApp {
         window.hercarNeural = this.neuralNet;
 
         this.setupEventListeners();
+        this.setupAdminEventListeners();
         this.setupVoiceFeedback();
         this.renderizarHistorialSidebar();
+        this.actualizarBadgeAdminSidebar();
         
         // Mostrar Portada de bienvenida por defecto
         this.mostrarPortada();
@@ -314,8 +346,15 @@ class HercarChatApp {
         this.enviarConsultaDirecta(text);
     }
 
-    enviarConsultaDirecta(query) {
+    async enviarConsultaDirecta(query) {
         if (!query || !query.trim()) return;
+
+        const trimmed = query.trim();
+        // Comando especial para abrir el Panel de Administración de IA
+        if (trimmed.toLowerCase() === '/admin' || trimmed.toLowerCase() === '/panel' || trimmed.toLowerCase() === 'admin') {
+            this.abrirPanelAdmin();
+            return;
+        }
 
         this.agregarAHistorialReciente(query);
         this.activarAreaChat();
@@ -336,10 +375,63 @@ class HercarChatApp {
             }
         }
 
+        // 1. Verificación en Base de Conocimiento Personalizada (Custom KB)
+        const customMatch = this.buscarEnCustomKB(query);
+        if (customMatch) {
+            setTimeout(() => {
+                this.removerTypingIndicator();
+                this.registrarMetricaConsulta('local', query, neuralResult.intent);
+                this.addBotMessage(customMatch.answer, true, '', {
+                    intent: 'custom_kb',
+                    confidence: 1.0,
+                    confidencePercent: '100% (KB Personalizada)',
+                    tokens: []
+                });
+            }, 400);
+            return;
+        }
+
+        // 2. Determinar si se consulta Cloud API o Red Neuronal Local
+        const mode = this.adminConfig ? (this.adminConfig.mode || 'hybrid') : 'hybrid';
+        const hasKey = Boolean(this.adminConfig && this.adminConfig.apiKey && this.adminConfig.apiKey.trim().length > 5);
+
+        if ((mode === 'cloud' || mode === 'hybrid') && hasKey) {
+            try {
+                const cloudReply = await this.consultarCloudAPI(query);
+                this.removerTypingIndicator();
+                this.registrarMetricaConsulta('cloud', query, neuralResult.intent);
+
+                const cloudInference = {
+                    intent: `cloud_${this.adminConfig.provider}`,
+                    confidence: 0.99,
+                    confidencePercent: `99% (${this.adminConfig.provider.toUpperCase()} - ${this.adminConfig.model})`,
+                    tokens: []
+                };
+
+                this.addBotMessage(cloudReply, true, '', cloudInference);
+                return;
+            } catch (err) {
+                console.warn('[Cloud API Fallback]: Error en API externa:', err);
+                this.registrarFalloAuditoria(query, this.adminConfig.provider, err.message);
+
+                if (mode === 'cloud') {
+                    this.removerTypingIndicator();
+                    const errMsg = `⚠️ **Error de Conexión Cloud (${this.adminConfig.provider.toUpperCase()})**:\n\n\`${err.message}\`\n\n💡 *Solución:* Verifica tu API Key en el [Panel Admin](#) o cambia al **Modo Híbrido** o **Modo Local APSTI** para continuar respondiendo con la Red Neuronal del navegador.`;
+                    this.addBotMessage(errMsg, false, 'Error de conexión con la API Cloud. Revisa tu API key en el panel de administración.');
+                    return;
+                }
+
+                // Si está en Modo Híbrido, continúa sin problemas hacia la Red Neuronal Local
+                this.mostrarToast(`⚡ Fallback activo: Conexión externa no disponible. Respondiendo con Red Neuronal APSTI...`, 3200);
+            }
+        }
+
+        // 3. Modo Local: Red Neuronal Multicapa APSTI + Base de Conocimiento Oficial
         setTimeout(() => {
             this.removerTypingIndicator();
+            this.registrarMetricaConsulta('local', query, neuralResult.intent);
             this.procesarRespuestaInteligente(query, neuralResult);
-        }, 550);
+        }, 500);
     }
 
     addUserMessage(text) {
@@ -1736,9 +1828,898 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         }
         if (tipo === 'up') {
             this.mostrarToast('👍 ¡Gracias por tu valoración positiva!');
+            if (this.metrics) {
+                this.metrics.upvotes = (this.metrics.upvotes || 0) + 1;
+                this.guardarMetricas();
+            }
         } else {
             this.mostrarToast('🙏 Tomaremos en cuenta tu feedback para seguir mejorando.');
+            if (this.metrics) {
+                this.metrics.downvotes = (this.metrics.downvotes || 0) + 1;
+                this.guardarMetricas();
+            }
         }
+        this.actualizarDashboardMetricas();
+    }
+
+    // =========================================================================
+    // MÓDULO: PANEL DE ADMINISTRACIÓN Y CONFIGURACIÓN MULTI-API (APSTI v6.0)
+    // =========================================================================
+
+    initAdminSystem() {
+        this.DEFAULT_SYSTEM_PROMPT = DEFAULT_HERCAR_SYSTEM_PROMPT;
+
+        try {
+            const savedConfig = localStorage.getItem('hercar_admin_config');
+            this.adminConfig = savedConfig ? JSON.parse(savedConfig) : {
+                mode: 'hybrid',
+                provider: 'gemini',
+                model: 'gemini-1.5-flash',
+                apiKey: '',
+                temperature: 0.7,
+                maxTokens: 800,
+                systemPrompt: this.DEFAULT_SYSTEM_PROMPT
+            };
+        } catch (e) {
+            this.adminConfig = {
+                mode: 'hybrid',
+                provider: 'gemini',
+                model: 'gemini-1.5-flash',
+                apiKey: '',
+                temperature: 0.7,
+                maxTokens: 800,
+                systemPrompt: this.DEFAULT_SYSTEM_PROMPT
+            };
+        }
+
+        try {
+            const savedMetrics = localStorage.getItem('hercar_admin_metrics');
+            this.metrics = savedMetrics ? JSON.parse(savedMetrics) : {
+                totalQueries: 0,
+                cloudQueries: 0,
+                localQueries: 0,
+                upvotes: 0,
+                downvotes: 0,
+                categoryCounts: { apsti: 0, ani: 0, conta: 0, dpa: 0, general: 0 },
+                auditLog: []
+            };
+        } catch (e) {
+            this.metrics = {
+                totalQueries: 0,
+                cloudQueries: 0,
+                localQueries: 0,
+                upvotes: 0,
+                downvotes: 0,
+                categoryCounts: { apsti: 0, ani: 0, conta: 0, dpa: 0, general: 0 },
+                auditLog: []
+            };
+        }
+
+        try {
+            const savedCustomKb = localStorage.getItem('hercar_custom_kb');
+            this.customKb = savedCustomKb ? JSON.parse(savedCustomKb) : [];
+        } catch (e) {
+            this.customKb = [];
+        }
+    }
+
+    setupAdminEventListeners() {
+        const btnOpenAdmin = document.getElementById('btn-open-admin-panel');
+        if (btnOpenAdmin) {
+            btnOpenAdmin.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
+                this.abrirPanelAdmin();
+            });
+        }
+
+        // Navegación por pestañas del modal Admin
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                this.cambiarPestanaAdmin(targetTab);
+            });
+        });
+
+        // Cambio de Modo Operativo (Radio buttons)
+        document.querySelectorAll('input[name="hercar_ai_mode"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.adminConfig.mode = e.target.value;
+                this.guardarConfiguracionAdminSilenciosa();
+                this.actualizarPillsModo();
+                this.actualizarBadgeAdminSidebar();
+            });
+        });
+
+        // Cambio de Proveedor de API
+        const providerSelect = document.getElementById('admin-api-provider');
+        if (providerSelect) {
+            providerSelect.addEventListener('change', (e) => {
+                const prov = e.target.value;
+                this.adminConfig.provider = prov;
+                this.actualizarModelosPorProveedor(prov);
+                this.actualizarPlaceholdersPorProveedor(prov);
+            });
+        }
+
+        // Cambio de Modelo
+        const modelSelect = document.getElementById('admin-api-model');
+        if (modelSelect) {
+            modelSelect.addEventListener('change', (e) => {
+                this.adminConfig.model = e.target.value;
+            });
+        }
+
+        // Ver / Ocultar API Key
+        const btnToggleKey = document.getElementById('btn-toggle-key-visibility');
+        const inputKey = document.getElementById('admin-api-key');
+        if (btnToggleKey && inputKey) {
+            btnToggleKey.addEventListener('click', () => {
+                if (inputKey.type === 'password') {
+                    inputKey.type = 'text';
+                    btnToggleKey.textContent = '🙈';
+                } else {
+                    inputKey.type = 'password';
+                    btnToggleKey.textContent = '👁️';
+                }
+            });
+        }
+
+        // Slider de Temperatura
+        const tempSlider = document.getElementById('admin-temperature');
+        const tempLabel = document.getElementById('temp-val-label');
+        if (tempSlider && tempLabel) {
+            tempSlider.addEventListener('input', (e) => {
+                tempLabel.textContent = e.target.value;
+            });
+        }
+
+        // Probar Conexión en Vivo
+        const btnTest = document.getElementById('btn-test-connection');
+        if (btnTest) {
+            btnTest.addEventListener('click', () => {
+                this.probarConexionAPI();
+            });
+        }
+
+        // Guardar Configuración API
+        const btnSave = document.getElementById('btn-save-api-config');
+        if (btnSave) {
+            btnSave.addEventListener('click', () => {
+                this.guardarConfiguracionAPI();
+            });
+        }
+
+        // Limpiar / Borrar API Key
+        const btnClear = document.getElementById('btn-clear-api-config');
+        if (btnClear) {
+            btnClear.addEventListener('click', () => {
+                this.limpiarConfiguracionAPI();
+            });
+        }
+
+        // Añadir Pregunta Personalizada a Custom KB
+        const btnAddCustom = document.getElementById('btn-add-custom-kb');
+        if (btnAddCustom) {
+            btnAddCustom.addEventListener('click', () => {
+                this.agregarItemCustomKB();
+            });
+        }
+
+        // Guardar System Prompt
+        const btnSavePrompt = document.getElementById('btn-save-system-prompt');
+        if (btnSavePrompt) {
+            btnSavePrompt.addEventListener('click', () => {
+                this.guardarSystemPrompt();
+            });
+        }
+
+        // Restablecer System Prompt
+        const btnResetPrompt = document.getElementById('btn-reset-system-prompt');
+        if (btnResetPrompt) {
+            btnResetPrompt.addEventListener('click', () => {
+                this.restablecerSystemPrompt();
+            });
+        }
+
+        // Exportar Auditoría JSON
+        const btnExportAudit = document.getElementById('btn-export-audit-log');
+        if (btnExportAudit) {
+            btnExportAudit.addEventListener('click', () => {
+                this.exportarRegistroAuditoria();
+            });
+        }
+    }
+
+    abrirPanelAdmin(tabName = 'tab-api-config') {
+        const modal = document.getElementById('modal-admin-panel');
+        if (!modal) return;
+
+        // Cargar valores actuales en controles
+        const modeRadio = document.querySelector(`input[name="hercar_ai_mode"][value="${this.adminConfig.mode}"]`);
+        if (modeRadio) modeRadio.checked = true;
+
+        const providerSelect = document.getElementById('admin-api-provider');
+        if (providerSelect) providerSelect.value = this.adminConfig.provider;
+
+        this.actualizarModelosPorProveedor(this.adminConfig.provider);
+
+        const modelSelect = document.getElementById('admin-api-model');
+        if (modelSelect && this.adminConfig.model) modelSelect.value = this.adminConfig.model;
+
+        const keyInput = document.getElementById('admin-api-key');
+        if (keyInput) keyInput.value = this.adminConfig.apiKey || '';
+
+        const tempSlider = document.getElementById('admin-temperature');
+        const tempLabel = document.getElementById('temp-val-label');
+        if (tempSlider) tempSlider.value = this.adminConfig.temperature || 0.7;
+        if (tempLabel) tempLabel.textContent = this.adminConfig.temperature || '0.7';
+
+        const maxTokensSelect = document.getElementById('admin-max-tokens');
+        if (maxTokensSelect) maxTokensSelect.value = this.adminConfig.maxTokens || 800;
+
+        const promptText = document.getElementById('admin-system-prompt-text');
+        if (promptText) promptText.value = this.adminConfig.systemPrompt || this.DEFAULT_SYSTEM_PROMPT;
+
+        this.actualizarPlaceholdersPorProveedor(this.adminConfig.provider);
+        this.actualizarPillsModo();
+        this.actualizarDashboardMetricas();
+        this.renderizarListaCustomKB();
+
+        const badgeTest = document.getElementById('connection-result-badge');
+        if (badgeTest) badgeTest.style.display = 'none';
+
+        this.cambiarPestanaAdmin(tabName);
+        modal.style.display = 'flex';
+    }
+
+    cambiarPestanaAdmin(tabId) {
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+        });
+
+        document.querySelectorAll('.admin-tab-content').forEach(tab => {
+            if (tab.id === tabId) {
+                tab.style.display = 'block';
+                tab.classList.add('active');
+            } else {
+                tab.style.display = 'none';
+                tab.classList.remove('active');
+            }
+        });
+    }
+
+    actualizarModelosPorProveedor(provider) {
+        const modelSelect = document.getElementById('admin-api-model');
+        if (!modelSelect) return;
+
+        const modelsMap = {
+            gemini: [
+                { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash (Rápido y Gratuito - Recomendado)' },
+                { id: 'gemini-1.5-pro', name: 'gemini-1.5-pro (Máxima Capacidad de Razonamiento)' },
+                { id: 'gemini-2.0-flash', name: 'gemini-2.0-flash (Última Generación)' }
+            ],
+            openai: [
+                { id: 'gpt-4o-mini', name: 'gpt-4o-mini (Económico y Veloz)' },
+                { id: 'gpt-4o', name: 'gpt-4o (Máximo Rendimiento OpenAI)' },
+                { id: 'gpt-3.5-turbo', name: 'gpt-3.5-turbo (Clásico)' }
+            ],
+            groq: [
+                { id: 'llama-3.1-8b-instant', name: 'llama-3.1-8b-instant (Inferencia Instantánea)' },
+                { id: 'llama-3.3-70b-versatile', name: 'llama-3.3-70b-versatile (Alta Precisión)' },
+                { id: 'mixtral-8x7b-32768', name: 'mixtral-8x7b-32768 (Gran Contexto)' }
+            ],
+            openrouter: [
+                { id: 'meta-llama/llama-3.1-8b-instruct:free', name: 'meta-llama/llama-3.1-8b (Gratuito)' },
+                { id: 'google/gemini-flash-1.5', name: 'google/gemini-flash-1.5' },
+                { id: 'mistralai/mistral-7b-instruct', name: 'mistralai/mistral-7b-instruct' }
+            ],
+            deepseek: [
+                { id: 'deepseek-chat', name: 'deepseek-chat (V3 - Muy Económico)' },
+                { id: 'deepseek-reasoner', name: 'deepseek-reasoner (R1 - Razonamiento Puro)' }
+            ]
+        };
+
+        const list = modelsMap[provider] || modelsMap.gemini;
+        modelSelect.innerHTML = list.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+
+        if (this.adminConfig && this.adminConfig.model) {
+            const exists = list.some(m => m.id === this.adminConfig.model);
+            if (exists) {
+                modelSelect.value = this.adminConfig.model;
+            } else {
+                this.adminConfig.model = list[0].id;
+                modelSelect.value = list[0].id;
+            }
+        }
+    }
+
+    actualizarPlaceholdersPorProveedor(prov) {
+        const inputKey = document.getElementById('admin-api-key');
+        if (!inputKey) return;
+        if (prov === 'gemini') {
+            inputKey.placeholder = 'Clave Google AI Studio (ej: AIzaSy...)';
+        } else if (prov === 'openai') {
+            inputKey.placeholder = 'Clave OpenAI (ej: sk-proj-...)';
+        } else if (prov === 'groq') {
+            inputKey.placeholder = 'Clave Groq Console (ej: gsk_...)';
+        } else if (prov === 'openrouter') {
+            inputKey.placeholder = 'Clave OpenRouter (ej: sk-or-v1-...)';
+        } else if (prov === 'deepseek') {
+            inputKey.placeholder = 'Clave DeepSeek (ej: sk-...)';
+        }
+    }
+
+    actualizarPillsModo() {
+        const mode = this.adminConfig.mode || 'hybrid';
+        const pill = document.getElementById('admin-mode-status-pill');
+        const footerInfo = document.getElementById('admin-footer-status-text');
+
+        const modeNames = {
+            hybrid: '⚡ Modo Híbrido Inteligente',
+            cloud: '☁️ Modo Cloud Exclusivo',
+            local: '🧠 Red Neuronal Local APSTI'
+        };
+
+        if (pill) {
+            pill.textContent = mode === 'hybrid' ? 'Híbrido' : (mode === 'cloud' ? 'Cloud' : 'Local APSTI');
+            pill.style.background = mode === 'hybrid' ? 'rgba(37, 99, 235, 0.15)' : (mode === 'cloud' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(147, 51, 234, 0.15)');
+            pill.style.color = mode === 'hybrid' ? '#2563eb' : (mode === 'cloud' ? '#059669' : '#7c3aed');
+        }
+
+        if (footerInfo) {
+            footerInfo.textContent = `Modo: ${modeNames[mode] || mode} • Proveedor: ${(this.adminConfig.provider || 'gemini').toUpperCase()} (${this.adminConfig.model || 'Local'})`;
+        }
+    }
+
+    actualizarBadgeAdminSidebar() {
+        const badge = document.getElementById('admin-status-badge');
+        if (!badge) return;
+
+        const mode = this.adminConfig.mode || 'hybrid';
+        const hasKey = Boolean(this.adminConfig.apiKey && this.adminConfig.apiKey.trim().length > 5);
+
+        if (mode === 'local' || (!hasKey && mode === 'hybrid')) {
+            badge.textContent = 'LOCAL 🧠';
+            badge.style.background = 'rgba(147, 51, 234, 0.2)';
+            badge.style.color = '#a855f7';
+        } else if (mode === 'cloud') {
+            badge.textContent = 'CLOUD ☁️';
+            badge.style.background = 'rgba(16, 185, 129, 0.2)';
+            badge.style.color = '#10b981';
+        } else {
+            badge.textContent = 'API ✨';
+            badge.style.background = 'rgba(59, 130, 246, 0.2)';
+            badge.style.color = '#3b82f6';
+        }
+    }
+
+    async probarConexionAPI() {
+        const btnTest = document.getElementById('btn-test-connection');
+        const badge = document.getElementById('connection-result-badge');
+        const keyInput = document.getElementById('admin-api-key');
+        const providerSelect = document.getElementById('admin-api-provider');
+        const modelSelect = document.getElementById('admin-api-model');
+
+        const key = (keyInput ? keyInput.value : (this.adminConfig.apiKey || '')).trim();
+        const provider = providerSelect ? providerSelect.value : (this.adminConfig.provider || 'gemini');
+        const model = modelSelect ? modelSelect.value : (this.adminConfig.model || 'gemini-1.5-flash');
+
+        if (!key) {
+            if (badge) {
+                badge.style.display = 'block';
+                badge.className = 'connection-result-badge error';
+                badge.textContent = '⚠️ Ingresa una API Key antes de probar la conexión.';
+            }
+            return;
+        }
+
+        if (btnTest) {
+            btnTest.disabled = true;
+            btnTest.innerHTML = '<span>⏳ Verificando conexión en vivo...</span>';
+        }
+        if (badge) {
+            badge.style.display = 'block';
+            badge.className = 'connection-result-badge';
+            badge.style.background = 'rgba(59, 130, 246, 0.15)';
+            badge.style.color = '#2563eb';
+            badge.textContent = 'Enviando petición de prueba al servidor...';
+        }
+
+        const tStart = performance.now();
+        try {
+            if (provider === 'gemini') {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: 'user', parts: [{ text: 'Hola, responde "Conexión exitosa".' }] }],
+                        generationConfig: { maxOutputTokens: 25 }
+                    })
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `HTTP ${res.status} ${res.statusText}`);
+                }
+            } else {
+                let endpoint = 'https://api.openai.com/v1/chat/completions';
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${key}`
+                };
+                if (provider === 'groq') endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+                else if (provider === 'openrouter') {
+                    endpoint = 'https://openrouter.ai/api/v1/chat/completions';
+                    headers['HTTP-Referer'] = window.location.origin || 'https://gmph2007.github.io/HercarBOT/';
+                } else if (provider === 'deepseek') {
+                    endpoint = 'https://api.deepseek.com/chat/completions';
+                }
+
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [{ role: 'user', content: 'Ping' }],
+                        max_tokens: 15
+                    })
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `HTTP ${res.status} ${res.statusText}`);
+                }
+            }
+
+            const latency = Math.round(performance.now() - tStart);
+            if (badge) {
+                badge.style.display = 'block';
+                badge.className = 'connection-result-badge success';
+                badge.textContent = `✅ ¡Conexión Exitosa con ${provider.toUpperCase()}! (Latencia: ${latency} ms)`;
+            }
+            this.mostrarToast(`✅ Conexión con ${provider.toUpperCase()} exitosa (${latency}ms)`);
+        } catch (e) {
+            if (badge) {
+                badge.style.display = 'block';
+                badge.className = 'connection-result-badge error';
+                badge.textContent = `❌ Error: ${e.message}`;
+            }
+            this.mostrarToast(`❌ Error al conectar con ${provider}: ${e.message}`, 4000);
+        } finally {
+            if (btnTest) {
+                btnTest.disabled = false;
+                btnTest.innerHTML = '<span>⚡ Probar Conexión con la API</span>';
+            }
+        }
+    }
+
+    guardarConfiguracionAPI() {
+        const keyInput = document.getElementById('admin-api-key');
+        const providerSelect = document.getElementById('admin-api-provider');
+        const modelSelect = document.getElementById('admin-api-model');
+        const tempSlider = document.getElementById('admin-temperature');
+        const maxTokensSelect = document.getElementById('admin-max-tokens');
+        const modeRadio = document.querySelector('input[name="hercar_ai_mode"]:checked');
+
+        this.adminConfig.apiKey = keyInput ? keyInput.value.trim() : '';
+        this.adminConfig.provider = providerSelect ? providerSelect.value : 'gemini';
+        this.adminConfig.model = modelSelect ? modelSelect.value : 'gemini-1.5-flash';
+        this.adminConfig.temperature = tempSlider ? parseFloat(tempSlider.value) : 0.7;
+        this.adminConfig.maxTokens = maxTokensSelect ? parseInt(maxTokensSelect.value) : 800;
+        if (modeRadio) this.adminConfig.mode = modeRadio.value;
+
+        this.guardarConfiguracionAdminSilenciosa();
+        this.actualizarPillsModo();
+        this.actualizarBadgeAdminSidebar();
+        this.mostrarToast('✅ ¡Configuración y API Key guardadas exitosamente!');
+    }
+
+    limpiarConfiguracionAPI() {
+        if (!confirm('¿Deseas eliminar la API Key configurada? El chatbot volverá al modo Red Neuronal Local APSTI.')) {
+            return;
+        }
+        this.adminConfig.apiKey = '';
+        const keyInput = document.getElementById('admin-api-key');
+        if (keyInput) keyInput.value = '';
+
+        const badgeTest = document.getElementById('connection-result-badge');
+        if (badgeTest) badgeTest.style.display = 'none';
+
+        this.guardarConfiguracionAdminSilenciosa();
+        this.actualizarPillsModo();
+        this.actualizarBadgeAdminSidebar();
+        this.mostrarToast('🗑️ API Key eliminada. Modo Red Neuronal Local activo.');
+    }
+
+    guardarConfiguracionAdminSilenciosa() {
+        try {
+            localStorage.setItem('hercar_admin_config', JSON.stringify(this.adminConfig));
+        } catch (e) {}
+    }
+
+    async consultarCloudAPI(query) {
+        const provider = this.adminConfig.provider || 'gemini';
+        const apiKey = (this.adminConfig.apiKey || '').trim();
+        const model = this.adminConfig.model || 'gemini-1.5-flash';
+        const temperature = parseFloat(this.adminConfig.temperature) || 0.7;
+        const maxTokens = parseInt(this.adminConfig.maxTokens) || 800;
+        const systemPrompt = this.adminConfig.systemPrompt || this.DEFAULT_SYSTEM_PROMPT;
+
+        if (!apiKey) {
+            throw new Error('No hay API Key configurada.');
+        }
+
+        // Contexto de los últimos 6 mensajes
+        const recentHistory = (this.history || [])
+            .filter(m => m.sender === 'user' || m.sender === 'bot')
+            .slice(-6);
+
+        if (provider === 'gemini') {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+            // Alternancia estricta de roles para Gemini
+            const contents = [];
+            let lastRole = null;
+            for (const msg of recentHistory) {
+                const r = msg.sender === 'user' ? 'user' : 'model';
+                if (r !== lastRole) {
+                    contents.push({ role: r, parts: [{ text: msg.text }] });
+                    lastRole = r;
+                }
+            }
+            if (lastRole === 'user') {
+                contents.push({ role: 'model', parts: [{ text: 'Entendido. Estoy lista para responder tu consulta.' }] });
+            }
+            contents.push({ role: 'user', parts: [{ text: query }] });
+
+            const bodyData = {
+                contents: contents,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    temperature: temperature,
+                    maxOutputTokens: maxTokens
+                }
+            };
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyData)
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = errData.error?.message || `HTTP ${res.status} ${res.statusText}`;
+                throw new Error(errMsg);
+            }
+
+            const data = await res.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) {
+                throw new Error('Gemini no devolvió texto de respuesta.');
+            }
+            return text;
+        } else {
+            // OpenAI, Groq, OpenRouter, DeepSeek
+            let endpoint = 'https://api.openai.com/v1/chat/completions';
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            };
+
+            if (provider === 'groq') {
+                endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+            } else if (provider === 'openrouter') {
+                endpoint = 'https://openrouter.ai/api/v1/chat/completions';
+                headers['HTTP-Referer'] = window.location.origin || 'https://gmph2007.github.io/HercarBOT/';
+                headers['X-Title'] = 'HercarIA Bot - IESTP Hermanos Carcamo';
+            } else if (provider === 'deepseek') {
+                endpoint = 'https://api.deepseek.com/chat/completions';
+            }
+
+            const messages = [
+                { role: 'system', content: systemPrompt }
+            ];
+
+            for (const msg of recentHistory) {
+                messages.push({
+                    role: msg.sender === 'user' ? 'user' : 'assistant',
+                    content: msg.text
+                });
+            }
+            messages.push({ role: 'user', content: query });
+
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    model: model,
+                    messages: messages,
+                    temperature: temperature,
+                    max_tokens: maxTokens
+                })
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = errData.error?.message || `HTTP ${res.status} ${res.statusText}`;
+                throw new Error(errMsg);
+            }
+
+            const data = await res.json();
+            const reply = data.choices?.[0]?.message?.content;
+            if (!reply) {
+                throw new Error(`${provider.toUpperCase()} no devolvió contenido.`);
+            }
+            return reply;
+        }
+    }
+
+    buscarEnCustomKB(query) {
+        if (!this.customKb || this.customKb.length === 0) return null;
+        const normQ = this.normalizarTexto(query);
+        const wordsQ = normQ.split(/\s+/).filter(w => w.length > 2);
+
+        for (const item of this.customKb) {
+            const normItemQ = this.normalizarTexto(item.question);
+            if (normQ.includes(normItemQ) || normItemQ.includes(normQ)) {
+                return item;
+            }
+            const itemWords = normItemQ.split(/\s+/).filter(w => w.length > 2);
+            if (itemWords.length > 0) {
+                const matchCount = itemWords.filter(w => wordsQ.includes(w)).length;
+                if (matchCount / itemWords.length >= 0.6) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    agregarItemCustomKB() {
+        const qInput = document.getElementById('custom-kb-question');
+        const aInput = document.getElementById('custom-kb-answer');
+        if (!qInput || !aInput) return;
+
+        const q = qInput.value.trim();
+        const a = aInput.value.trim();
+
+        if (!q || !a) {
+            alert('Por favor, ingresa tanto la pregunta o palabras clave como la respuesta detallada.');
+            return;
+        }
+
+        const newItem = {
+            id: 'kb_' + Date.now(),
+            question: q,
+            answer: a,
+            timestamp: new Date().toLocaleDateString('es-PE')
+        };
+
+        this.customKb.unshift(newItem);
+        try {
+            localStorage.setItem('hercar_custom_kb', JSON.stringify(this.customKb));
+        } catch (e) {}
+
+        qInput.value = '';
+        aInput.value = '';
+        this.renderizarListaCustomKB();
+        this.mostrarToast('✅ Pregunta personalizada añadida con éxito');
+    }
+
+    eliminarItemCustomKB(id) {
+        if (!confirm('¿Seguro que deseas eliminar esta pregunta personalizada?')) return;
+        this.customKb = this.customKb.filter(item => item.id !== id);
+        try {
+            localStorage.setItem('hercar_custom_kb', JSON.stringify(this.customKb));
+        } catch (e) {}
+        this.renderizarListaCustomKB();
+        this.mostrarToast('🗑️ Pregunta eliminada de la base personalizada');
+    }
+
+    renderizarListaCustomKB() {
+        const listEl = document.getElementById('custom-kb-list');
+        const countEl = document.getElementById('custom-kb-count');
+        if (!listEl) return;
+
+        if (countEl) {
+            countEl.textContent = `${this.customKb.length} ${this.customKb.length === 1 ? 'registrada' : 'registradas'}`;
+        }
+
+        if (this.customKb.length === 0) {
+            listEl.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 15px;">No hay preguntas personalizadas añadidas aún. Las respuestas provienen de la base institucional oficial y de la Red Neuronal APSTI.</p>`;
+            return;
+        }
+
+        listEl.innerHTML = this.customKb.map(item => `
+            <div class="custom-kb-item">
+                <div class="custom-kb-item-header">
+                    <strong>❓ ${this.escapeHTML(item.question)}</strong>
+                    <button type="button" class="btn-delete-kb-item" onclick="window.hercarApp.eliminarItemCustomKB('${item.id}')" title="Eliminar pregunta">🗑️</button>
+                </div>
+                <div class="custom-kb-item-body">
+                    ${this.parseMarkdown(item.answer)}
+                </div>
+                <div class="custom-kb-item-date">Añadida el: ${item.timestamp || 'Reciente'}</div>
+            </div>
+        `).join('');
+    }
+
+    guardarSystemPrompt() {
+        const promptEl = document.getElementById('admin-system-prompt-text');
+        if (!promptEl) return;
+        const val = promptEl.value.trim();
+        if (!val) {
+            alert('El System Prompt no puede estar vacío.');
+            return;
+        }
+        this.adminConfig.systemPrompt = val;
+        this.guardarConfiguracionAdminSilenciosa();
+        this.mostrarToast('✅ Prompt del Sistema actualizado y guardado');
+    }
+
+    restablecerSystemPrompt() {
+        if (!confirm('¿Restablecer el System Prompt al texto institucional predeterminado de APSTI?')) return;
+        this.adminConfig.systemPrompt = this.DEFAULT_SYSTEM_PROMPT;
+        const promptEl = document.getElementById('admin-system-prompt-text');
+        if (promptEl) promptEl.value = this.DEFAULT_SYSTEM_PROMPT;
+        this.guardarConfiguracionAdminSilenciosa();
+        this.mostrarToast('🔄 Prompt restablecido al oficial de APSTI');
+    }
+
+    registrarMetricaConsulta(tipo, query, intent = '') {
+        if (!this.metrics) return;
+
+        this.metrics.totalQueries = (this.metrics.totalQueries || 0) + 1;
+        if (tipo === 'cloud') {
+            this.metrics.cloudQueries = (this.metrics.cloudQueries || 0) + 1;
+        } else {
+            this.metrics.localQueries = (this.metrics.localQueries || 0) + 1;
+        }
+
+        const qLower = (query + ' ' + (intent || '')).toLowerCase();
+        if (!this.metrics.categoryCounts) {
+            this.metrics.categoryCounts = { apsti: 0, ani: 0, conta: 0, dpa: 0, general: 0 };
+        }
+
+        if (qLower.includes('apsti') || qLower.includes('sistema') || qLower.includes('program') || qLower.includes('software') || qLower.includes('redes') || qLower.includes('cloud')) {
+            this.metrics.categoryCounts.apsti = (this.metrics.categoryCounts.apsti || 0) + 1;
+        } else if (qLower.includes('ani') || qLower.includes('negocio') || qLower.includes('aduan') || qLower.includes('comercio') || qLower.includes('puerto')) {
+            this.metrics.categoryCounts.ani = (this.metrics.categoryCounts.ani || 0) + 1;
+        } else if (qLower.includes('conta') || qLower.includes('tribut') || qLower.includes('balance') || qLower.includes('sunat') || qLower.includes('libro')) {
+            this.metrics.categoryCounts.conta = (this.metrics.categoryCounts.conta || 0) + 1;
+        } else if (qLower.includes('dpa') || qLower.includes('pesqu') || qLower.includes('mar') || qLower.includes('acuicol') || qLower.includes('embarca')) {
+            this.metrics.categoryCounts.dpa = (this.metrics.categoryCounts.dpa || 0) + 1;
+        } else {
+            this.metrics.categoryCounts.general = (this.metrics.categoryCounts.general || 0) + 1;
+        }
+
+        if (!this.metrics.auditLog) this.metrics.auditLog = [];
+        const entry = {
+            time: new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            query: query.length > 70 ? query.slice(0, 70) + '...' : query,
+            engine: tipo === 'cloud' ? `${this.adminConfig.provider.toUpperCase()} (${this.adminConfig.model})` : 'Red Neuronal Local APSTI',
+            status: '✅ OK'
+        };
+        this.metrics.auditLog.unshift(entry);
+        if (this.metrics.auditLog.length > 30) this.metrics.auditLog = this.metrics.auditLog.slice(0, 30);
+
+        this.guardarMetricas();
+    }
+
+    registrarFalloAuditoria(query, provider, error) {
+        if (!this.metrics) return;
+        if (!this.metrics.auditLog) this.metrics.auditLog = [];
+        const entry = {
+            time: new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            query: query.length > 70 ? query.slice(0, 70) + '...' : query,
+            engine: `${provider.toUpperCase()} (Fallo -> Fallback Local)`,
+            status: `⚠️ ${error.slice(0, 35)}`
+        };
+        this.metrics.auditLog.unshift(entry);
+        if (this.metrics.auditLog.length > 30) this.metrics.auditLog = this.metrics.auditLog.slice(0, 30);
+        this.guardarMetricas();
+    }
+
+    guardarMetricas() {
+        try {
+            localStorage.setItem('hercar_admin_metrics', JSON.stringify(this.metrics));
+        } catch (e) {}
+    }
+
+    actualizarDashboardMetricas() {
+        if (!this.metrics) return;
+
+        const totalEl = document.getElementById('dash-total-queries');
+        const cloudEl = document.getElementById('dash-cloud-queries');
+        const localEl = document.getElementById('dash-local-queries');
+        const satEl = document.getElementById('dash-satisfaction-pct');
+
+        if (totalEl) totalEl.textContent = this.metrics.totalQueries || 0;
+        if (cloudEl) cloudEl.textContent = this.metrics.cloudQueries || 0;
+        if (localEl) localEl.textContent = this.metrics.localQueries || 0;
+
+        const up = this.metrics.upvotes || 0;
+        const down = this.metrics.downvotes || 0;
+        const totalVotes = up + down;
+        const pctSat = totalVotes > 0 ? Math.round((up / totalVotes) * 100) + '%' : '100%';
+        if (satEl) satEl.textContent = pctSat;
+
+        // Distribución de Categorías
+        const cats = this.metrics.categoryCounts || { apsti: 1, ani: 1, conta: 1, dpa: 1 };
+        const totalCat = (cats.apsti || 0) + (cats.ani || 0) + (cats.conta || 0) + (cats.dpa || 0) + (cats.general || 0) || 1;
+
+        const pApsti = Math.max(5, Math.round(((cats.apsti || 0) / totalCat) * 100));
+        const pAni = Math.max(5, Math.round(((cats.ani || 0) / totalCat) * 100));
+        const pConta = Math.max(5, Math.round(((cats.conta || 0) / totalCat) * 100));
+        const pDpa = Math.max(5, Math.round(((cats.dpa || 0) / totalCat) * 100));
+
+        const barApsti = document.getElementById('cat-bar-apsti');
+        const countApsti = document.getElementById('cat-count-apsti');
+        if (barApsti) barApsti.style.width = pApsti + '%';
+        if (countApsti) countApsti.textContent = `${pApsti}% (${cats.apsti || 0})`;
+
+        const barAni = document.getElementById('cat-bar-ani');
+        const countAni = document.getElementById('cat-count-ani');
+        if (barAni) barAni.style.width = pAni + '%';
+        if (countAni) countAni.textContent = `${pAni}% (${cats.ani || 0})`;
+
+        const barConta = document.getElementById('cat-bar-conta');
+        const countConta = document.getElementById('cat-count-conta');
+        if (barConta) barConta.style.width = pConta + '%';
+        if (countConta) countConta.textContent = `${pConta}% (${cats.conta || 0})`;
+
+        const barDpa = document.getElementById('cat-bar-dpa');
+        const countDpa = document.getElementById('cat-count-dpa');
+        if (barDpa) barDpa.style.width = pDpa + '%';
+        if (countDpa) countDpa.textContent = `${pDpa}% (${cats.dpa || 0})`;
+
+        // Tabla de Auditoría
+        const tbody = document.getElementById('audit-table-body');
+        if (tbody) {
+            const logs = this.metrics.auditLog || [];
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 15px;">Aún no hay consultas registradas en esta sesión.</td></tr>`;
+            } else {
+                tbody.innerHTML = logs.map(log => `
+                    <tr>
+                        <td><strong>${this.escapeHTML(log.time)}</strong></td>
+                        <td title="${this.escapeHTML(log.query)}">${this.escapeHTML(log.query)}</td>
+                        <td><span class="engine-badge">${this.escapeHTML(log.engine)}</span></td>
+                        <td>${this.escapeHTML(log.status)}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+    }
+
+    exportarRegistroAuditoria() {
+        const data = {
+            institucion: 'IESTP Hermanos Cárcamo - Paita',
+            sistema: 'HercarIA Bot v6.0 - Arquitectura Híbrida APSTI',
+            fechaExportacion: new Date().toISOString(),
+            configuracionActual: {
+                modo: this.adminConfig.mode,
+                proveedor: this.adminConfig.provider,
+                modelo: this.adminConfig.model,
+                tieneApiKey: Boolean(this.adminConfig.apiKey)
+            },
+            metricas: this.metrics,
+            preguntasPersonalizadas: this.customKb
+        };
+
+        const jsonStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Auditoria_HercarIA_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.mostrarToast('📥 Registro de auditoría exportado correctamente.');
     }
 
     normalizarTexto(txt) {
