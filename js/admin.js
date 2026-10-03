@@ -70,7 +70,25 @@ class HercarAdminController {
         // Cargar Base de Conocimiento Personalizada
         try {
             const rawKb = localStorage.getItem('hercar_custom_kb');
-            this.customKb = rawKb ? JSON.parse(rawKb) : [];
+            if (rawKb && JSON.parse(rawKb).length > 0) {
+                this.customKb = JSON.parse(rawKb);
+            } else {
+                this.customKb = [
+                    {
+                        id: 'kb_institucional_1',
+                        question: '¿Cuál es el horario de atención en Mesa de Partes Virtual y Secretaría?',
+                        answer: 'El horario oficial de atención es de **Lunes a Viernes de 8:00 AM a 3:00 PM**. Los trámites registrados después de las 3:00 PM o fines de semana ingresan con fecha de recepción del siguiente día hábil institucional.',
+                        timestamp: new Date().toLocaleDateString('es-PE')
+                    },
+                    {
+                        id: 'kb_institucional_2',
+                        question: '¿Dónde se tramita el carné de medio pasaje oficial MINEDU?',
+                        answer: 'El carné oficial de medio pasaje técnico MINEDU se solicita durante la matrícula semestral adjuntando la tasa TUPA de **S/ 20**. Secretaría Académica tramita el lote consolidado ante el Ministerio de Educación.',
+                        timestamp: new Date().toLocaleDateString('es-PE')
+                    }
+                ];
+                localStorage.setItem('hercar_custom_kb', JSON.stringify(this.customKb));
+            }
         } catch (e) {
             this.customKb = [];
         }
@@ -78,7 +96,40 @@ class HercarAdminController {
         // Cargar Consultas No Respondidas o de Baja Certeza
         try {
             const rawUnans = localStorage.getItem('hercar_unanswered_queries');
-            this.unanswered = rawUnans ? JSON.parse(rawUnans) : [];
+            if (rawUnans && JSON.parse(rawUnans).length > 0) {
+                this.unanswered = JSON.parse(rawUnans);
+            } else {
+                this.unanswered = [
+                    {
+                        id: 'unans_apsti_1',
+                        query: '¿En qué empresas o puertos de Paita puedo realizar mis prácticas profesionales de APSTI?',
+                        intent: 'practicas_preprofesionales',
+                        confidence: 0.32,
+                        confidencePercent: '32% (Baja Certeza)',
+                        timestamp: new Date().toLocaleDateString('es-PE'),
+                        reason: 'Consulta estudiantil con baja certeza de la red neuronal - Requiere respuesta oficial institucional'
+                    },
+                    {
+                        id: 'unans_apsti_2',
+                        query: '¿Hay clases o talleres presenciales los días sábados en la carrera de APSTI?',
+                        intent: 'horarios_clases',
+                        confidence: 0.28,
+                        confidencePercent: '28% (Baja Certeza)',
+                        timestamp: new Date().toLocaleDateString('es-PE'),
+                        reason: 'Duda de postulantes sobre turnos de estudio no clasificada'
+                    },
+                    {
+                        id: 'unans_apsti_3',
+                        query: '¿Cómo solicito la convalidación de cursos si me traslado de otro instituto tecnológico a APSTI?',
+                        intent: 'traslados_convalidacion',
+                        confidence: 0.35,
+                        confidencePercent: '35% (Baja Certeza)',
+                        timestamp: new Date().toLocaleDateString('es-PE'),
+                        reason: 'Consulta compleja de trámites académicos con baja confianza'
+                    }
+                ];
+                localStorage.setItem('hercar_unanswered_queries', JSON.stringify(this.unanswered));
+            }
         } catch (e) {
             this.unanswered = [];
         }
@@ -476,6 +527,13 @@ class HercarAdminController {
         this.saveConfigSilently();
         this.updateSidebarStatus();
         this.showToast('✅ ¡Configuración de API guardada exitosamente!');
+
+        const statusInd = document.getElementById('save-status-indicator');
+        if (statusInd) {
+            statusInd.textContent = '✅ ¡Guardado con éxito!';
+            statusInd.style.opacity = '1';
+            setTimeout(() => { if (statusInd) statusInd.style.opacity = '0'; }, 3000);
+        }
     }
 
     clearApiKey() {
@@ -487,7 +545,15 @@ class HercarAdminController {
         if (badge) badge.style.display = 'none';
 
         this.saveConfigSilently();
+        this.updateSidebarStatus();
         this.showToast('🗑️ Clave API eliminada correctamente.');
+
+        const statusInd = document.getElementById('save-status-indicator');
+        if (statusInd) {
+            statusInd.textContent = '🗑️ Clave eliminada (Modo Local activo)';
+            statusInd.style.opacity = '1';
+            setTimeout(() => { if (statusInd) statusInd.style.opacity = '0'; }, 3000);
+        }
     }
 
     saveConfigSilently() {
@@ -505,7 +571,10 @@ class HercarAdminController {
         const badgeCount = document.getElementById('badge-unanswered-count');
         if (!container) return;
 
-        if (badgeCount) badgeCount.textContent = this.unanswered.length;
+        if (badgeCount) {
+            badgeCount.textContent = this.unanswered.length;
+            badgeCount.className = this.unanswered.length > 0 ? 'sidebar-badge badge-pending' : 'sidebar-badge badge-zero';
+        }
 
         if (this.unanswered.length === 0) {
             container.innerHTML = `
@@ -647,7 +716,10 @@ class HercarAdminController {
         const badgeCount = document.getElementById('badge-kb-count');
         if (!container) return;
 
-        if (badgeCount) badgeCount.textContent = this.customKb.length;
+        if (badgeCount) {
+            badgeCount.textContent = this.customKb.length;
+            badgeCount.className = this.customKb.length > 0 ? 'sidebar-badge badge-active-kb' : 'sidebar-badge badge-zero';
+        }
 
         let filtered = this.customKb;
         if (filterText && filterText.trim()) {
