@@ -1,14 +1,14 @@
 # INFORME TÉCNICO Y MEMORIA DESCRIPTIVA DE PROYECTO
 
-## DESARROLLO E IMPLEMENTACIÓN DEL ASISTENTE VIRTUAL INTELIGENTE "HERCARIA v5.1"
-### Dotado de Red Neuronal Artificial Multicapa (MLP), Base Enciclopédica Institucional, Simulador TUPA 2026, Mapa del Campus, Interfaz Limpia Ergonométrica y Síntesis Vocal Femenina Humana
+## DESARROLLO E IMPLEMENTACIÓN DEL ASISTENTE VIRTUAL INTELIGENTE "HERCARIA v6.0"
+### Dotado de Arquitectura Híbrida Multi-API (Gemini, OpenAI, Groq), Red Neuronal Artificial Local APSTI (MLP), Panel de Administración con Métricas, Base Enciclopédica Institucional, Simulador TUPA 2026, Mapa del Campus y Síntesis Vocal Femenina Humana
 ### Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" — Paita, Piura
 
 ---
 
 * **Carrera Profesional Técnica:** Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)
 * **Autor / Desarrollador:** Gerson Misael Pintado Huamán (GMPH2007)
-* **Versión del Sistema:** v5.1 Neuronal APSTI Ampliada (Producción Estable)
+* **Versión del Sistema:** v6.0 Arquitectura Híbrida Multi-API & Red Neuronal APSTI (Producción Estable)
 * **Institución Beneficiaria:** I.E.S.T.P. "Hermanos Cárcamo" de Paita ([ieshercar.edu.pe](https://ieshercar.edu.pe/))
 * **Fecha:** Octubre de 2026
 * **Repositorio Oficial:** [https://github.com/GMPH2007/HercarBOT](https://github.com/GMPH2007/HercarBOT)
@@ -18,18 +18,21 @@
 
 ## 1. RESUMEN EJECUTIVO
 
-El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema **HercarIA v5.1**, una plataforma de Inteligencia Artificial conversacional de última generación concebida para el **Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita**.
+El presente informe técnico expone la fundamentación de ingeniería, diseño arquitectónico, desarrollo algorítmico y despliegue del sistema **HercarIA v6.0**, una plataforma de Inteligencia Artificial conversacional de última generación concebida para el **Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita**.
 
-Desarrollado en el marco formativo de la **Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)**, HercarIA integra una **Red Neuronal Artificial Perceptrón Multicapa (MLP)** ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning) con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.
+Desarrollado en el marco formativo de la **Carrera Profesional Técnica de Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)**, HercarIA integra una **Arquitectura Híbrida Multi-API** combinada con una **Red Neuronal Artificial Perceptrón Multicapa (MLP)** ejecutada íntegramente en el cliente (Browser Client-Side Deep Learning) con vectorización TF-IDF, activación LeakyReLU y Tanh, y distribución Softmax de intenciones con latencia inferior a 5 milisegundos.
 
-Asimismo, la versión 5.1 incorpora:
-1. **Base de Conocimiento Enciclopédica y Semántica:** Respuestas minuciosas sobre mallas curriculares ciclo por ciclo de las 4 carreras, temario oficial del examen de admisión, requisitos de titulación y prácticas preprofesionales (EFSRT), Beca 18 (PRONABEC), carné de medio pasaje, rutas de transporte desde Piura y Sullana, sistema SIGA web y biblioteca virtual.
-2. **Ergonomía Visual Limpia y Humanizada:** Ocultamiento de botones e indicadores de IA toscos en cabecera y barra lateral para una interfaz pulcra y amigable estilo ChatGPT, manteniendo el acceso a la red neuronal mediante el comando `/inspector`.
-3. **Simulador de Matrícula y Tasas TUPA 2026:** Calculadora institucional interactiva con perfiles para cachimbos, regulares y trámites de titulación.
-4. **Mapa Arquitectónico Digital del Campus:** Plano esquemático interactivo con puntos de interés de laboratorios de cómputo APSTI, acuicultura y navegación DPA.
-5. **Motor de Síntesis Vocal Femenina Humana y Dulce:** Voces neurales de alta fidelidad (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`), sin lectura robótica de Markdown y con pronunciación fonética nativa.
-6. **Orientador Vocacional Psicométrico:** 6 reactivos ponderados con cálculo matricial de compatibilidad porcentual.
-7. **Chips Contextuales Dinámicos y Acciones de Mensaje:** Preguntas sugeridas de seguimiento y botones de escucha, copiado con notificación Toast y calificación de satisfacción.
+Asimismo, la versión 6.0 incorpora:
+1. **Panel de Administración y Configuración Multi-API (`/admin`):** Soporte client-side directo para Google Gemini (1.5 Flash, 1.5 Pro, 2.0 Flash), OpenAI (GPT-4o, GPT-4o-mini), Groq (Llama 3.1, Llama 3.3) y DeepSeek API, con selector de modelos, prueba de conexión en vivo con medición de latencia y ajuste de temperatura/tokens.
+2. **Modo Híbrido Resiliente con Fallback Automático:** Si se configura una API Key, el sistema aprovecha el modelo generativo en la nube para consultas complejas. Ante caídas de conexión externa o agotamiento de cuota (HTTP 429), conmuta de inmediato a la Red Neuronal Local APSTI (MLP) sin que el usuario experimente interrupción alguna.
+3. **Tablero de Métricas y Registro de Auditoría JSON:** Cuadro de mando en vivo con total de consultas, ratio Cloud vs. Local, índice de satisfacción estudiantil (👍/👎), distribución porcentual por carrera y tabla cronológica de consultas con opción de descarga de reporte en formato JSON.
+4. **Base de Conocimiento Personalizada (Custom KB):** Módulo para ingresar preguntas y respuestas oficiales ad hoc (ej. fechas de sustentación, eventos institucionales) almacenadas en LocalStorage con máxima prioridad de respuesta.
+5. **Editor de Prompt del Sistema Institucional:** Área de edición de directrices de identidad y restricciones del asistente, con botón de restauración al texto institucional predeterminado de APSTI con un solo clic.
+6. **Base de Conocimiento Enciclopédica y Semántica:** Mallas curriculares ciclo por ciclo de las 4 carreras, temario oficial del examen de admisión, requisitos de titulación y prácticas preprofesionales (EFSRT), Beca 18, carné de medio pasaje, rutas de transporte desde Piura y Sullana, sistema SIGA web y biblioteca virtual.
+7. **Simulador de Matrícula y Tasas TUPA 2026:** Calculadora institucional interactiva con perfiles para cachimbos, regulares y trámites de titulación.
+8. **Mapa Arquitectónico Digital del Campus:** Plano esquemático interactivo con puntos de interés de laboratorios de cómputo APSTI, acuicultura y navegación DPA.
+9. **Motor de Síntesis Vocal Femenina Humana y Dulce:** Voces neurales de alta fidelidad (`es-PE-CamilaNeural`, `es-MX-DaliaNeural`), sin lectura robótica de Markdown y con pronunciación fonética nativa.
+10. **Orientador Vocacional Psicométrico:** 6 reactivos ponderados con cálculo matricial de compatibilidad porcentual.
 
 ---
 
@@ -44,7 +47,7 @@ La provincia de Paita alberga el principal puerto marítimo y comercial del nort
 
 ---
 
-## 3. ARQUITECTURA TECNOLÓGICA DEL SISTEMA
+## 3. ARQUITECTURA TECNOLÓGICA DEL SISTEMA (HÍBRIDA MULTI-API)
 
 El software fue construido bajo una arquitectura desacoplada y modular, garantizando máxima velocidad, bajo consumo y cero costos de infraestructura en la nube:
 
@@ -52,30 +55,39 @@ El software fue construido bajo una arquitectura desacoplada y modular, garantiz
 flowchart TD
     subgraph Cliente ["Cliente Web (Navegador del Usuario)"]
         UI["Interfaz UI/UX (HTML5 + CSS3 Glassmorphism)"]
-        NN["Red Neuronal Artificial MLP (neural_network.js)\n220 In -> 36 H1 (LeakyReLU) -> 18 H2 (Tanh) -> 22 Out (Softmax)"]
-        APP["Controlador Chat & Ensamble Híbrido (app.js)"]
+        ADMIN["Panel de Administración (/admin)\nConfiguración API, Métricas, Custom KB, System Prompt"]
+        APP["Controlador Chat & Router Híbrido (app.js)"]
+        CKB["Base Personalizada Custom KB (LocalStorage)"]
+        NN["Red Neuronal Artificial MLP (neural_network.js)\n260 In -> 36 H1 (LeakyReLU) -> 18 H2 (Tanh) -> 34 Out (Softmax)"]
+        KB["Base Enciclopédica Institucional (knowledge.js)"]
         SIM["Simulador TUPA 2026"]
         MAP["Mapa Arquitectónico del Campus"]
         INS["Inspector Visual de Red Neuronal & Playground"]
         VOC["Motor Test Vocacional (test_vocacional.js)"]
-        KB["Base de Conocimiento Institucional (knowledge.js)"]
         VOICE["Módulo de Voz Dulce & Micrófono (voice.js)"]
     end
 
-    subgraph Nube ["Despliegue y Servicios"]
-        GH["GitHub Pages (CDN Global HTTPS)"]
-        PY["Servidor Local Opcional (server.py + Edge-TTS)"]
+    subgraph ProveedoresCloud ["APIs en la Nube (Opcional)"]
+        GEMINI["Google Gemini API (1.5 Flash / 1.5 Pro)"]
+        OAI["OpenAI API (GPT-4o / GPT-4o-mini)"]
+        GROQ["Groq Inferencia Llama 3 Ultra Rápida"]
+    end
+
+    subgraph Nube ["Despliegue Global"]
+        GH["GitHub Pages (CDN Global HTTPS 24/7)"]
     end
 
     UI --> APP
-    APP --> NN
-    APP --> KB
+    ADMIN --> APP
+    APP --> CKB
+    APP -->|Modo Híbrido / Cloud| ProveedoresCloud
+    APP -->|Fallback / Modo Local| NN
+    NN --> KB
     APP --> SIM
     APP --> MAP
     APP --> INS
     APP --> VOC
     APP --> VOICE
-    VOICE -.->|Audio Local| PY
     UI -.->|Alojado en| GH
 ```
 
