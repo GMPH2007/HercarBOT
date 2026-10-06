@@ -596,7 +596,28 @@
                 </form>
             </div>
         </div>
+    <!-- ==========================================================================
+         MODAL FLOTANTE MODERNO: DIÁLOGO DE CONFIRMACIÓN Y ALERTA (CERO POPUPS DEL NAVEGADOR)
+         ========================================================================== -->
+    <div class="admin-modal-overlay modal-dialog-overlay" id="modal-custom-dialog" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-desc">
+        <div class="admin-modal-box modal-dialog-card">
+            <div class="dialog-glow-ring"></div>
+            <div class="dialog-top-icon">
+                <div class="dialog-icon-circle dialog-icon-danger" id="dialog-icon-container">
+                    <span id="dialog-icon" class="dialog-icon-emoji">🗑️</span>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <h3 id="dialog-title" class="dialog-title">¿Confirmar acción?</h3>
+                <p id="dialog-desc" class="dialog-desc">¿Estás seguro de que deseas continuar con esta operación?</p>
+            </div>
+            <div class="dialog-actions-row" id="dialog-actions-row">
+                <button type="button" class="btn-dialog-cancel" id="btn-dialog-cancel">Cancelar</button>
+                <button type="button" class="btn-dialog-confirm btn-dialog-danger" id="btn-dialog-confirm">Confirmar</button>
+            </div>
+        </div>
     </div>
+
     <div class="admin-toast" id="admin-toast"></div>
 
     <!-- SCRIPTS -->
