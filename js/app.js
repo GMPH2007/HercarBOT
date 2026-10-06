@@ -895,6 +895,26 @@ class HercarChatApp {
             return;
         }
 
+        // Número de Cuenta Bancaria Oficial y Códigos de Pago Banco de la Nación
+        if (
+            nr.intent === 'cuenta_bancaria_codigos' ||
+            q.includes('cuenta') ||
+            q.includes('cci') ||
+            q.includes('interbancari') ||
+            q.includes('codigo de pago') ||
+            q.includes('codigos de pago') ||
+            q.includes('donde deposito') ||
+            q.includes('a que cuenta') ||
+            (q.includes('pasame') && q.includes('cuenta')) ||
+            (q.includes('pasa') && q.includes('cuenta')) ||
+            (q.includes('dame') && q.includes('cuenta')) ||
+            (q.includes('numero') && q.includes('cuenta')) ||
+            (q.includes('banco') && q.includes('cuenta'))
+        ) {
+            this.responderNumeroDeCuenta(nr);
+            return;
+        }
+
         // Pagos y Vouchers
         if (
             nr.intent === 'pagos_vouchers' ||
@@ -1116,15 +1136,149 @@ class HercarChatApp {
         this.responderGenerico(rawQuery, nr);
     }
 
+    responderNumeroDeCuenta(nr = null) {
+        const respuesta = `🏦 **NÚMERO DE CUENTA BANCARIA Y CÓDIGOS OFICIALES DE PAGO**
+
+Para realizar tus pagos de **matrícula**, **examen de admisión** o trámites TUPA del **IESTP "Hermanos Cárcamo"**, utiliza las cuentas institucionales del **Banco de la Nación**:
+
+<div class="bank-card-chat">
+    <div class="bank-card-header">
+        <div class="bank-title-box">
+            <span class="bank-flag">🇵🇪</span>
+            <div>
+                <div class="bank-name">BANCO DE LA NACIÓN DEL PERÚ</div>
+                <div class="bank-inst-name">IESTP "Hermanos Cárcamo" - Paita (RDR)</div>
+            </div>
+        </div>
+        <span class="bank-badge">Cuenta Oficial</span>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Número de Cuenta Corriente (Soles):</span>
+            <span class="code-meta-val">00-631-018241</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('00-631-018241', 'N° de Cuenta Corriente (00-631-018241)')">
+            📋 Copiar Cuenta
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código Interbancario (CCI para transferir desde BCP, BBVA, Interbank, Yape):</span>
+            <span class="code-meta-val">018-631-000631018241-73</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('018-631-000631018241-73', 'Código CCI Interbancario')">
+            📋 Copiar CCI
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">RUC Institucional:</span>
+            <span class="code-meta-val">20197087091</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('20197087091', 'RUC Institucional')">
+            📋 Copiar RUC
+        </button>
+    </div>
+
+    <div class="bank-buttons-footer">
+        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="btn-link-action btn-link-success-mini">
+            🔗 Registrar Voucher en pagos.ieshercar.edu.pe ↗
+        </a>
+        <button type="button" class="btn-link-action btn-link-primary-mini" onclick="window.hercarApp.abrirSimuladorTupaModal()">
+            🧮 Abrir Simulador TUPA
+        </button>
+    </div>
+</div>
+
+---
+
+### 💵 Principales Tasas TUPA Oficiales:
+* 🎓 **Matrícula Semestral Regular:** **S/ 100.00** *(¡La educación técnica es 100% gratuita, S/ 0 mensualidades privadas!)*
+* 📝 **Inscripción Examen de Admisión Ordinario:** **S/ 150.00**
+* 🚀 **Ciclo Pre-Tecnológico (Ingreso Directo):** **S/ 200.00**
+* 🚌 **Carnet Oficial de Medio Pasaje MINEDU:** **S/ 20.00**
+
+---
+
+### 📲 ¿Dónde pagar y cómo registrar tu comprobante?
+1. **Canales autorizados:** Ventanillas del Banco de la Nación en todo el Perú, Red de Agentes MultiRed o transferencias interbancarias directas con el código CCI.
+2. **Exige tu comprobante:** Al pagar, revisa que el voucher indique tu DNI y número de operación legible.
+3. **Registro obligatorio de Voucher:** Sube tu comprobante a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) para que Secretaría Académica valide tu pago.
+4. **Consulta tu boleta oficial:** Descarga tu comprobante electrónico en [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).
+
+> ⚠️ *Advertencia de Seguridad:* Nunca realices transferencias a números de cuenta de personas naturales. Todos los pagos del instituto se realizan exclusivamente a las cuentas oficiales del Banco de la Nación.`;
+
+        const voz = "¡Claro que sí! Aquí tienes los datos bancarios oficiales del Instituto Hermanos Cárcamo en el Banco de la Nación. La cuenta corriente es cero cero, seiscientos treinta y uno, cero dieciocho, doscientos cuarenta y uno, y también tienes el código interbancario C C I. Puedes copiarlos con un solo clic y registrar tu comprobante en la plataforma oficial de pagos.";
+        this.addBotMessage(respuesta, true, voz, nr);
+    }
+
     responderMetodosDePago(nr = null) {
-        const respuesta = `💳 **GUÍA OFICIAL DE PAGOS Y REGISTRO DE VOUCHERS**
+        const respuesta = `💳 **GUÍA OFICIAL DE PAGOS, NÚMEROS DE CUENTA Y REGISTRO DE VOUCHERS**
         
 El IESTP "Hermanos Cárcamo" cuenta con una plataforma virtual exclusiva para la recepción y verificación de pagos:
+
+<div class="bank-card-chat">
+    <div class="bank-card-header">
+        <div class="bank-title-box">
+            <span class="bank-flag">🇵🇪</span>
+            <div>
+                <div class="bank-name">BANCO DE LA NACIÓN DEL PERÚ</div>
+                <div class="bank-inst-name">IESTP "Hermanos Cárcamo" - Paita (RDR)</div>
+            </div>
+        </div>
+        <span class="bank-badge">Cuenta Oficial</span>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Número de Cuenta Corriente (Soles):</span>
+            <span class="code-meta-val">00-631-018241</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('00-631-018241', 'N° de Cuenta Corriente')">
+            📋 Copiar Cuenta
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código Interbancario (CCI para transferencias):</span>
+            <span class="code-meta-val">018-631-000631018241-73</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('018-631-000631018241-73', 'Código CCI')">
+            📋 Copiar CCI
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">RUC Institucional:</span>
+            <span class="code-meta-val">20197087091</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('20197087091', 'RUC Institucional')">
+            📋 Copiar RUC
+        </button>
+    </div>
+
+    <div class="bank-buttons-footer">
+        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="btn-link-action btn-link-success-mini">
+            🔗 Registrar Voucher en pagos.ieshercar.edu.pe ↗
+        </a>
+        <button type="button" class="btn-link-action btn-link-primary-mini" onclick="window.hercarApp.abrirSimuladorTupaModal()">
+            🧮 Abrir Simulador TUPA
+        </button>
+    </div>
+</div>
+
+---
 
 ### 🏦 1. ¿Dónde realizar el pago?
 Todos los conceptos (matrícula, examen de admisión, constancias, certificaciones) se cancelan en el **Banco de la Nación**:
 * **En Ventanilla** de cualquier agencia bancaria a nivel nacional.
 * **En Agentes MultiRed** autorizados.
+* **Por transferencia interbancaria** directa utilizando el código CCI.
 * *Importante:* Al pagar, solicita tu comprobante (voucher físico o digital) y revisa que figure tu DNI y el monto exacto.
 
 ---
@@ -1146,7 +1300,7 @@ Puedes verificar y descargar tu comprobante de pago electrónico en cualquier mo
 
 > ⚠️ *Advertencia de Seguridad:* Nunca realices depósitos a números de cuenta de personas particulares. Todos los abonos institucionales se realizan únicamente en las cuentas oficiales del Banco de la Nación.`;
 
-        const voz = "Puedes pagar en el Banco de la Nación o mediante Págalo punto pe. Luego subes la foto de tu comprobante en la plataforma oficial de pagos. ¡Es muy sencillo y seguro!";
+        const voz = "Puedes pagar en cualquier agencia del Banco de la Nación o Agente MultiRed con la cuenta corriente cero cero seiscientos treinta y uno cero dieciocho doscientos cuarenta y uno. Luego subes la foto de tu comprobante en la plataforma oficial de pagos. ¡Es muy sencillo y seguro!";
         this.addBotMessage(respuesta, true, voz, nr);
     }
 
@@ -1620,8 +1774,16 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
                     { text: 'Convenios con Pesqueras', query: '¿Qué convenios tiene el instituto con empresas pesqueras?', icon: '🤝' },
                     { text: 'Requisitos de Admisión', query: '¿Cuándo es el examen de admisión y requisitos?', icon: '📝' }
                 ];
+            case 'cuenta_bancaria_codigos':
+                return [
+                    { text: '¿Cómo registro mi Voucher?', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' },
+                    { text: 'Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
+                    { text: 'Descargar Boleta Oficial', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' },
+                    { text: 'Requisitos de Matrícula', query: '¿Cuáles son los requisitos de matrícula?', icon: '📝' }
+                ];
             case 'matricula_costos':
                 return [
+                    { text: 'N° de Cuenta Banco de la Nación', query: 'Pásame el número de cuenta oficial del Banco de la Nación para pagar', icon: '🏦' },
                     { text: 'Abrir Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
                     { text: '¿Cómo registro mi Voucher?', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' },
                     { text: 'Descargar Boleta Oficial', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' }
@@ -1629,6 +1791,7 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
             case 'pagos_vouchers':
             case 'boletas_electronicas':
                 return [
+                    { text: 'N° de Cuenta Banco de la Nación', query: 'Pásame el número de cuenta oficial del Banco de la Nación para pagar', icon: '🏦' },
                     { text: 'Descargar Boleta Electrónica', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' },
                     { text: 'Mesa de Partes Virtual', query: '¿Cómo ingreso a la Mesa de Partes Virtual?', icon: '📁' },
                     { text: 'Simulador de Cuotas', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
@@ -1849,6 +2012,36 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         navigator.clipboard.writeText(text).then(() => {
             this.mostrarToast('✅ Resumen de simulación copiado al portapapeles');
         });
+    }
+
+    copiarTextoPortapapeles(texto, label = 'Dato') {
+        if (!texto) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(texto).then(() => {
+                this.mostrarToast(`✅ ¡${label} copiado con éxito!`);
+            }).catch(() => {
+                this.copiarFallback(texto, label);
+            });
+        } else {
+            this.copiarFallback(texto, label);
+        }
+    }
+
+    copiarFallback(texto, label) {
+        try {
+            const temp = document.createElement('textarea');
+            temp.value = texto;
+            temp.setAttribute('readonly', '');
+            temp.style.position = 'absolute';
+            temp.style.left = '-9999px';
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            this.mostrarToast(`✅ ¡${label} copiado con éxito!`);
+        } catch (e) {
+            this.mostrarToast(`📋 Copiado manual: ${texto}`);
+        }
     }
 
     consultarSobreSimulacion() {
