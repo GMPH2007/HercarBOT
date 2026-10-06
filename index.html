@@ -102,14 +102,16 @@
                         <span class="subtool-badge badge-blue">Sede</span>
                     </button>
 
-                    <button type="button" class="btn-sidebar-subtool btn-sidebar-neural" id="btn-open-neural-monitor" title="Monitorear el estado y las activaciones de la Red Neuronal" style="display: none !important;">
-                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
-                            <path d="M12 12L2.5 7.5"></path>
-                        </svg>
-                        <span>Red Neuronal APSTI</span>
-                        <span class="neural-badge-live">IA</span>
+                    <button type="button" class="btn-sidebar-subtool btn-subtool-neural" id="btn-open-neural-monitor" title="Auditar vector matemático y topología de la Red Neuronal APSTI">
+                        <div class="subtool-icon-wrapper icon-neural">
+                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                                <path d="M12 12L2.5 7.5"></path>
+                            </svg>
+                        </div>
+                        <span class="subtool-name">Red Neuronal APSTI</span>
+                        <span class="subtool-badge badge-purple">MLP 260</span>
                     </button>
                 </div>
 
@@ -676,7 +678,7 @@
                     </div>
                     <div class="metric-card">
                         <span class="metric-label">Pesos Sinápticos</span>
-                        <span class="metric-val text-purple" id="neural-metric-weights">8,964</span>
+                        <span class="metric-val text-purple" id="neural-metric-weights">10,708</span>
                     </div>
                 </div>
 
@@ -693,7 +695,7 @@
                 <!-- Tokens y Características Detectadas -->
                 <div class="neural-section">
                     <div class="section-title">
-                        <span>🔍 Tokens Semánticos Activados (Bag-of-Words):</span>
+                        <span>🔍 Tokens Semánticos Activados (Bag-of-Words / TF-IDF):</span>
                     </div>
                     <div class="tokens-cloud" id="neural-tokens-cloud">
                         <span class="token-empty">No hay tokens activos</span>
@@ -708,26 +710,26 @@
                     <div class="topology-diagram">
                         <div class="layer-node-box">
                             <span class="layer-title">Capa Entrada</span>
-                            <span class="layer-count">220 Nodos</span>
-                            <span class="layer-desc">Vocabulario / TF-IDF</span>
+                            <span class="layer-count">260 Nodos</span>
+                            <span class="layer-desc">Vocabulario TF-IDF</span>
                         </div>
                         <div class="layer-connector">➔</div>
                         <div class="layer-node-box">
                             <span class="layer-title">Capa Oculta 1</span>
                             <span class="layer-count">36 Neuronas</span>
-                            <span class="layer-desc">LeakyReLU</span>
+                            <span class="layer-desc">LeakyReLU (α = 0.01)</span>
                         </div>
                         <div class="layer-connector">➔</div>
                         <div class="layer-node-box">
                             <span class="layer-title">Capa Oculta 2</span>
                             <span class="layer-count">18 Neuronas</span>
-                            <span class="layer-desc">Tanh</span>
+                            <span class="layer-desc">Tanh ([-1, 1])</span>
                         </div>
                         <div class="layer-connector">➔</div>
                         <div class="layer-node-box layer-output">
                             <span class="layer-title">Capa Salida</span>
-                            <span class="layer-count">22 Clases</span>
-                            <span class="layer-desc">Softmax</span>
+                            <span class="layer-count">34 Clases</span>
+                            <span class="layer-desc">Softmax Institucional</span>
                         </div>
                     </div>
                 </div>
