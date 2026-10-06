@@ -223,7 +223,17 @@ class VoiceEngineHercar {
 
     toggleListening() {
         if (!this.recognition) {
-            alert('Tu navegador no soporta entrada de voz por micrófono. Te recomendamos Google Chrome o Microsoft Edge.');
+            if (window.hercarApp && typeof window.hercarApp.mostrarAlerta === 'function') {
+                window.hercarApp.mostrarAlerta({
+                    titulo: 'Micrófono No Compatible',
+                    mensaje: 'Tu navegador no soporta entrada de voz por micrófono. Te recomendamos Google Chrome o Microsoft Edge para una experiencia óptima.',
+                    icono: '🎙️',
+                    tipo: 'warning',
+                    textoBoton: 'Entendido'
+                });
+            } else {
+                alert('Tu navegador no soporta entrada de voz por micrófono. Te recomendamos Google Chrome o Microsoft Edge.');
+            }
             return;
         }
 
