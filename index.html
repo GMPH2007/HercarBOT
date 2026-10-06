@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=7.6.0&b=20261006b">
+    <link rel="stylesheet" href="css/styles.css?v=7.7.0&b=20261006c">
 
     <!-- Interceptor Global de Seguridad para erradicar cualquier confirm() o alert() nativo del navegador -->
     <script>
@@ -600,7 +600,13 @@
                     <div class="chips-scroll-track">
                         <span class="chips-title">Accesos Directos:</span>
                         <button type="button" class="chip-pill chip-highlight-bank" onclick="window.hercarApp.enviarConsultaDirecta('Pásame el número de cuenta oficial del Banco de la Nación para pagar')">
-                            <span class="chip-icon">🏦</span> N° de Cuenta Banco de la Nación
+                            <span class="chip-icon">🏦</span> N° de Cuenta y Códigos
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Cuánto cuesta la carpeta modular y cómo la pago?')">
+                            <span class="chip-icon">📁</span> Carpeta Modular S/ 25
+                        </button>
+                        <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('¿Cuánto cuesta el programa de inglés técnico para titulación y cuál es el código de pago?')">
+                            <span class="chip-icon">🇬🇧</span> Inglés Titulación S/ 400
                         </button>
                         <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas que ofrece el instituto')">
                             <span class="chip-icon">💻</span> Las 4 Carreras Técnicas
@@ -964,6 +970,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="simulador-rate-pills">
+                        <span class="sim-rate-tag">🎓 Matrícula: S/ 100 [MAT-01]</span>
+                        <span class="sim-rate-tag">📁 Carpeta Modular: S/ 25 [CARP-25]</span>
+                        <span class="sim-rate-tag">🇬🇧 Inglés Titulación: S/ 400 [ING-400]</span>
+                        <span class="sim-rate-tag">🚌 Carnet: S/ 20 [PAS-20]</span>
+                    </div>
                     <div class="bank-banner-actions">
                         <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="link-pagos-badge">
                             <span>🔗 Subir y Registrar Voucher en pagos.ieshercar.edu.pe ↗</span>
@@ -1320,10 +1332,10 @@
     <div class="toast-notification" id="toast-notification"></div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/neural_network.js?v=7.6.0&b=20261006b"></script>
-    <script src="js/knowledge.js?v=7.6.0&b=20261006b"></script>
-    <script src="js/test_vocacional.js?v=7.6.0&b=20261006b"></script>
-    <script src="js/voice.js?v=7.6.0&b=20261006b"></script>
-    <script src="js/app.js?v=7.6.0&b=20261006b"></script>
+    <script src="js/neural_network.js?v=7.7.0&b=20261006c"></script>
+    <script src="js/knowledge.js?v=7.7.0&b=20261006c"></script>
+    <script src="js/test_vocacional.js?v=7.7.0&b=20261006c"></script>
+    <script src="js/voice.js?v=7.7.0&b=20261006c"></script>
+    <script src="js/app.js?v=7.7.0&b=20261006c"></script>
 </body>
 </html>
