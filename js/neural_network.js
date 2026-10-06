@@ -358,6 +358,12 @@ class HercarNeuralNetwork {
             { q: 'como pagar por transferencia interbancaria bcp bbva yape a la cuenta', intent: 'cuenta_bancaria_codigos' },
             { q: 'numero de cuenta oficial del instituto de paita', intent: 'cuenta_bancaria_codigos' },
             { q: 'a que cuenta tengo que pagar la matricula semestral', intent: 'cuenta_bancaria_codigos' },
+            { q: 'pago de la carpeta modular 25 soles como pagar y codigo', intent: 'cuenta_bancaria_codigos' },
+            { q: 'cuanto cuesta la carpeta modular y donde se paga', intent: 'cuenta_bancaria_codigos' },
+            { q: 'pago de ingles 400 soles para titulacion tecnica minedu', intent: 'cuenta_bancaria_codigos' },
+            { q: 'cuanto cuesta el ingles tecnico y codigo de pago', intent: 'cuenta_bancaria_codigos' },
+            { q: 'pedir el codigo o numero de pago de todo matricula carpeta e ingles', intent: 'cuenta_bancaria_codigos' },
+            { q: 'codigos y tasas completas tupa banco de la nacion', intent: 'cuenta_bancaria_codigos' },
 
             // Boletas
             { q: 'como descargar mi boleta de venta electronica con dni', intent: 'boletas_electronicas' },
