@@ -165,6 +165,26 @@ class HercarChatApp {
             });
         }
 
+        // Centro de Herramientas Flotantes (Trigger Flotante, Header y Sidebar)
+        const btnFloatingTrigger = document.getElementById('btn-floating-tools-trigger');
+        if (btnFloatingTrigger) {
+            btnFloatingTrigger.addEventListener('click', () => this.abrirHubHerramientas());
+        }
+
+        const btnHeaderHub = document.getElementById('btn-header-tools-hub');
+        if (btnHeaderHub) {
+            btnHeaderHub.addEventListener('click', () => this.abrirHubHerramientas());
+        }
+
+        const btnSidebarHub = document.getElementById('btn-sidebar-tools-hub');
+        if (btnSidebarHub) {
+            btnSidebarHub.addEventListener('click', () => {
+                this.cerrarSidebarMovilSiAplica();
+                this.abrirHubHerramientas();
+            });
+        }
+
+
         // Herramientas Inteligentes APSTI en Sidebar
         const btnOpenSim = document.getElementById('btn-open-simulador');
         if (btnOpenSim) {
@@ -633,21 +653,36 @@ class HercarChatApp {
         this.mostrarPortada();
     }
 
-    borrarConversacionConConfirmacion() {
+    async borrarConversacionConConfirmacion() {
         if (!this.history || this.history.length === 0) {
             this.reiniciarConversacion();
             return;
         }
 
-        const confirmar = confirm('¿Estás seguro de que deseas borrar toda la conversación actual y reiniciar el chat?');
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Borrar conversación actual?',
+            mensaje: '¿Estás seguro de que deseas borrar toda la conversación actual y reiniciar el chat? Se limpiará el historial de mensajes de la pantalla.',
+            icono: '🗑️',
+            tipo: 'danger',
+            textoConfirmar: 'Sí, Borrar Chat',
+            textoCancelar: 'Cancelar'
+        });
+
         if (confirmar) {
             this.reiniciarConversacion();
+            this.mostrarToast('🗑️ Conversación reiniciada');
         }
     }
 
-    exportarConversacion() {
+    async exportarConversacion() {
         if (!this.history || this.history.length === 0) {
-            alert('Aún no hay mensajes en la conversación para guardar. Realiza una consulta primero.');
+            await this.mostrarAlerta({
+                titulo: 'Conversación Vacía',
+                mensaje: 'Aún no hay mensajes en la conversación para guardar. Realiza una consulta con el asistente primero.',
+                icono: 'ℹ️',
+                tipo: 'info',
+                textoBoton: 'Entendido'
+            });
             return;
         }
 
@@ -765,8 +800,16 @@ class HercarChatApp {
         } catch (e) {}
     }
 
-    vaciarHistorialReciente() {
-        if (!confirm('¿Deseas vaciar todo el historial de consultas recientes?')) return;
+    async vaciarHistorialReciente() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Vaciar consultas recientes?',
+            mensaje: '¿Deseas vaciar todo el historial de consultas recientes registradas en este dispositivo?',
+            icono: '🗑️',
+            tipo: 'danger',
+            textoConfirmar: 'Sí, Vaciar Historial',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
         localStorage.removeItem('hercar_recent_queries');
         const historySection = document.getElementById('sidebar-history-section');
         if (historySection) historySection.style.display = 'none';
@@ -1878,6 +1921,180 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
     }
 
+    abrirHubHerramientas() {
+        this.cerrarSidebarMovilSiAplica();
+        const hub = document.getElementById('modal-tools-hub');
+        if (hub) {
+            hub.style.display = 'flex';
+        }
+    }
+
+    abrirSimuladorDesdeHub() {
+        this.cerrarTodosLosModales();
+        setTimeout(() => this.abrirSimuladorTUPA(), 40);
+    }
+
+    abrirMapaDesdeHub() {
+        this.cerrarTodosLosModales();
+        setTimeout(() => this.abrirMapaCampus(), 40);
+    }
+
+    abrirNeuralDesdeHub() {
+        this.cerrarTodosLosModales();
+        setTimeout(() => this.abrirInspectorNeuronal(), 40);
+    }
+
+    abrirTestDesdeHub() {
+        this.cerrarTodosLosModales();
+        if (window.hercarTest) {
+            window.hercarTest.iniciar();
+        }
+    }
+
+    mostrarConfirmacion({
+        titulo = '¿Confirmar acción?',
+        mensaje = '¿Estás seguro de que deseas continuar?',
+        icono = '🗑️',
+        tipo = 'danger',
+        textoConfirmar = 'Confirmar',
+        textoCancelar = 'Cancelar'
+    } = {}) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-custom-dialog');
+            if (!overlay) {
+                resolve(window.confirm(mensaje));
+                return;
+            }
+
+            const titleEl = document.getElementById('dialog-title');
+            const descEl = document.getElementById('dialog-desc');
+            const iconEl = document.getElementById('dialog-icon');
+            const iconContainer = document.getElementById('dialog-icon-container');
+            const btnConfirm = document.getElementById('btn-dialog-confirm');
+            const btnCancel = document.getElementById('btn-dialog-cancel');
+
+            if (titleEl) titleEl.textContent = titulo;
+            if (descEl) descEl.innerHTML = mensaje;
+            if (iconEl) iconEl.textContent = icono;
+
+            if (iconContainer) {
+                iconContainer.className = `dialog-icon-circle dialog-icon-${tipo}`;
+            }
+
+            if (btnConfirm) {
+                btnConfirm.textContent = textoConfirmar;
+                btnConfirm.className = `btn-dialog-confirm btn-dialog-${tipo}`;
+                btnConfirm.style.display = 'inline-flex';
+            }
+
+            if (btnCancel) {
+                btnCancel.textContent = textoCancelar;
+                btnCancel.style.display = 'inline-flex';
+            }
+
+            const cleanup = (resultado) => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('active');
+                if (btnConfirm) btnConfirm.removeEventListener('click', onConfirm);
+                if (btnCancel) btnCancel.removeEventListener('click', onCancel);
+                overlay.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(resultado);
+            };
+
+            const onConfirm = () => cleanup(true);
+            const onCancel = () => cleanup(false);
+            const onBackdrop = (e) => {
+                if (e.target === overlay) cleanup(false);
+            };
+            const onKeyDown = (e) => {
+                if (e.key === 'Escape') cleanup(false);
+                if (e.key === 'Enter') cleanup(true);
+            };
+
+            if (btnConfirm) btnConfirm.addEventListener('click', onConfirm, { once: true });
+            if (btnCancel) btnCancel.addEventListener('click', onCancel, { once: true });
+            overlay.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeyDown);
+
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                overlay.classList.add('active');
+                if (btnConfirm) btnConfirm.focus();
+            });
+        });
+    }
+
+    mostrarAlerta({
+        titulo = 'Información Institucional',
+        mensaje = '',
+        icono = 'ℹ️',
+        tipo = 'info',
+        textoBoton = 'Entendido'
+    } = {}) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-custom-dialog');
+            if (!overlay) {
+                window.alert(mensaje);
+                resolve(true);
+                return;
+            }
+
+            const titleEl = document.getElementById('dialog-title');
+            const descEl = document.getElementById('dialog-desc');
+            const iconEl = document.getElementById('dialog-icon');
+            const iconContainer = document.getElementById('dialog-icon-container');
+            const btnConfirm = document.getElementById('btn-dialog-confirm');
+            const btnCancel = document.getElementById('btn-dialog-cancel');
+
+            if (titleEl) titleEl.textContent = titulo;
+            if (descEl) descEl.innerHTML = mensaje;
+            if (iconEl) iconEl.textContent = icono;
+
+            if (iconContainer) {
+                iconContainer.className = `dialog-icon-circle dialog-icon-${tipo}`;
+            }
+
+            if (btnCancel) {
+                btnCancel.style.display = 'none';
+            }
+
+            if (btnConfirm) {
+                btnConfirm.textContent = textoBoton;
+                btnConfirm.className = `btn-dialog-confirm btn-dialog-${tipo}`;
+                btnConfirm.style.display = 'inline-flex';
+            }
+
+            const cleanup = () => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('active');
+                if (btnConfirm) btnConfirm.removeEventListener('click', onConfirm);
+                overlay.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(true);
+            };
+
+            const onConfirm = () => cleanup();
+            const onBackdrop = (e) => {
+                if (e.target === overlay) cleanup();
+            };
+            const onKeyDown = (e) => {
+                if (e.key === 'Escape' || e.key === 'Enter') cleanup();
+            };
+
+            if (btnConfirm) btnConfirm.addEventListener('click', onConfirm, { once: true });
+            overlay.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeyDown);
+
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                overlay.classList.add('active');
+                if (btnConfirm) btnConfirm.focus();
+            });
+        });
+    }
+
+
     mostrarToast(mensaje, duracion = 2500) {
         const toast = document.getElementById('toast-notification');
         if (!toast) return;
@@ -2387,10 +2604,17 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         this.mostrarToast('✅ ¡Configuración y API Key guardadas exitosamente!');
     }
 
-    limpiarConfiguracionAPI() {
-        if (!confirm('¿Deseas eliminar la API Key configurada? El chatbot volverá al modo Red Neuronal Local APSTI.')) {
-            return;
-        }
+    async limpiarConfiguracionAPI() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Eliminar API Key?',
+            mensaje: '¿Deseas eliminar la clave API configurada? El chatbot volverá al modo Red Neuronal Local APSTI.',
+            icono: '⚠️',
+            tipo: 'warning',
+            textoConfirmar: 'Sí, Eliminar Clave',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.adminConfig.apiKey = '';
         const keyInput = document.getElementById('admin-api-key');
         if (keyInput) keyInput.value = '';
@@ -2551,7 +2775,7 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         return null;
     }
 
-    agregarItemCustomKB() {
+    async agregarItemCustomKB() {
         const qInput = document.getElementById('custom-kb-question');
         const aInput = document.getElementById('custom-kb-answer');
         if (!qInput || !aInput) return;
@@ -2560,7 +2784,13 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         const a = aInput.value.trim();
 
         if (!q || !a) {
-            alert('Por favor, ingresa tanto la pregunta o palabras clave como la respuesta detallada.');
+            await this.mostrarAlerta({
+                titulo: 'Campos Requeridos',
+                mensaje: 'Por favor, ingresa tanto la pregunta o palabras clave como la respuesta oficial detallada.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
 
@@ -2582,8 +2812,17 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         this.mostrarToast('✅ Pregunta personalizada añadida con éxito');
     }
 
-    eliminarItemCustomKB(id) {
-        if (!confirm('¿Seguro que deseas eliminar esta pregunta personalizada?')) return;
+    async eliminarItemCustomKB(id) {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Eliminar Pregunta?',
+            mensaje: '¿Seguro que deseas eliminar esta pregunta personalizada de la base de conocimiento?',
+            icono: '🗑️',
+            tipo: 'danger',
+            textoConfirmar: 'Sí, Eliminar',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.customKb = this.customKb.filter(item => item.id !== id);
         try {
             localStorage.setItem('hercar_custom_kb', JSON.stringify(this.customKb));
@@ -2620,12 +2859,18 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         `).join('');
     }
 
-    guardarSystemPrompt() {
+    async guardarSystemPrompt() {
         const promptEl = document.getElementById('admin-system-prompt-text');
         if (!promptEl) return;
         const val = promptEl.value.trim();
         if (!val) {
-            alert('El System Prompt no puede estar vacío.');
+            await this.mostrarAlerta({
+                titulo: 'Prompt Vacío',
+                mensaje: 'El System Prompt institucional no puede estar vacío.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
         this.adminConfig.systemPrompt = val;
@@ -2633,8 +2878,17 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
         this.mostrarToast('✅ Prompt del Sistema actualizado y guardado');
     }
 
-    restablecerSystemPrompt() {
-        if (!confirm('¿Restablecer el System Prompt al texto institucional predeterminado de APSTI?')) return;
+    async restablecerSystemPrompt() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Restablecer Prompt?',
+            mensaje: '¿Deseas restablecer el System Prompt al texto institucional predeterminado de APSTI?',
+            icono: '🔄',
+            tipo: 'warning',
+            textoConfirmar: 'Sí, Restablecer',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.adminConfig.systemPrompt = this.DEFAULT_SYSTEM_PROMPT;
         const promptEl = document.getElementById('admin-system-prompt-text');
         if (promptEl) promptEl.value = this.DEFAULT_SYSTEM_PROMPT;
