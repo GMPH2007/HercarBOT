@@ -4230,4 +4230,25 @@ body.dark-mode .hub-card:hover {
     color: #ffffff;
 }
 
+.simulador-rate-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.sim-rate-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--primary-700);
+}
+[data-theme="dark"] .sim-rate-tag {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
+}
+
 
