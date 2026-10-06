@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=7.5.0&b=20261006">
+    <link rel="stylesheet" href="css/styles.css?v=7.6.0&b=20261006b">
 
     <!-- Interceptor Global de Seguridad para erradicar cualquier confirm() o alert() nativo del navegador -->
     <script>
@@ -599,6 +599,9 @@
                 <div class="quick-access-chips" id="quick-access-chips">
                     <div class="chips-scroll-track">
                         <span class="chips-title">Accesos Directos:</span>
+                        <button type="button" class="chip-pill chip-highlight-bank" onclick="window.hercarApp.enviarConsultaDirecta('Pásame el número de cuenta oficial del Banco de la Nación para pagar')">
+                            <span class="chip-icon">🏦</span> N° de Cuenta Banco de la Nación
+                        </button>
                         <button type="button" class="chip-pill" onclick="window.hercarApp.enviarConsultaDirecta('Cuéntame sobre todas las carreras técnicas que ofrece el instituto')">
                             <span class="chip-icon">💻</span> Las 4 Carreras Técnicas
                         </button>
@@ -661,16 +664,8 @@
             </div>
 
         </main>
-    <!-- BOTÓN FLOTANTE INTERACTIVO DE HERRAMIENTAS APSTI -->
-    <button type="button" class="floating-hub-trigger" id="btn-floating-tools-trigger" title="Abrir Centro de Herramientas y Módulos Flotantes APSTI">
-        <div class="floating-hub-icon-wrapper">
-            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-        </div>
-        <span class="floating-hub-text">Herramientas Flotantes</span>
-        <span class="floating-hub-pill">4 Módulos</span>
-    </button>
+
+    <!-- ==========================================================================
 
     <!-- ==========================================================================
          MODAL FLOTANTE MODERNO: DIÁLOGO DE CONFIRMACIÓN Y ALERTA (CERO POPUPS DEL NAVEGADOR)
@@ -943,6 +938,37 @@
                         <span class="total-sub">En ventanilla o Agente MultiRed del Banco de la Nación</span>
                     </div>
                     <div class="total-amount" id="simulador-total-val">S/ 0.00</div>
+                </div>
+
+                <!-- BANNER DE CUENTAS BANCARIAS OFICIALES BANCO DE LA NACIÓN -->
+                <div class="simulador-bank-banner">
+                    <div class="bank-banner-top">
+                        <div class="bank-badge-group">
+                            <span class="bank-badge">🏦 Banco de la Nación</span>
+                            <span class="bank-sub">Titular: IESTP "Hermanos Cárcamo" • RUC: 20197087091</span>
+                        </div>
+                    </div>
+                    <div class="bank-banner-details">
+                        <div class="bank-data-item">
+                            <span class="data-label">Cuenta Corriente (Soles):</span>
+                            <div class="data-copy-group">
+                                <code id="sim-cta-corriente">00-631-018241</code>
+                                <button type="button" class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('00-631-018241', 'N° de Cuenta Corriente')">📋 Copiar</button>
+                            </div>
+                        </div>
+                        <div class="bank-data-item">
+                            <span class="data-label">Código CCI Interbancario:</span>
+                            <div class="data-copy-group">
+                                <code id="sim-cci">018-631-000631018241-73</code>
+                                <button type="button" class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('018-631-000631018241-73', 'Código CCI Interbancario')">📋 Copiar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bank-banner-actions">
+                        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="link-pagos-badge">
+                            <span>🔗 Subir y Registrar Voucher en pagos.ieshercar.edu.pe ↗</span>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="simulador-note">
@@ -1294,10 +1320,10 @@
     <div class="toast-notification" id="toast-notification"></div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/neural_network.js?v=7.5.0&b=20261006"></script>
-    <script src="js/knowledge.js?v=7.5.0&b=20261006"></script>
-    <script src="js/test_vocacional.js?v=7.5.0&b=20261006"></script>
-    <script src="js/voice.js?v=7.5.0&b=20261006"></script>
-    <script src="js/app.js?v=7.5.0&b=20261006"></script>
+    <script src="js/neural_network.js?v=7.6.0&b=20261006b"></script>
+    <script src="js/knowledge.js?v=7.6.0&b=20261006b"></script>
+    <script src="js/test_vocacional.js?v=7.6.0&b=20261006b"></script>
+    <script src="js/voice.js?v=7.6.0&b=20261006b"></script>
+    <script src="js/app.js?v=7.6.0&b=20261006b"></script>
 </body>
 </html>
