@@ -71,49 +71,20 @@
                     <span class="test-tag">Interactúa</span>
                 </button>
 
-                <!-- Herramientas Inteligentes Integradas (Módulos Interactivos) -->
-                <div class="sidebar-tools-group">
-                    <div class="sidebar-tools-header">
-                        <span>HERRAMIENTAS INTERACTIVAS</span>
+                <!-- Acceso al Centro de Herramientas y Módulos Flotantes APSTI -->
+                <button type="button" class="btn-sidebar-hub" id="btn-sidebar-tools-hub" title="Abrir Centro de Herramientas y Módulos Flotantes APSTI">
+                    <div class="hub-btn-left">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Módulos Flotantes</span>
                     </div>
+                    <span class="hub-badge">Hub</span>
+                </button>
 
-                    <button type="button" class="btn-sidebar-subtool btn-subtool-tupa" id="btn-open-simulador" title="Calcular costos de matrícula y tasas TUPA">
-                        <div class="subtool-icon-wrapper icon-tupa">
-                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
-                                <line x1="8" y1="6" x2="16" y2="6"></line>
-                                <line x1="16" y1="14" x2="16" y2="18"></line>
-                                <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
-                            </svg>
-                        </div>
-                        <span class="subtool-name">Simulador TUPA</span>
-                        <span class="subtool-badge badge-emerald">2026</span>
-                    </button>
-
-                    <button type="button" class="btn-sidebar-subtool btn-subtool-mapa" id="btn-open-mapa" title="Explorar instalaciones y laboratorios del instituto">
-                        <div class="subtool-icon-wrapper icon-mapa">
-                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                                <line x1="8" y1="2" x2="8" y2="18"></line>
-                                <line x1="16" y1="6" x2="16" y2="22"></line>
-                            </svg>
-                        </div>
-                        <span class="subtool-name">Mapa del Campus</span>
-                        <span class="subtool-badge badge-blue">Sede</span>
-                    </button>
-
-                    <button type="button" class="btn-sidebar-subtool btn-subtool-neural" id="btn-open-neural-monitor" title="Auditar vector matemático y topología de la Red Neuronal APSTI">
-                        <div class="subtool-icon-wrapper icon-neural">
-                            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
-                                <path d="M12 12L2.5 7.5"></path>
-                            </svg>
-                        </div>
-                        <span class="subtool-name">Red Neuronal APSTI</span>
-                        <span class="subtool-badge badge-purple">MLP 260</span>
-                    </button>
-                </div>
 
                 <!-- Historial de Consultas Recientes -->
                 <div class="sidebar-section" id="sidebar-history-section" style="display: none;">
@@ -221,6 +192,17 @@
                     <div class="speaking-wave" id="header-speaking-indicator">
                         <span></span><span></span><span></span><span></span>
                     </div>
+
+                    <!-- Botón Centro de Herramientas Flotantes -->
+                    <button type="button" class="btn-header-tool btn-header-hub" id="btn-header-tools-hub" title="Abrir Centro de Herramientas y Módulos Flotantes APSTI">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span class="header-btn-label">Herramientas</span>
+                    </button>
 
                     <!-- Botón Guardar / Descargar Registro de Chat -->
                     <button type="button" class="btn-header-tool btn-export-chat" id="btn-export-chat" title="Descargar y guardar copia de la conversación (.txt)">
@@ -641,6 +623,148 @@
             </div>
 
         </main>
+    <!-- BOTÓN FLOTANTE INTERACTIVO DE HERRAMIENTAS APSTI -->
+    <button type="button" class="floating-hub-trigger" id="btn-floating-tools-trigger" title="Abrir Centro de Herramientas y Módulos Flotantes APSTI">
+        <div class="floating-hub-icon-wrapper">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+        </div>
+        <span class="floating-hub-text">Herramientas Flotantes</span>
+        <span class="floating-hub-pill">4 Módulos</span>
+    </button>
+
+    <!-- ==========================================================================
+         MODAL FLOTANTE MODERNO: DIÁLOGO DE CONFIRMACIÓN Y ALERTA (CERO POPUPS DEL NAVEGADOR)
+         ========================================================================== -->
+    <div class="modal-overlay modal-dialog-overlay" id="modal-custom-dialog" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-desc">
+        <div class="modal-card modal-dialog-card">
+            <div class="dialog-glow-ring"></div>
+            <div class="dialog-top-icon">
+                <div class="dialog-icon-circle dialog-icon-danger" id="dialog-icon-container">
+                    <span id="dialog-icon" class="dialog-icon-emoji">🗑️</span>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <h3 id="dialog-title" class="dialog-title">¿Borrar conversación actual?</h3>
+                <p id="dialog-desc" class="dialog-desc">¿Estás seguro de que deseas borrar toda la conversación actual y reiniciar el chat?</p>
+            </div>
+            <div class="dialog-actions-row" id="dialog-actions-row">
+                <button type="button" class="btn-dialog-cancel" id="btn-dialog-cancel">Cancelar</button>
+                <button type="button" class="btn-dialog-confirm btn-dialog-danger" id="btn-dialog-confirm">Sí, Borrar Chat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL FLOTANTE: CENTRO DE HERRAMIENTAS INTERACTIVAS (HUB APSTI)
+         ========================================================================== -->
+    <div class="modal-overlay" id="modal-tools-hub" style="display: none;" role="dialog" aria-modal="true">
+        <div class="modal-card modal-tools-hub-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="modal-icon-badge">⚡</span>
+                    <div>
+                        <h3>Centro de Herramientas Flotantes</h3>
+                        <p>Módulos Interactivos de Simulación, Orientación e Inteligencia Artificial • APSTI</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="window.hercarApp.cerrarTodosLosModales()">&times;</button>
+            </div>
+
+            <div class="modal-body hub-modal-body">
+                <p class="hub-intro-text">
+                    Selecciona cualquiera de las herramientas oficiales del I.E.S.T.P. "Hermanos Cárcamo" para abrirla en su ventana flotante interactiva:
+                </p>
+
+                <div class="hub-grid">
+                    <!-- Tarjeta 1: Simulador TUPA -->
+                    <div class="hub-card" id="hub-card-tupa" onclick="window.hercarApp.abrirSimuladorDesdeHub()">
+                        <div class="hub-card-top">
+                            <div class="hub-icon-box icon-box-emerald">
+                                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <line x1="8" y1="6" x2="16" y2="6"></line>
+                                    <line x1="16" y1="14" x2="16" y2="18"></line>
+                                    <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
+                                </svg>
+                            </div>
+                            <span class="hub-card-badge badge-emerald">TUPA 2026</span>
+                        </div>
+                        <h3 class="hub-card-title">Simulador de Matrícula y Tasas</h3>
+                        <p class="hub-card-desc">Calcula en tiempo real los costos administrativos oficiales para el Banco de la Nación según tu condición (Cachimbo o Regular). Gratuidad de enseñanza garantizada.</p>
+                        <div class="hub-card-action">
+                            <span>Abrir Simulador</span>
+                            <span class="hub-arrow">➔</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 2: Mapa del Campus -->
+                    <div class="hub-card" id="hub-card-mapa" onclick="window.hercarApp.abrirMapaDesdeHub()">
+                        <div class="hub-card-top">
+                            <div class="hub-icon-box icon-box-blue">
+                                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                                </svg>
+                            </div>
+                            <span class="hub-card-badge badge-blue">Sede Paita</span>
+                        </div>
+                        <h3 class="hub-card-title">Mapa Interactivo del Campus</h3>
+                        <p class="hub-card-desc">Explora los pabellones de clases, los 4 laboratorios de APSTI, talleres marítimos DPA, aulas multimedia ANI, biblioteca y losas deportivas.</p>
+                        <div class="hub-card-action">
+                            <span>Explorar Mapa</span>
+                            <span class="hub-arrow">➔</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 3: Red Neuronal APSTI -->
+                    <div class="hub-card" id="hub-card-neural" onclick="window.hercarApp.abrirNeuralDesdeHub()">
+                        <div class="hub-card-top">
+                            <div class="hub-icon-box icon-box-purple">
+                                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                                    <path d="M12 12L2.5 7.5"></path>
+                                </svg>
+                            </div>
+                            <span class="hub-card-badge badge-purple">MLP 260</span>
+                        </div>
+                        <h3 class="hub-card-title">Inspector de Red Neuronal</h3>
+                        <p class="hub-card-desc">Audita en vivo el funcionamiento del Perceptrón Multicapa: pesos sinápticos, distribución Softmax, tokens TF-IDF y playground experimental en tiempo real.</p>
+                        <div class="hub-card-action">
+                            <span>Auditar Red IA</span>
+                            <span class="hub-arrow">➔</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 4: Test Vocacional -->
+                    <div class="hub-card" id="hub-card-test" onclick="window.hercarApp.abrirTestDesdeHub()">
+                        <div class="hub-card-top">
+                            <div class="hub-icon-box icon-box-amber">
+                                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                                </svg>
+                            </div>
+                            <span class="hub-card-badge badge-amber">12 Preguntas</span>
+                        </div>
+                        <h3 class="hub-card-title">Test de Orientación Vocacional</h3>
+                        <p class="hub-card-desc">Descubre tu afinidad profesional diagnóstica entre las carreras técnicas oficiales: APSTI, Desarrollo Pesquero, Administración de Negocios o Contabilidad.</p>
+                        <div class="hub-card-action">
+                            <span>Realizar Test</span>
+                            <span class="hub-arrow">➔</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <span class="hub-footer-hint">💡 Cada módulo se abre en su propia ventana flotante interactiva</span>
+                <button type="button" class="btn-modal-close-action" onclick="window.hercarApp.cerrarTodosLosModales()">Cerrar Ventana</button>
+            </div>
+        </div>
     </div>
 
     <!-- ==========================================================================
