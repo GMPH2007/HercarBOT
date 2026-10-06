@@ -509,12 +509,14 @@ add_bullet('Tipografía e Identidad Visual: ', 'Uso de las fuentes Google Plus J
 add_bullet('Renderizado Markdown Completo: ', 'Capacidad de mostrar tablas formateadas, bloques de código con botón de copiar, listas numeradas y viñetas interactivas dentro de las respuestas.')
 add_bullet('Chips de Continuidad Guiada: ', 'Debajo de cada respuesta se despliegan sugerencias inteligentes para que el usuario continúe la conversación con un solo toque.')
 
-add_h2('3.3. Módulo 2: Centro de Herramientas Flotantes (Hub APSTI)')
+add_h2('3.3. Módulo 2: Centro de Herramientas APSTI y Datos Bancarios Oficiales')
 add_p(
-    'Para evitar saturar el menú lateral izquierdo, todas las herramientas interactivas fueron unificadas en un moderno Centro de Control Flotante (#modal-tools-hub), '
-    'accesible desde un botón flotante en pantalla, la cabecera superior o la barra lateral:'
+    'Para garantizar una interfaz 100% despejada y sin botones invasivos que obstruyan el campo de escritura o las sugerencias, '
+    'el Centro de Herramientas (#modal-tools-hub) se diseñó con acceso ergonómico desde la barra superior de navegación y el menú lateral, '
+    'incorporando los módulos clave para postulantes y alumnos:'
 )
-add_bullet('🧮 Simulador de Matrícula y Tasas TUPA 2026: ', 'Calculadora interactiva en soles (S/) con desglose para Cachimbos (S/ 150 matrícula + S/ 20 carné + S/ 25 carpeta), Regulares y Trámites de Titulación Modular. Permite copiar el presupuesto formal para llevarlo al Banco de la Nación.')
+add_bullet('🏦 Módulo de Cuentas Bancarias Oficiales (Banco de la Nación): ', 'Integración de las credenciales de recaudo formal del instituto (Cuenta Corriente N° 00-631-018241, CCI N° 018-631-000631018241-73 y RUC 20197087091). HercarIA responde inmediatamente al comando "¿Pásame el número de cuenta?" con tarjetas interactivas dotadas de botones de copiado en un solo toque, enlaces directos a la plataforma de validación de comprobantes (pagos.ieshercar.edu.pe) y descarga de boletas electrónicas.')
+add_bullet('🧮 Simulador de Matrícula y Tasas TUPA 2026: ', 'Calculadora interactiva en soles (S/) con desglose para Cachimbos (S/ 100 matrícula + S/ 20 carné + carpeta), Regulares y Trámites de Titulación Modular. Incluye banner institucional con copiado directo de número de cuenta y CCI para el Banco de la Nación.')
 add_bullet('🗺️ Mapa Interactivo del Campus: ', 'Croquis visual del local de Paita (Pabellón APSTI con 4 laboratorios de cómputo, Módulo pesquero DPA, Aulas ANI, Biblioteca y Dirección General).')
 add_bullet('🧠 Inspector de Red Neuronal en Tiempo Real: ', 'Herramienta de auditoría para docentes evaluadores que grafica la topología, pesos y distribución Softmax al instante.')
 add_bullet('🎯 Test de Orientación Vocacional: ', 'Test diagnóstico de 12 preguntas que orienta al postulante indeciso hacia la carrera más compatible con sus intereses.')
