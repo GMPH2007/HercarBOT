@@ -477,6 +477,15 @@ class HercarChatApp {
         const confPct = inference.confidencePercent || (inference.confidence * 100).toFixed(1) + '%';
         const previewQuery = (inference.query || markdownText.slice(0, 50)).replace(/'/g, "\\'");
 
+        let engineTagHtml = '';
+        if (inference.intent && inference.intent.startsWith('cloud_')) {
+            engineTagHtml = `<span class="engine-badge-tag tag-cloud" title="Respuesta procesada mediante Cloud LLM">⚡ Cloud API</span>`;
+        } else if (inference.intent === 'custom_kb') {
+            engineTagHtml = `<span class="engine-badge-tag tag-kb" title="Respuesta obtenida de la Base Oficial Institucional">📚 Base Oficial</span>`;
+        } else {
+            engineTagHtml = `<span class="engine-badge-tag tag-neural" title="Clasificado por Red Neuronal Artificial MLP APSTI (${confPct})">🧠 Red Neuronal MLP (${confPct})</span>`;
+        }
+
         messageEl.innerHTML = `
             <div class="bot-avatar">
                 <img src="assets/logo-hercar.png" alt="HercarIA" onerror="this.src='assets/logo-iestp.png'">
@@ -485,6 +494,7 @@ class HercarChatApp {
                 <div class="bot-header-meta">
                     <span class="bot-name">HercarIA</span>
                     <span class="bot-badge-tag">Orientadora Oficial</span>
+                    ${engineTagHtml}
                     <span class="voice-wave-anim" style="display: none;">
                         <span></span><span></span><span></span><span></span>
                     </span>
@@ -505,6 +515,9 @@ class HercarChatApp {
                 ` : ''}
 
                 <div class="message-actions">
+                    <button type="button" class="msg-action-btn btn-inspect-neural" title="Inspeccionar vector matemático TF-IDF y pesos de la Red Neuronal APSTI" onclick="window.hercarApp.abrirInspectorNeuronal('${previewQuery}')">
+                        🧠 Vector IA
+                    </button>
                     <button type="button" class="msg-action-btn btn-speak" title="Escuchar respuesta en voz dulce">
                         🔊 Escuchar
                     </button>
@@ -2805,23 +2818,148 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
 
     parseMarkdown(md) {
         if (!md) return '';
-        let html = md;
+        let text = md;
 
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        html = html.replace(/^### (.*$)/gim, '<h4>$1</h4>');
-        html = html.replace(/^## (.*$)/gim, '<h3>$1</h3>');
-        html = html.replace(/^# (.*$)/gim, '<h2>$1</h2>');
-        html = html.replace(/^> (.*$)/gim, '<div class="chat-blockquote">$1</div>');
-        html = html.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1 <span class="link-arrow">↗</span></a>');
-        html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/gim, '<ul class="chat-list">$1</ul>');
-        html = html.replace(/<\/ul>\s*<ul class="chat-list">/g, '');
-        html = html.replace(/^---$/gim, '<hr class="chat-divider">');
-        html = html.replace(/\n\n/g, '<br><br>');
-        html = html.replace(/\n/g, '<br>');
+        // 1. Bloques de código con triple backtick ```lang ... ```
+        const codeBlocks = [];
+        text = text.replace(/```([a-zA-Z0-9_\-\.]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+            const index = codeBlocks.length;
+            const langName = lang ? lang.toUpperCase() : 'CÓDIGO';
+            const escapedCode = this.escapeHTML(code.trim());
+            const safeCodeForAttr = encodeURIComponent(code.trim());
+            const blockHtml = `
+                <div class="code-block-wrapper">
+                    <div class="code-block-header">
+                        <span class="code-lang-label">${langName}</span>
+                        <button type="button" class="btn-copy-code" onclick="navigator.clipboard.writeText(decodeURIComponent('${safeCodeForAttr}')).then(() => { this.textContent = '✅ Copiado'; setTimeout(() => this.textContent = '📋 Copiar', 2000); })">
+                            📋 Copiar
+                        </button>
+                    </div>
+                    <pre class="code-pre"><code>${escapedCode}</code></pre>
+                </div>
+            `;
+            codeBlocks.push(blockHtml);
+            return `__CODE_BLOCK_${index}__`;
+        });
 
-        return html;
+        // 2. Tablas Markdown (| Header 1 | Header 2 | \n | --- | --- | \n | Val 1 | Val 2 |)
+        const tableBlocks = [];
+        text = text.replace(/((?:^[ \t]*\|[^\n]+\|[ \t]*(?:\r?\n|$))+)/gm, (tableMatch) => {
+            const lines = tableMatch.trim().split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length < 2) return tableMatch;
+
+            let headerLine = lines[0];
+            let dataLines = lines.slice(1);
+
+            let isSeparator = /^\|?[\s\-:|]+\|?$/.test(dataLines[0]);
+            if (isSeparator) {
+                dataLines = dataLines.slice(1);
+            }
+
+            const parseRow = (line) => {
+                let cells = line.split('|');
+                if (cells[0].trim() === '') cells.shift();
+                if (cells[cells.length - 1].trim() === '') cells.pop();
+                return cells.map(c => this.parseMarkdownInline(c.trim()));
+            };
+
+            const headerCells = parseRow(headerLine);
+            const theadHtml = `<thead><tr>${headerCells.map(h => `<th>${h}</th>`).join('')}</tr></thead>`;
+
+            const tbodyRows = dataLines.map((rowLine, rIdx) => {
+                const cells = parseRow(rowLine);
+                const rowClass = rIdx % 2 === 0 ? 'even-row' : 'odd-row';
+                return `<tr class="${rowClass}">${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            }).join('');
+
+            const tableHtml = `
+                <div class="table-responsive-wrapper">
+                    <table class="chat-custom-table">
+                        ${theadHtml}
+                        <tbody>${tbodyRows}</tbody>
+                    </table>
+                </div>
+            `;
+            const index = tableBlocks.length;
+            tableBlocks.push(tableHtml);
+            return `__TABLE_BLOCK_${index}__`;
+        });
+
+        // 3. Callouts tipo GitHub (> [!NOTE], > [!TIP], > [!IMPORTANT], > [!WARNING])
+        text = text.replace(/^>[ \t]*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*\n((?:^>[ \t]*.*$\n?)+)/gim, (match, type, content) => {
+            const cleanContent = content.split('\n').map(l => l.replace(/^>[ \t]*/, '')).join('\n').trim();
+            const upperType = type.toUpperCase();
+            let icon = 'ℹ️';
+            let title = 'Nota Institucional';
+            let cls = 'callout-note';
+
+            if (upperType === 'TIP') {
+                icon = '💡';
+                title = 'Sugerencia Institucional';
+                cls = 'callout-tip';
+            } else if (upperType === 'IMPORTANT') {
+                icon = '📌';
+                title = 'Información Clave';
+                cls = 'callout-important';
+            } else if (upperType === 'WARNING' || upperType === 'CAUTION') {
+                icon = '⚠️';
+                title = 'Advertencia';
+                cls = 'callout-warning';
+            }
+
+            return `<div class="chat-callout ${cls}"><div class="callout-title">${icon} ${title}</div><div>${this.parseMarkdownInline(cleanContent)}</div></div>`;
+        });
+
+        // Blockquotes estándar (> texto)
+        text = text.replace(/^>[ \t]+(.*$)/gim, '<div class="chat-blockquote">$1</div>');
+
+        // Separadores horizontales
+        text = text.replace(/^---$/gim, '<hr class="chat-divider">');
+
+        // Encabezados
+        text = text.replace(/^### (.*$)/gim, '<h4>$1</h4>');
+        text = text.replace(/^## (.*$)/gim, '<h3>$1</h3>');
+        text = text.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+
+        // Listas ordenadas numéricas (1. Item)
+        text = text.replace(/^\d+\.\s+(.*$)/gim, '<li class="num-li">$1</li>');
+        text = text.replace(/((?:<li class="num-li">.*<\/li>\s*)+)/gim, '<ol class="chat-num-list">$1</ol>');
+
+        // Listas desordenadas (* o -)
+        text = text.replace(/^[\*\-]\s+(.*$)/gim, '<li>$1</li>');
+        text = text.replace(/((?:<li>.*<\/li>\s*)+)/gim, '<ul class="chat-list">$1</ul>');
+        text = text.replace(/<\/ul>\s*<ul class="chat-list">/g, '');
+
+        // Formatos en línea
+        text = this.parseMarkdownInline(text);
+
+        // Saltos de línea
+        text = text.replace(/\n\n/g, '<br><br>');
+        text = text.replace(/\n/g, '<br>');
+
+        // Restaurar tablas y bloques de código
+        tableBlocks.forEach((tb, i) => {
+            text = text.replace(`__TABLE_BLOCK_${i}__`, tb);
+        });
+        codeBlocks.forEach((cb, i) => {
+            text = text.replace(`__CODE_BLOCK_${i}__`, cb);
+        });
+
+        return text;
+    }
+
+    parseMarkdownInline(str) {
+        if (!str) return '';
+        let s = str;
+        // Código inline `code`
+        s = s.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+        // Negrita **texto**
+        s = s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Cursiva *texto*
+        s = s.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, '$1<em>$2</em>$3');
+        // Enlaces [texto](url)
+        s = s.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1 <span class="link-arrow">↗</span></a>');
+        return s;
     }
 }
 
