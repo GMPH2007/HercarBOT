@@ -15,7 +15,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Estilos CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=5.1">
+    <link rel="stylesheet" href="css/styles.css?v=7.5.0&b=20261006">
+
+    <!-- Interceptor Global de Seguridad para erradicar cualquier confirm() o alert() nativo del navegador -->
+    <script>
+        window.confirm = function(msg) {
+            if (window.hercarApp && typeof window.hercarApp.mostrarConfirmacion === 'function') {
+                window.hercarApp.mostrarConfirmacion({
+                    titulo: '¿Borrar conversación actual?',
+                    mensaje: msg || '¿Estás seguro de que deseas borrar toda la conversación actual y reiniciar el chat?',
+                    icono: '🗑️',
+                    tipo: 'danger',
+                    textoConfirmar: 'Sí, Borrar Chat',
+                    textoCancelar: 'Cancelar'
+                }).then(res => {
+                    if (res && window.hercarApp.reiniciarConversacion) {
+                        window.hercarApp.reiniciarConversacion();
+                        if (typeof window.hercarApp.mostrarToast === 'function') {
+                            window.hercarApp.mostrarToast('🗑️ Conversación reiniciada');
+                        }
+                    }
+                });
+                return false;
+            }
+            return false;
+        };
+        window.alert = function(msg) {
+            if (window.hercarApp && typeof window.hercarApp.mostrarAlerta === 'function') {
+                window.hercarApp.mostrarAlerta({
+                    titulo: 'Información Institucional',
+                    mensaje: msg || '',
+                    icono: 'ℹ️',
+                    tipo: 'info',
+                    textoBoton: 'Entendido'
+                });
+                return false;
+            }
+            return false;
+        };
+    </script>
 </head>
 <body>
 
@@ -1256,10 +1294,10 @@
     <div class="toast-notification" id="toast-notification"></div>
 
     <!-- Scripts de la Aplicación -->
-    <script src="js/neural_network.js?v=6.0"></script>
-    <script src="js/knowledge.js?v=6.0"></script>
-    <script src="js/test_vocacional.js?v=6.0"></script>
-    <script src="js/voice.js?v=6.0"></script>
-    <script src="js/app.js?v=6.0"></script>
+    <script src="js/neural_network.js?v=7.5.0&b=20261006"></script>
+    <script src="js/knowledge.js?v=7.5.0&b=20261006"></script>
+    <script src="js/test_vocacional.js?v=7.5.0&b=20261006"></script>
+    <script src="js/voice.js?v=7.5.0&b=20261006"></script>
+    <script src="js/app.js?v=7.5.0&b=20261006"></script>
 </body>
 </html>
