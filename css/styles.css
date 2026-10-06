@@ -82,6 +82,12 @@ html, body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Accesibilidad y Focus Ring Moderno (Estilo Tailwind / Material UI) */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--blue-vibrant);
+}
+
 /* Iconos SVG Estandarizados */
 .svg-icon {
     width: 20px;
