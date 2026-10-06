@@ -21,6 +21,7 @@ class HercarNeuralNetwork {
             'temario_admision',
             'titulacion_efsrt',
             'pagos_vouchers',
+            'cuenta_bancaria_codigos',
             'boletas_electronicas',
             'mesa_partes_tramites',
             'duracion_semestres',
@@ -58,6 +59,7 @@ class HercarNeuralNetwork {
             'temario_admision': 'Temario de Estudio para Examen de Admisión',
             'titulacion_efsrt': 'Requisitos de Titulación y Prácticas EFSRT',
             'pagos_vouchers': 'Registro de Vouchers en pagos.ieshercar.edu.pe',
+            'cuenta_bancaria_codigos': 'Número de Cuenta Banco de la Nación y Códigos de Pago',
             'boletas_electronicas': 'Consulta y Descarga de Boletas Electrónicas',
             'mesa_partes_tramites': 'Mesa de Partes Virtual y Trámites FUT',
             'duracion_semestres': 'Duración Formativa (3 Años / 6 Semestres)',
@@ -340,6 +342,22 @@ class HercarNeuralNetwork {
             // Pagos y Vouchers
             { q: 'como registro mi voucher de pago en pagos ieshercar', intent: 'pagos_vouchers' },
             { q: 'donde se paga el banco de la nacion y subir voucher', intent: 'pagos_vouchers' },
+            { q: 'plataforma de validacion de comprobantes y pagos', intent: 'pagos_vouchers' },
+
+            // Número de Cuenta Bancaria y Códigos de Pago Banco de la Nación
+            { q: 'pasame el numero de cuenta', intent: 'cuenta_bancaria_codigos' },
+            { q: 'dile pasame el numero de cuenta', intent: 'cuenta_bancaria_codigos' },
+            { q: 'pasame el numero de cuenta del instituto', intent: 'cuenta_bancaria_codigos' },
+            { q: 'cual es el numero de cuenta para pagar en el banco de la nacion', intent: 'cuenta_bancaria_codigos' },
+            { q: 'pasa el numero de cuenta corriente hermanos carcamo', intent: 'cuenta_bancaria_codigos' },
+            { q: 'cuenta de banco de la nacion para depositar la matricula', intent: 'cuenta_bancaria_codigos' },
+            { q: 'cual es el cci codigo de cuenta interbancario del instituto', intent: 'cuenta_bancaria_codigos' },
+            { q: 'a que cuenta se deposita el dinero de admision o inscripcion', intent: 'cuenta_bancaria_codigos' },
+            { q: 'donde deposito la plata de la matricula numero de cuenta', intent: 'cuenta_bancaria_codigos' },
+            { q: 'dame los codigos de pago del banco de la nacion', intent: 'cuenta_bancaria_codigos' },
+            { q: 'como pagar por transferencia interbancaria bcp bbva yape a la cuenta', intent: 'cuenta_bancaria_codigos' },
+            { q: 'numero de cuenta oficial del instituto de paita', intent: 'cuenta_bancaria_codigos' },
+            { q: 'a que cuenta tengo que pagar la matricula semestral', intent: 'cuenta_bancaria_codigos' },
 
             // Boletas
             { q: 'como descargar mi boleta de venta electronica con dni', intent: 'boletas_electronicas' },
