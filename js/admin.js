@@ -563,8 +563,17 @@ class HercarAdminController {
         }
     }
 
-    clearApiKey() {
-        if (!confirm('¿Deseas eliminar la clave API almacenada? El bot volverá al modo Red Neuronal Local APSTI.')) return;
+    async clearApiKey() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Eliminar Clave API?',
+            mensaje: '¿Deseas eliminar la clave API almacenada? El chatbot volverá al modo Red Neuronal Local APSTI.',
+            icono: '⚠️',
+            tipo: 'warning',
+            textoConfirmar: 'Sí, Eliminar Clave',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.config.apiKey = '';
         const inputKey = document.getElementById('input-api-key');
         if (inputKey) inputKey.value = '';
@@ -656,7 +665,7 @@ class HercarAdminController {
         this.currentTeachingId = null;
     }
 
-    confirmTeachAnswer() {
+    async confirmTeachAnswer() {
         const qInput = document.getElementById('teach-modal-question');
         const aInput = document.getElementById('teach-modal-answer');
 
@@ -664,7 +673,13 @@ class HercarAdminController {
         const a = aInput ? aInput.value.trim() : '';
 
         if (!q || !a) {
-            alert('Por favor, ingresa tanto la pregunta como la respuesta institucional.');
+            await this.mostrarAlerta({
+                titulo: 'Campos Incompletos',
+                mensaje: 'Por favor, ingresa tanto la pregunta como la respuesta institucional.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
 
@@ -697,8 +712,17 @@ class HercarAdminController {
         this.showToast('Consulta descartada de la bandeja.');
     }
 
-    clearAllUnanswered() {
-        if (!confirm('¿Deseas vaciar todas las preguntas pendientes de la bandeja?')) return;
+    async clearAllUnanswered() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Vaciar Consultas?',
+            mensaje: '¿Deseas vaciar todas las preguntas pendientes de la bandeja?',
+            icono: '🗑️',
+            tipo: 'danger',
+            textoConfirmar: 'Sí, Vaciar Bandeja',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.unanswered = [];
         localStorage.setItem('hercar_unanswered_queries', JSON.stringify(this.unanswered));
         this.renderUnansweredList();
@@ -709,7 +733,7 @@ class HercarAdminController {
     // BASE DE CONOCIMIENTO (CUSTOM KB)
     // =========================================================================
 
-    addCustomKnowledge() {
+    async addCustomKnowledge() {
         const qInput = document.getElementById('kb-input-question');
         const aInput = document.getElementById('kb-input-answer');
 
@@ -717,7 +741,13 @@ class HercarAdminController {
         const a = aInput ? aInput.value.trim() : '';
 
         if (!q || !a) {
-            alert('Por favor, escribe la pregunta y la respuesta oficial.');
+            await this.mostrarAlerta({
+                titulo: 'Campos Incompletos',
+                mensaje: 'Por favor, escribe la pregunta y la respuesta oficial institucional.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
 
@@ -777,8 +807,17 @@ class HercarAdminController {
         `).join('');
     }
 
-    deleteCustomKb(id) {
-        if (!confirm('¿Seguro que deseas eliminar esta pregunta de la base de conocimiento?')) return;
+    async deleteCustomKb(id) {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Eliminar Conocimiento?',
+            mensaje: '¿Seguro que deseas eliminar esta pregunta de la base de conocimiento institucional?',
+            icono: '🗑️',
+            tipo: 'danger',
+            textoConfirmar: 'Sí, Eliminar',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.customKb = this.customKb.filter(item => item.id !== id);
         localStorage.setItem('hercar_custom_kb', JSON.stringify(this.customKb));
         this.renderCustomKbList();
@@ -923,7 +962,13 @@ class HercarAdminController {
 
         const printWindow = window.open('', '_blank', 'width=960,height=800');
         if (!printWindow) {
-            alert('Por favor, permite ventanas emergentes para generar el informe formal de sustentación.');
+            await this.mostrarAlerta({
+                titulo: 'Ventana Emergente Bloqueada',
+                mensaje: 'Por favor, permite las ventanas emergentes en tu navegador para generar e imprimir el informe formal de sustentación.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
 
@@ -1238,12 +1283,18 @@ class HercarAdminController {
     // SYSTEM PROMPT
     // =========================================================================
 
-    saveSystemPrompt() {
+    async saveSystemPrompt() {
         const txtPrompt = document.getElementById('system-prompt-textarea');
         if (!txtPrompt) return;
         const val = txtPrompt.value.trim();
         if (!val) {
-            alert('El system prompt no puede estar vacío.');
+            await this.mostrarAlerta({
+                titulo: 'Prompt Vacío',
+                mensaje: 'El System Prompt institucional no puede estar vacío.',
+                icono: '⚠️',
+                tipo: 'warning',
+                textoBoton: 'Entendido'
+            });
             return;
         }
         this.config.systemPrompt = val;
@@ -1251,8 +1302,17 @@ class HercarAdminController {
         this.showToast('✅ System Prompt actualizado con éxito.');
     }
 
-    resetSystemPrompt() {
-        if (!confirm('¿Restablecer el System Prompt al texto institucional predeterminado de APSTI?')) return;
+    async resetSystemPrompt() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Restablecer Prompt?',
+            mensaje: '¿Deseas restablecer el System Prompt al texto institucional predeterminado de APSTI?',
+            icono: '🔄',
+            tipo: 'warning',
+            textoConfirmar: 'Sí, Restablecer',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         this.config.systemPrompt = DEFAULT_OFFICIAL_SYSTEM_PROMPT;
         const txtPrompt = document.getElementById('system-prompt-textarea');
         if (txtPrompt) txtPrompt.value = DEFAULT_OFFICIAL_SYSTEM_PROMPT;
@@ -1382,6 +1442,145 @@ class HercarAdminController {
         this._toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
     }
 
+    mostrarConfirmacion({
+        titulo = '¿Confirmar acción?',
+        mensaje = '¿Estás seguro de continuar con esta operación?',
+        icono = '🗑️',
+        tipo = 'danger',
+        textoConfirmar = 'Confirmar',
+        textoCancelar = 'Cancelar'
+    } = {}) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-custom-dialog');
+            if (!overlay) {
+                resolve(window.confirm(mensaje));
+                return;
+            }
+
+            const titleEl = document.getElementById('dialog-title');
+            const descEl = document.getElementById('dialog-desc');
+            const iconEl = document.getElementById('dialog-icon');
+            const iconContainer = document.getElementById('dialog-icon-container');
+            const btnConfirm = document.getElementById('btn-dialog-confirm');
+            const btnCancel = document.getElementById('btn-dialog-cancel');
+
+            if (titleEl) titleEl.textContent = titulo;
+            if (descEl) descEl.innerHTML = mensaje;
+            if (iconEl) iconEl.textContent = icono;
+
+            if (iconContainer) {
+                iconContainer.className = `dialog-icon-circle dialog-icon-${tipo}`;
+            }
+
+            if (btnConfirm) {
+                btnConfirm.textContent = textoConfirmar;
+                btnConfirm.className = `btn-dialog-confirm btn-dialog-${tipo}`;
+                btnConfirm.style.display = 'inline-flex';
+            }
+
+            if (btnCancel) {
+                btnCancel.textContent = textoCancelar;
+                btnCancel.style.display = 'inline-flex';
+            }
+
+            const cleanup = (resultado) => {
+                overlay.style.display = 'none';
+                if (btnConfirm) btnConfirm.removeEventListener('click', onConfirm);
+                if (btnCancel) btnCancel.removeEventListener('click', onCancel);
+                overlay.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(resultado);
+            };
+
+            const onConfirm = () => cleanup(true);
+            const onCancel = () => cleanup(false);
+            const onBackdrop = (e) => {
+                if (e.target === overlay) cleanup(false);
+            };
+            const onKeyDown = (e) => {
+                if (e.key === 'Escape') cleanup(false);
+                if (e.key === 'Enter') cleanup(true);
+            };
+
+            if (btnConfirm) btnConfirm.addEventListener('click', onConfirm, { once: true });
+            if (btnCancel) btnCancel.addEventListener('click', onCancel, { once: true });
+            overlay.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeyDown);
+
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                if (btnConfirm) btnConfirm.focus();
+            });
+        });
+    }
+
+    mostrarAlerta({
+        titulo = 'Información Administrativa',
+        mensaje = '',
+        icono = 'ℹ️',
+        tipo = 'info',
+        textoBoton = 'Entendido'
+    } = {}) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('modal-custom-dialog');
+            if (!overlay) {
+                window.alert(mensaje);
+                resolve(true);
+                return;
+            }
+
+            const titleEl = document.getElementById('dialog-title');
+            const descEl = document.getElementById('dialog-desc');
+            const iconEl = document.getElementById('dialog-icon');
+            const iconContainer = document.getElementById('dialog-icon-container');
+            const btnConfirm = document.getElementById('btn-dialog-confirm');
+            const btnCancel = document.getElementById('btn-dialog-cancel');
+
+            if (titleEl) titleEl.textContent = titulo;
+            if (descEl) descEl.innerHTML = mensaje;
+            if (iconEl) iconEl.textContent = icono;
+
+            if (iconContainer) {
+                iconContainer.className = `dialog-icon-circle dialog-icon-${tipo}`;
+            }
+
+            if (btnCancel) {
+                btnCancel.style.display = 'none';
+            }
+
+            if (btnConfirm) {
+                btnConfirm.textContent = textoBoton;
+                btnConfirm.className = `btn-dialog-confirm btn-dialog-${tipo}`;
+                btnConfirm.style.display = 'inline-flex';
+            }
+
+            const cleanup = () => {
+                overlay.style.display = 'none';
+                if (btnConfirm) btnConfirm.removeEventListener('click', onConfirm);
+                overlay.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(true);
+            };
+
+            const onConfirm = () => cleanup();
+            const onBackdrop = (e) => {
+                if (e.target === overlay) cleanup();
+            };
+            const onKeyDown = (e) => {
+                if (e.key === 'Escape' || e.key === 'Enter') cleanup();
+            };
+
+            if (btnConfirm) btnConfirm.addEventListener('click', onConfirm, { once: true });
+            overlay.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeyDown);
+
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                if (btnConfirm) btnConfirm.focus();
+            });
+        });
+    }
+
     checkAuth() {
         const session = localStorage.getItem('hercar_admin_session');
         const loginModal = document.getElementById('modal-admin-login');
@@ -1432,8 +1631,17 @@ class HercarAdminController {
         }
     }
 
-    logout() {
-        if (!confirm('¿Deseas cerrar tu sesión como administrador?')) return;
+    async logout() {
+        const confirmar = await this.mostrarConfirmacion({
+            titulo: '¿Cerrar Sesión?',
+            mensaje: '¿Deseas cerrar tu sesión como administrador institucional?',
+            icono: '🚪',
+            tipo: 'warning',
+            textoConfirmar: 'Sí, Cerrar Sesión',
+            textoCancelar: 'Cancelar'
+        });
+        if (!confirmar) return;
+
         localStorage.removeItem('hercar_admin_session');
         this.showToast('🔒 Sesión cerrada.');
         const loginModal = document.getElementById('modal-admin-login');
