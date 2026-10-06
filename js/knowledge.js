@@ -41,10 +41,14 @@ const INSTITUCIONAL_KB = {
             plataformaVouchers: 'https://pagos.ieshercar.edu.pe/',
             consultaBoletas: 'https://sistema.ieshercar.com/Consulta_Boletas/index.php',
             tasasOficiales: {
-                matriculaSemestral: 'S/ 100.00 (Educación pública 100% gratuita, S/ 0 mensualidades)',
-                admisionOrdinaria: 'S/ 150.00',
-                preTecnologico: 'S/ 200.00',
-                carnetMedioPasaje: 'S/ 20.00'
+                matriculaSemestral: 'S/ 100.00 (Regular) | S/ 150.00 (Cachimbo) - Código: MAT-01',
+                carpetaModular: 'S/ 25.00 (por Módulo Formativo Profesional) - Código: CARP-25',
+                inglesTecnico: 'S/ 400.00 (Programa de Certificación de Idioma Extranjero para Titulación) - Código: ING-400',
+                carnetMedioPasaje: 'S/ 20.00 - Código: PAS-20',
+                admisionOrdinaria: 'S/ 150.00 - Código: ADM-150',
+                preTecnologico: 'S/ 200.00 - Código: PRE-200',
+                certificadoModular: 'S/ 35.00 - Código: CERT-35',
+                titulacionTramite: 'S/ 160.00 - Código: TIT-160'
             }
         },
         
@@ -304,13 +308,24 @@ const INSTITUCIONAL_KB = {
         if (!query) return null;
         const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-        // 0. Preguntas sobre Número de Cuenta Bancaria / Dónde depositar / CCI / Banco de la Nación
+        // 0.a. Preguntas sobre Carpeta Modular (S/ 25.00)
+        if (q.includes('carpeta') || (q.includes('modular') && (q.includes('pago') || q.includes('costo') || q.includes('cuanto') || q.includes('25')))) {
+            return this.formatearCarpetaModular();
+        }
+
+        // 0.b. Preguntas sobre Inglés Técnico / Idioma Extranjero para Titulación (S/ 400.00)
+        if (q.includes('ingles') || (q.includes('idioma') && (q.includes('pago') || q.includes('costo') || q.includes('cuanto') || q.includes('400')))) {
+            return this.formatearInglesTecnico();
+        }
+
+        // 0.c. Preguntas sobre Número de Cuenta Bancaria / Dónde depositar / CCI / Códigos de Pago
         if (
             q.includes('cuenta') || 
             q.includes('cci') || 
             q.includes('interbancari') || 
             q.includes('codigo de pago') || 
             q.includes('codigos de pago') || 
+            q.includes('codigo') || 
             q.includes('donde deposito') || 
             q.includes('a que cuenta') || 
             q.includes('donde pago') || 
@@ -395,7 +410,7 @@ const INSTITUCIONAL_KB = {
 
     formatearDatosBancarios: function() {
         const b = this.instituto.datosBancarios;
-        return `🏦 **DATOS BANCARIOS OFICIALES: BANCO DE LA NACIÓN**
+        return `🏦 **DATOS BANCARIOS OFICIALES Y CÓDIGOS DE PAGO: BANCO DE LA NACIÓN**
 
 El **IESTP "Hermanos Cárcamo"** recauda todas sus tasas académicas y administrativas únicamente en las cuentas oficiales del **Banco de la Nación**:
 
@@ -410,21 +425,97 @@ El **IESTP "Hermanos Cárcamo"** recauda todas sus tasas académicas y administr
 
 ---
 
-### 💵 Principales Tasas TUPA 2026:
-* **Matrícula Semestral Regular:** ${b.tasasOficiales.matriculaSemestral}
-* **Inscripción Examen de Admisión Ordinario:** ${b.tasasOficiales.admisionOrdinaria}
-* **Ciclo Pre-Tecnológico:** ${b.tasasOficiales.preTecnologico}
-* **Carnet de Medio Pasaje MINEDU:** ${b.tasasOficiales.carnetMedioPasaje}
+### 💵 Tabla de Tasas Oficiales y Códigos TUPA:
+* 🎓 **Matrícula Semestral:** ${b.tasasOficiales.matriculaSemestral}
+* 📁 **Carpeta Modular Pedagógica:** ${b.tasasOficiales.carpetaModular}
+* 🇬🇧 **Programa de Inglés Técnico para Titulación:** ${b.tasasOficiales.inglesTecnico}
+* 🚌 **Carnet de Medio Pasaje MINEDU:** ${b.tasasOficiales.carnetMedioPasaje}
+* 📝 **Inscripción Examen de Admisión Ordinario:** ${b.tasasOficiales.admisionOrdinaria}
+* 🚀 **Ciclo Pre-Tecnológico (Ingreso Directo):** ${b.tasasOficiales.preTecnologico}
+* 📜 **Certificado Modular Progresivo:** ${b.tasasOficiales.certificadoModular}
+* 🏆 **Derecho de Titulación Profesional Técnico:** ${b.tasasOficiales.titulacionTramite}
 
 ---
 
 ### 📲 ¿Qué hacer luego de depositar?
 1. Exige tu voucher impreso o comprobante digital con el **N° de Operación** legible.
 2. Ingresa a la plataforma oficial: [pagos.ieshercar.edu.pe](${b.plataformaVouchers})
-3. Digita tu **DNI**, adjunta la imagen clara del voucher y haz clic en *Registrar Pago*.
+3. Digita tu **DNI**, selecciona el concepto correspondiente (Matrícula, Carpeta Modular, Inglés, etc.), adjunta el voucher y haz clic en *Registrar Pago*.
 4. Descarga tu boleta de venta electrónica oficial desde: [sistema.ieshercar.com/Consulta_Boletas](${b.consultaBoletas})
 
 > ⚠️ *Advertencia de Seguridad:* Nunca deposites a números de cuenta de personas particulares. Todos los pagos del instituto se realizan exclusivamente en las cuentas oficiales del Banco de la Nación.`;
+    },
+
+    formatearCarpetaModular: function() {
+        const b = this.instituto.datosBancarios;
+        return `📁 **PAGO DE CARPETA MODULAR: S/ 25.00 (TUPA INSTITUCIONAL)**
+
+La **Carpeta Modular Pedagógica** es el expediente técnico-académico individual en el que se asientan tus evaluaciones por competencias y prácticas formativas de cada módulo profesional de tu carrera:
+
+### 💰 Costo y Código de Pago:
+* **Concepto Institucional:** Carpeta Modular (por cada Módulo Profesional)
+* **Importe Oficial:** **S/ 25.00**
+* **Código de Trámite / Referencia:** \`CARP-25\` (o Concepto "Carpeta Modular" en la plataforma de pagos)
+
+---
+
+### 🏦 Cuentas Oficiales del Banco de la Nación:
+* **Banco:** ${b.banco}
+* **Titular de la Cuenta:** ${b.titular}
+* **RUC:** \`${b.ruc}\`
+* **Cuenta Corriente (Soles):** \`${b.cuentaCorriente}\`
+* **Código Interbancario CCI:** \`${b.cci}\`
+
+---
+
+### 📝 ¿Para qué sirve la Carpeta Modular?
+1. **Certificación Modular Oficial:** Es requisito indispensable para que Secretaría Académica emita tu **Certificado Modular Progresivo (MINEDU)** al culminar cada año lectivo.
+2. **Evaluación de Competencias Técnicas:** Registra la aprobación de unidades didácticas y proyectos prácticos.
+3. **Validación de EFSRT:** Contiene las fichas de acreditación de tus prácticas preprofesionales en empresas.
+
+---
+
+### 📲 Pasos para Registrar tu Voucher de S/ 25.00:
+1. Paga en cualquier ventanilla del Banco de la Nación, Agente MultiRed o transferencia interbancaria directa.
+2. Ingresa a: [pagos.ieshercar.edu.pe](${b.plataformaVouchers})
+3. Ingresa tu **DNI**, selecciona el concepto **"Carpeta Modular"** y adjunta la imagen de tu voucher.
+4. Consulta tu boleta oficial en: [sistema.ieshercar.com/Consulta_Boletas](${b.consultaBoletas})`;
+    },
+
+    formatearInglesTecnico: function() {
+        const b = this.instituto.datosBancarios;
+        return `🇬🇧 **PROGRAMA DE INGLÉS TÉCNICO PARA TITULACIÓN: S/ 400.00**
+
+Conforme a la **Ley de Institutos de Educación Superior N° 30512** y normativa del **MINEDU**, la acreditación del idioma extranjero (Inglés Técnico) es un **requisito obligatorio** para tramitar el **Título Profesional Técnico a Nombre de la Nación**:
+
+### 💰 Costo y Código de Pago:
+* **Concepto:** Certificación / Programa de Suficiencia en Inglés Técnico
+* **Importe Total Oficial:** **S/ 400.00**
+* **Código de Trámite / Referencia:** \`ING-400\` (o Concepto "Inglés Técnico" en el sistema de pagos)
+
+---
+
+### 🏦 Datos Bancarios para Abonar:
+* **Banco:** ${b.banco}
+* **Titular:** ${b.titular}
+* **RUC:** \`${b.ruc}\`
+* **Cuenta Corriente (Soles):** \`${b.cuentaCorriente}\`
+* **Código Interbancario CCI:** \`${b.cci}\`
+
+---
+
+### 🎯 Beneficios del Programa de Inglés Institucional:
+1. **Orientado a tu Carrera:** Vocabulario técnico específico para desarrollo de software en APSTI, comercio marítimo y aduanas en ANI, tributación y estados contables en Contabilidad, o artes y biología marina en DPA.
+2. **Validez Oficial Directa:** Al aprobarlo dentro del instituto, no necesitas convalidar certificados con academias particulares costosas.
+3. **Flexibilidad:** Desarrollado en módulos intensivos diseñados para estudiantes y egresados.
+
+---
+
+### 📲 ¿Cómo registrar el Voucher de S/ 400.00?
+1. Realiza el depósito en ventanilla del Banco de la Nación o Agente MultiRed con la Cta. Cte. \`00-631-018241\`.
+2. Accede a: [pagos.ieshercar.edu.pe](${b.plataformaVouchers})
+3. Ingresa tu **DNI**, elige el concepto **"Inglés Técnico / Idioma Extranjero"** y sube la imagen clara del comprobante.
+4. Obtén tu boleta de venta electrónica en: [sistema.ieshercar.com/Consulta_Boletas](${b.consultaBoletas})`;
     }
 };
 
