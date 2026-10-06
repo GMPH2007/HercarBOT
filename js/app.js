@@ -895,6 +895,24 @@ class HercarChatApp {
             return;
         }
 
+        // Pago de Carpeta Modular (S/ 25.00)
+        if (
+            q.includes('carpeta') ||
+            (q.includes('modular') && (q.includes('pago') || q.includes('costo') || q.includes('cuanto') || q.includes('25') || q.includes('precio')))
+        ) {
+            this.responderCarpetaModular(nr);
+            return;
+        }
+
+        // Pago de Inglés Técnico para Titulación (S/ 400.00)
+        if (
+            q.includes('ingles') ||
+            (q.includes('idioma') && (q.includes('pago') || q.includes('costo') || q.includes('cuanto') || q.includes('400') || q.includes('precio') || q.includes('titulacion')))
+        ) {
+            this.responderInglesTecnico(nr);
+            return;
+        }
+
         // Número de Cuenta Bancaria Oficial y Códigos de Pago Banco de la Nación
         if (
             nr.intent === 'cuenta_bancaria_codigos' ||
@@ -903,6 +921,9 @@ class HercarChatApp {
             q.includes('interbancari') ||
             q.includes('codigo de pago') ||
             q.includes('codigos de pago') ||
+            q.includes('codigo') ||
+            q.includes('codigos') ||
+            q.includes('numero de pago') ||
             q.includes('donde deposito') ||
             q.includes('a que cuenta') ||
             (q.includes('pasame') && q.includes('cuenta')) ||
@@ -1136,10 +1157,166 @@ class HercarChatApp {
         this.responderGenerico(rawQuery, nr);
     }
 
-    responderNumeroDeCuenta(nr = null) {
-        const respuesta = `🏦 **NÚMERO DE CUENTA BANCARIA Y CÓDIGOS OFICIALES DE PAGO**
+    responderCarpetaModular(nr = null) {
+        const respuesta = `📁 **PAGO DE CARPETA MODULAR: S/ 25.00 (TUPA INSTITUCIONAL)**
 
-Para realizar tus pagos de **matrícula**, **examen de admisión** o trámites TUPA del **IESTP "Hermanos Cárcamo"**, utiliza las cuentas institucionales del **Banco de la Nación**:
+La **Carpeta Modular Pedagógica** es el instrumento oficial en el cual se asienta el registro de competencias, proyectos modulares y prácticas preprofesionales (EFSRT) por cada módulo técnico de tu carrera:
+
+<div class="bank-card-chat">
+    <div class="bank-card-header">
+        <div class="bank-title-box">
+            <span class="bank-flag">📁</span>
+            <div>
+                <div class="bank-name">CARPETA MODULAR INSTITUCIONAL</div>
+                <div class="bank-inst-name">Tasa TUPA Oficial • Por Módulo Formativo</div>
+            </div>
+        </div>
+        <span class="bank-badge">Importe: S/ 25.00</span>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código de Trámite / Concepto TUPA:</span>
+            <span class="code-meta-val">CARP-25</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('CARP-25', 'Código de Carpeta Modular (CARP-25)')">
+            📋 Copiar Código
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Cuenta Corriente Banco de la Nación:</span>
+            <span class="code-meta-val">00-631-018241</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('00-631-018241', 'N° de Cuenta Corriente')">
+            📋 Copiar Cuenta
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código CCI Interbancario:</span>
+            <span class="code-meta-val">018-631-000631018241-73</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('018-631-000631018241-73', 'Código CCI')">
+            📋 Copiar CCI
+        </button>
+    </div>
+
+    <div class="bank-buttons-footer">
+        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="btn-link-action btn-link-success-mini">
+            🔗 Subir Voucher en pagos.ieshercar.edu.pe ↗
+        </a>
+        <button type="button" class="btn-link-action btn-link-primary-mini" onclick="window.hercarApp.abrirSimuladorTupaModal()">
+            🧮 Simular en TUPA
+        </button>
+    </div>
+</div>
+
+---
+
+### 📝 ¿Por qué es indispensable la Carpeta Modular?
+1. **Certificación Modular Oficial (MINEDU):** Al culminar cada año lectivo (2 semestres), te permite solicitar tu Certificado Modular Progresivo con valor oficial para trabajar en empresas.
+2. **Registro de Rúbricas:** Reúne las actas y calificaciones de las capacidades terminales aprobadas.
+3. **Acreditación de EFSRT:** Incluye la documentación obligatoria de tus prácticas en el sector productivo de Paita y Piura.
+
+---
+
+### 📲 Pasos para Abonar y Registrar:
+1. Paga **S/ 25.00** en ventanilla del Banco de la Nación, Agente MultiRed o transferencia bancaria a la Cta. Cte. \`00-631-018241\`.
+2. Ingresa a la plataforma oficial: [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/)
+3. Digita tu **DNI**, selecciona el concepto **"Carpeta Modular"**, adjunta la imagen nítida del comprobante y registra tu pago.
+4. Consulta y descarga tu boleta electrónica en: [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).`;
+
+        const voz = "El costo oficial de la carpeta modular es de 25 soles. Se abona en el Banco de la Nación con el código C A R P guión veinticinco en la cuenta corriente cero cero seiscientos treinta y uno cero dieciocho doscientos cuarenta y uno. Luego subes la foto del comprobante en la plataforma oficial de pagos.";
+        this.addBotMessage(respuesta, true, voz, nr);
+    }
+
+    responderInglesTecnico(nr = null) {
+        const respuesta = `🇬🇧 **PROGRAMA DE INGLÉS TÉCNICO PARA TITULACIÓN: S/ 400.00**
+
+La acreditación de suficiencia en **Idioma Extranjero (Inglés Técnico)** es un **requisito de ley obligatorio** establecido por la **Ley de Institutos N° 30512** y el **MINEDU** para expedir el **Título Profesional Técnico a Nombre de la Nación**:
+
+<div class="bank-card-chat">
+    <div class="bank-card-header">
+        <div class="bank-title-box">
+            <span class="bank-flag">🇬🇧</span>
+            <div>
+                <div class="bank-name">PROGRAMA DE INGLÉS TÉCNICO PROFESIONAL</div>
+                <div class="bank-inst-name">Requisito Obligatorio de Titulación MINEDU</div>
+            </div>
+        </div>
+        <span class="bank-badge">Importe: S/ 400.00</span>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código de Trámite / Concepto TUPA:</span>
+            <span class="code-meta-val">ING-400</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('ING-400', 'Código de Inglés Técnico (ING-400)')">
+            📋 Copiar Código
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Cuenta Corriente Banco de la Nación:</span>
+            <span class="code-meta-val">00-631-018241</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('00-631-018241', 'N° de Cuenta Corriente')">
+            📋 Copiar Cuenta
+        </button>
+    </div>
+
+    <div class="bank-code-row">
+        <div class="bank-code-meta">
+            <span class="code-meta-label">Código CCI Interbancario:</span>
+            <span class="code-meta-val">018-631-000631018241-73</span>
+        </div>
+        <button type="button" class="btn-copy-account" onclick="window.hercarApp.copiarTextoPortapapeles('018-631-000631018241-73', 'Código CCI')">
+            📋 Copiar CCI
+        </button>
+    </div>
+
+    <div class="bank-buttons-footer">
+        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener noreferrer" class="btn-link-action btn-link-success-mini">
+            🔗 Subir Voucher en pagos.ieshercar.edu.pe ↗
+        </a>
+        <button type="button" class="btn-link-action btn-link-primary-mini" onclick="window.hercarApp.abrirSimuladorTupaModal()">
+            🧮 Simular en TUPA
+        </button>
+    </div>
+</div>
+
+---
+
+### 🎯 Características del Programa Institucional:
+1. **Especializado según tu carrera:**
+   * **APSTI:** Terminología en desarrollo de software, git, comandos linux, cloud y redes Cisco.
+   * **ANI:** Incoterms, contratos internacionales, fletes marítimos y aduanas.
+   * **Contabilidad:** Vocabulario tributario, estados financieros y balances.
+   * **DPA:** Biología marina, artes de pesca y fitosanidad acuícola.
+2. **Acreditación Automática:** Al aprobar el curso en el instituto obtienes la constancia de suficiencia directa, sin pagar academias privadas de alto costo.
+3. **Validez Oficial:** Reconocida por el Ministerio de Educación para la expedición de tu Título Profesional Técnico.
+
+---
+
+### 📲 ¿Cómo abonar y registrar tu comprobante?
+1. Realiza el depósito de **S/ 400.00** en ventanilla del Banco de la Nación o Agente MultiRed en la Cta. Cte. \`00-631-018241\`.
+2. Ingresa a la plataforma: [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/)
+3. Digita tu **DNI**, selecciona el concepto **"Inglés Técnico / Idioma Extranjero"**, adjunta la imagen nítida del comprobante y haz clic en *Registrar Pago*.
+4. Descarga tu boleta oficial en: [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).`;
+
+        const voz = "El programa de inglés técnico para titulación tiene un costo oficial de 400 soles según el TUPA. Se abona en el Banco de la Nación con el código I N G guión cuatrocientos a la cuenta corriente cero cero seiscientos treinta y uno cero dieciocho doscientos cuarenta y uno. Es un requisito indispensable para obtener tu título a nombre de la nación.";
+        this.addBotMessage(respuesta, true, voz, nr);
+    }
+
+    responderNumeroDeCuenta(nr = null) {
+        const respuesta = `🏦 **TABLA COMPLETA DE CÓDIGOS DE PAGO Y CUENTAS: BANCO DE LA NACIÓN**
+
+Para realizar tus pagos de **matrícula**, **carpeta modular**, **inglés técnico** o trámites TUPA del **IESTP "Hermanos Cárcamo"**, utiliza los datos oficiales del **Banco de la Nación**:
 
 <div class="bank-card-chat">
     <div class="bank-card-header">
@@ -1195,23 +1372,29 @@ Para realizar tus pagos de **matrícula**, **examen de admisión** o trámites T
 
 ---
 
-### 💵 Principales Tasas TUPA Oficiales:
-* 🎓 **Matrícula Semestral Regular:** **S/ 100.00** *(¡La educación técnica es 100% gratuita, S/ 0 mensualidades privadas!)*
-* 📝 **Inscripción Examen de Admisión Ordinario:** **S/ 150.00**
-* 🚀 **Ciclo Pre-Tecnológico (Ingreso Directo):** **S/ 200.00**
-* 🚌 **Carnet Oficial de Medio Pasaje MINEDU:** **S/ 20.00**
+### 💵 Tabla Completa de Tasas Oficiales TUPA 2026:
+| Concepto Académico | Importe Oficial | Código de Trámite | Acción Rápida |
+| :--- | :---: | :---: | :---: |
+| 🎓 **Matrícula Semestral Regular** | **S/ 100.00** | \`MAT-01\` | *(S/ 0 mensualidad)* |
+| 📁 **Carpeta Modular Pedagógica** | **S/ 25.00** | \`CARP-25\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('CARP-25', 'Código Carpeta Modular')">Copiar</button> |
+| 🇬🇧 **Inglés Técnico (Titulación)** | **S/ 400.00** | \`ING-400\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('ING-400', 'Código Inglés')">Copiar</button> |
+| 🚌 **Carnet Medio Pasaje MINEDU** | **S/ 20.00** | \`PAS-20\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('PAS-20', 'Código Carnet')">Copiar</button> |
+| 📝 **Examen de Admisión Ordinario** | **S/ 150.00** | \`ADM-150\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('ADM-150', 'Código Admisión')">Copiar</button> |
+| 🚀 **Ciclo Pre-Tecnológico (Directo)** | **S/ 200.00** | \`PRE-200\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('PRE-200', 'Código Pre-Tecno')">Copiar</button> |
+| 📜 **Certificado Modular Progresivo** | **S/ 35.00** | \`CERT-35\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('CERT-35', 'Código Certificado')">Copiar</button> |
+| 🏆 **Derecho de Titulación Profesional** | **S/ 160.00** | \`TIT-160\` | <button class="btn-copy-mini" onclick="window.hercarApp.copiarTextoPortapapeles('TIT-160', 'Código Titulación')">Copiar</button> |
 
 ---
 
 ### 📲 ¿Dónde pagar y cómo registrar tu comprobante?
 1. **Canales autorizados:** Ventanillas del Banco de la Nación en todo el Perú, Red de Agentes MultiRed o transferencias interbancarias directas con el código CCI.
 2. **Exige tu comprobante:** Al pagar, revisa que el voucher indique tu DNI y número de operación legible.
-3. **Registro obligatorio de Voucher:** Sube tu comprobante a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) para que Secretaría Académica valide tu pago.
+3. **Registro obligatorio de Voucher:** Sube tu comprobante a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) indicando el concepto correspondiente para que Secretaría Académica valide tu pago.
 4. **Consulta tu boleta oficial:** Descarga tu comprobante electrónico en [sistema.ieshercar.com/Consulta_Boletas](https://sistema.ieshercar.com/Consulta_Boletas/index.php).
 
 > ⚠️ *Advertencia de Seguridad:* Nunca realices transferencias a números de cuenta de personas naturales. Todos los pagos del instituto se realizan exclusivamente a las cuentas oficiales del Banco de la Nación.`;
 
-        const voz = "¡Claro que sí! Aquí tienes los datos bancarios oficiales del Instituto Hermanos Cárcamo en el Banco de la Nación. La cuenta corriente es cero cero, seiscientos treinta y uno, cero dieciocho, doscientos cuarenta y uno, y también tienes el código interbancario C C I. Puedes copiarlos con un solo clic y registrar tu comprobante en la plataforma oficial de pagos.";
+        const voz = "Para realizar tus pagos en el Banco de la Nación, tienes la matrícula a 100 soles, la carpeta modular a 25 soles y el programa de inglés técnico a 400 soles. La cuenta corriente oficial es cero cero, seiscientos treinta y uno, cero dieciocho, doscientos cuarenta y uno. Puedes consultar y simular todos los montos en el simulador TUPA en pantalla.";
         this.addBotMessage(respuesta, true, voz, nr);
     }
 
@@ -1776,25 +1959,25 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
                 ];
             case 'cuenta_bancaria_codigos':
                 return [
-                    { text: '¿Cómo registro mi Voucher?', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' },
+                    { text: 'Carpeta Modular (S/ 25)', query: '¿Cuánto cuesta la carpeta modular y cómo la pago?', icon: '📁' },
+                    { text: 'Inglés Titulación (S/ 400)', query: '¿Cuánto cuesta el curso de inglés técnico para titulación?', icon: '🇬🇧' },
                     { text: 'Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
-                    { text: 'Descargar Boleta Oficial', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' },
-                    { text: 'Requisitos de Matrícula', query: '¿Cuáles son los requisitos de matrícula?', icon: '📝' }
+                    { text: 'Subir Voucher en Web', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' }
                 ];
             case 'matricula_costos':
                 return [
                     { text: 'N° de Cuenta Banco de la Nación', query: 'Pásame el número de cuenta oficial del Banco de la Nación para pagar', icon: '🏦' },
-                    { text: 'Abrir Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' },
-                    { text: '¿Cómo registro mi Voucher?', query: '¿Cómo registro mi voucher en pagos.ieshercar.edu.pe?', icon: '💳' },
-                    { text: 'Descargar Boleta Oficial', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' }
+                    { text: 'Carpeta Modular (S/ 25)', query: '¿Cuánto cuesta la carpeta modular y cómo la pago?', icon: '📁' },
+                    { text: 'Inglés Técnico (S/ 400)', query: '¿Cuánto cuesta el curso de inglés técnico para titulación?', icon: '🇬🇧' },
+                    { text: 'Abrir Simulador TUPA', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
                 ];
             case 'pagos_vouchers':
             case 'boletas_electronicas':
                 return [
                     { text: 'N° de Cuenta Banco de la Nación', query: 'Pásame el número de cuenta oficial del Banco de la Nación para pagar', icon: '🏦' },
-                    { text: 'Descargar Boleta Electrónica', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' },
-                    { text: 'Mesa de Partes Virtual', query: '¿Cómo ingreso a la Mesa de Partes Virtual?', icon: '📁' },
-                    { text: 'Simulador de Cuotas', query: 'Abrir el simulador de matrícula y tasas TUPA', icon: '🧮' }
+                    { text: 'Carpeta Modular (S/ 25)', query: '¿Cuánto cuesta la carpeta modular y cómo la pago?', icon: '📁' },
+                    { text: 'Inglés Técnico (S/ 400)', query: '¿Cuánto cuesta el curso de inglés técnico para titulación?', icon: '🇬🇧' },
+                    { text: 'Descargar Boleta Electrónica', query: '¿Cómo descargo mi boleta electrónica oficial?', icon: '🧾' }
                 ];
             case 'convalidacion_sunedu':
             case 'titulo_oficial':
@@ -1920,22 +2103,26 @@ Como orientadora oficial del **IESTP Hermanos Cárcamo de Paita**, puedo guiarte
     initSimuladorData() {
         this.simuladorItems = {
             cachimbo: [
-                { id: 'c_mat', name: 'Derecho de Matrícula (Ingresante Cachimbo Sem. I)', price: 180, checked: true, req: true },
-                { id: 'c_car', name: 'Carnet de Medio Pasaje Oficial (MINEDU)', price: 15, checked: true, req: false },
-                { id: 'c_pro', name: 'Carpeta y Prospecto de Admisión', price: 30, checked: true, req: false },
-                { id: 'c_seg', name: 'Seguro Estudiantil contra Accidentes', price: 20, checked: false, req: false }
+                { id: 'c_mat', name: 'Derecho de Matrícula (Ingresante Cachimbo Sem. I) [COD: MAT-01]', price: 100, checked: true, req: true },
+                { id: 'c_mod', name: 'Carpeta Modular Pedagógica Institucional [COD: CARP-25]', price: 25, checked: true, req: false },
+                { id: 'c_car', name: 'Carnet de Medio Pasaje Oficial MINEDU [COD: PAS-20]', price: 20, checked: true, req: false },
+                { id: 'c_adm', name: 'Inscripción Examen de Admisión Ordinario [COD: ADM-150]', price: 150, checked: false, req: false },
+                { id: 'c_ing', name: 'Programa de Inglés Técnico para Titulación [COD: ING-400]', price: 400, checked: false, req: false }
             ],
             regular: [
-                { id: 'r_mat', name: 'Derecho de Matrícula Semestral (Sem. II - VI)', price: 150, checked: true, req: true },
-                { id: 'r_car', name: 'Renovación de Carnet de Estudiante MINEDU', price: 15, checked: true, req: false },
-                { id: 'r_seg', name: 'Seguro Estudiantil contra Accidentes', price: 20, checked: false, req: false }
+                { id: 'r_mat', name: 'Derecho de Matrícula Semestral (Sem. II - VI) [COD: MAT-01]', price: 100, checked: true, req: true },
+                { id: 'r_mod', name: 'Carpeta Modular Pedagógica (por Módulo) [COD: CARP-25]', price: 25, checked: true, req: false },
+                { id: 'r_car', name: 'Renovación de Carnet de Estudiante MINEDU [COD: PAS-20]', price: 20, checked: true, req: false },
+                { id: 'r_cert', name: 'Certificado Modular Progresivo Oficial [COD: CERT-35]', price: 35, checked: false, req: false },
+                { id: 'r_ing', name: 'Programa de Inglés Técnico para Titulación [COD: ING-400]', price: 400, checked: false, req: false }
             ],
             tramites: [
-                { id: 't_con', name: 'Constancia de Estudios Oficial', price: 25, checked: true, req: false },
-                { id: 't_rec', name: 'Récord de Notas Académico Completo', price: 30, checked: false, req: false },
-                { id: 't_egr', name: 'Certificado de Egresado Oficial', price: 45, checked: false, req: false },
-                { id: 't_mod', name: 'Certificado Modular Progresivo (por Año)', price: 40, checked: false, req: false },
-                { id: 't_tit', name: 'Derecho de Titulación Profesional Técnico', price: 160, checked: false, req: false }
+                { id: 't_ing', name: 'Certificación de Suficiencia en Inglés Técnico [COD: ING-400]', price: 400, checked: true, req: false },
+                { id: 't_mod_carp', name: 'Carpeta Modular Pedagógica [COD: CARP-25]', price: 25, checked: true, req: false },
+                { id: 't_con', name: 'Constancia de Estudios Oficial [COD: CON-20]', price: 20, checked: false, req: false },
+                { id: 't_rec', name: 'Récord de Notas Académico Completo [COD: REC-25]', price: 25, checked: false, req: false },
+                { id: 't_mod_cert', name: 'Certificado Modular Progresivo (por Año) [COD: CERT-35]', price: 35, checked: false, req: false },
+                { id: 't_tit', name: 'Derecho y Carpeta de Titulación Profesional [COD: TIT-160]', price: 160, checked: false, req: false }
             ]
         };
         this.perfilSimuladorActual = 'cachimbo';
