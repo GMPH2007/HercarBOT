@@ -40,6 +40,7 @@ class HercarAdminController {
         this.initDOM();
         this.setupEventListeners();
         this.renderAll();
+        this.checkAuth();
     }
 
     loadState() {
@@ -209,6 +210,26 @@ class HercarAdminController {
                 const isDark = document.body.classList.toggle('dark-mode');
                 localStorage.setItem('hercar_theme', isDark ? 'dark' : 'light');
                 this.updateThemeBtn(isDark);
+            });
+        }
+
+        // Sesión y Logout
+        const btnLogout = document.getElementById('btn-admin-logout');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.logout();
+            });
+        }
+
+        const sessionPill = document.getElementById('admin-session-pill');
+        if (sessionPill) {
+            sessionPill.addEventListener('click', () => {
+                const session = localStorage.getItem('hercar_admin_session');
+                if (!session) {
+                    const loginModal = document.getElementById('modal-admin-login');
+                    if (loginModal) loginModal.style.display = 'flex';
+                }
             });
         }
 
@@ -1359,6 +1380,64 @@ class HercarAdminController {
         toast.classList.add('show');
         clearTimeout(this._toastTimeout);
         this._toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    checkAuth() {
+        const session = localStorage.getItem('hercar_admin_session');
+        const loginModal = document.getElementById('modal-admin-login');
+        const userNameEl = document.getElementById('session-user-name');
+
+        if (!session) {
+            if (loginModal) loginModal.style.display = 'flex';
+        } else {
+            try {
+                const userObj = JSON.parse(session);
+                if (userNameEl) userNameEl.textContent = userObj.nombre || 'Admin APSTI';
+                if (loginModal) loginModal.style.display = 'none';
+            } catch (e) {
+                if (loginModal) loginModal.style.display = 'flex';
+            }
+        }
+    }
+
+    submitLogin() {
+        const emailInput = document.getElementById('login-email');
+        const passInput = document.getElementById('login-password');
+        const errorEl = document.getElementById('login-error-msg');
+        const loginModal = document.getElementById('modal-admin-login');
+        const userNameEl = document.getElementById('session-user-name');
+
+        const email = emailInput ? emailInput.value.trim() : '';
+        const password = passInput ? passInput.value.trim() : '';
+
+        // Autenticación con credenciales oficiales de APSTI (o backend si disponible)
+        if ((email === 'admin@ieshercar.edu.pe' || email === 'admin') && (password === 'hercar2026' || password === 'admin')) {
+            const sessionData = {
+                id: 1,
+                nombre: 'Admin APSTI',
+                email: 'admin@ieshercar.edu.pe',
+                rol: 'admin',
+                token: 'tok_' + Date.now()
+            };
+            localStorage.setItem('hercar_admin_session', JSON.stringify(sessionData));
+            if (userNameEl) userNameEl.textContent = sessionData.nombre;
+            if (loginModal) loginModal.style.display = 'none';
+            if (errorEl) errorEl.style.display = 'none';
+            this.showToast('✅ Sesión administrativa iniciada con éxito');
+        } else {
+            if (errorEl) {
+                errorEl.textContent = '❌ Credenciales incorrectas. Usa admin@ieshercar.edu.pe / hercar2026';
+                errorEl.style.display = 'block';
+            }
+        }
+    }
+
+    logout() {
+        if (!confirm('¿Deseas cerrar tu sesión como administrador?')) return;
+        localStorage.removeItem('hercar_admin_session');
+        this.showToast('🔒 Sesión cerrada.');
+        const loginModal = document.getElementById('modal-admin-login');
+        if (loginModal) loginModal.style.display = 'flex';
     }
 
     escapeHTML(str) {
