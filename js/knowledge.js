@@ -30,6 +30,24 @@ const INSTITUCIONAL_KB = {
         youtube: 'https://www.youtube.com/@ieshercar',
         maps: 'https://maps.google.com/?q=IEST+HERMANOS+CARCAMOS+Paita',
         
+        datosBancarios: {
+            banco: 'Banco de la Nación del Perú',
+            titular: 'I.E.S.T.P. "Hermanos Cárcamo" - Paita (Recursos Directamente Recaudados)',
+            ruc: '20197087091',
+            cuentaCorriente: '00-631-018241',
+            cci: '018-631-000631018241-73',
+            moneda: 'Soles (S/ - PEN)',
+            agenciasHabilitadas: 'Ventanilla Banco de la Nación, Agentes MultiRed a nivel nacional y transferencias interbancarias',
+            plataformaVouchers: 'https://pagos.ieshercar.edu.pe/',
+            consultaBoletas: 'https://sistema.ieshercar.com/Consulta_Boletas/index.php',
+            tasasOficiales: {
+                matriculaSemestral: 'S/ 100.00 (Educación pública 100% gratuita, S/ 0 mensualidades)',
+                admisionOrdinaria: 'S/ 150.00',
+                preTecnologico: 'S/ 200.00',
+                carnetMedioPasaje: 'S/ 20.00'
+            }
+        },
+        
         historia: `El IESTP "Hermanos Cárcamo" fue creado en 1987 (R.M. N° 232-87-ED) y revalidado por R.M. N° 0528-2006-ED. Lleva con orgullo el nombre de los heroicos hermanos Cárcamo (Victoriano, Andrés, Raymundo y Enrique), ilustres paiteños que en 1821 capturaron el pailebote español "Sacramento", acción heroica que dio origen a la Marina de Guerra del Perú. Hoy en día, la institución cuenta con un megaproyecto de modernización de más de S/ 36 millones ejecutado por el Gobierno Regional de Piura, con laboratorios de última tecnología, modernos ambientes y una embarcación pesquera propia con radar y visión nocturna para la instrucción práctica en alta mar.`,
         
         beneficiosPublicos: [
@@ -286,6 +304,22 @@ const INSTITUCIONAL_KB = {
         if (!query) return null;
         const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
+        // 0. Preguntas sobre Número de Cuenta Bancaria / Dónde depositar / CCI / Banco de la Nación
+        if (
+            q.includes('cuenta') || 
+            q.includes('cci') || 
+            q.includes('interbancari') || 
+            q.includes('codigo de pago') || 
+            q.includes('codigos de pago') || 
+            q.includes('donde deposito') || 
+            q.includes('a que cuenta') || 
+            q.includes('donde pago') || 
+            q.includes('donde se paga') || 
+            (q.includes('banco') && q.includes('nacion'))
+        ) {
+            return this.formatearDatosBancarios();
+        }
+
         // 1. Preguntas sobre malla curricular o cursos
         if (q.includes('malla') || q.includes('cursos') || q.includes('plan de estudio') || q.includes('que materias') || q.includes('que ensenan')) {
             if (q.includes('apsti') || q.includes('sistema') || q.includes('comput') || q.includes('software')) {
@@ -357,6 +391,40 @@ const INSTITUCIONAL_KB = {
 
         res += `> 💡 *Certificación Modular:* Al culminar cada 2 semestres (1 año) obtienes un certificado oficial emitido por el MINEDU para incorporarte al mercado laboral.`;
         return res;
+    },
+
+    formatearDatosBancarios: function() {
+        const b = this.instituto.datosBancarios;
+        return `🏦 **DATOS BANCARIOS OFICIALES: BANCO DE LA NACIÓN**
+
+El **IESTP "Hermanos Cárcamo"** recauda todas sus tasas académicas y administrativas únicamente en las cuentas oficiales del **Banco de la Nación**:
+
+### 💳 Cuentas Institucionales para Depósitos y Transferencias:
+* **Entidad Bancaria:** ${b.banco}
+* **Titular de la Cuenta:** ${b.titular}
+* **RUC Institucional:** \`${b.ruc}\`
+* **Cuenta Corriente (Soles):** \`${b.cuentaCorriente}\`
+* **Código de Cuenta Interbancario (CCI):** \`${b.cci}\`
+* **Moneda:** ${b.moneda}
+* **Canales Habilitados:** Ventanillas BN a nivel nacional, Red de Agentes MultiRed y transferencias interbancarias directas (BCP, BBVA, Interbank, Scotiabank, Yape/Plin a cuenta).
+
+---
+
+### 💵 Principales Tasas TUPA 2026:
+* **Matrícula Semestral Regular:** ${b.tasasOficiales.matriculaSemestral}
+* **Inscripción Examen de Admisión Ordinario:** ${b.tasasOficiales.admisionOrdinaria}
+* **Ciclo Pre-Tecnológico:** ${b.tasasOficiales.preTecnologico}
+* **Carnet de Medio Pasaje MINEDU:** ${b.tasasOficiales.carnetMedioPasaje}
+
+---
+
+### 📲 ¿Qué hacer luego de depositar?
+1. Exige tu voucher impreso o comprobante digital con el **N° de Operación** legible.
+2. Ingresa a la plataforma oficial: [pagos.ieshercar.edu.pe](${b.plataformaVouchers})
+3. Digita tu **DNI**, adjunta la imagen clara del voucher y haz clic en *Registrar Pago*.
+4. Descarga tu boleta de venta electrónica oficial desde: [sistema.ieshercar.com/Consulta_Boletas](${b.consultaBoletas})
+
+> ⚠️ *Advertencia de Seguridad:* Nunca deposites a números de cuenta de personas particulares. Todos los pagos del instituto se realizan exclusivamente en las cuentas oficiales del Banco de la Nación.`;
     }
 };
 
