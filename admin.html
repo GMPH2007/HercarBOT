@@ -22,6 +22,11 @@
             </div>
         </div>
         <div class="navbar-actions">
+            <div class="admin-session-pill" id="admin-session-pill" style="display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25); border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: var(--primary);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.7);"></span>
+                <span id="session-user-name">Admin APSTI</span>
+                <button type="button" id="btn-admin-logout" title="Cerrar Sesión Segura" style="background: none; border: none; cursor: pointer; font-size: 0.85rem; margin-left: 4px;">🚪</button>
+            </div>
             <a href="index.html" class="btn-nav-action btn-nav-chat">
                 <span>💬 Abrir Chatbot Oficial</span>
                 <span style="font-size: 0.8rem;">↗</span>
@@ -556,7 +561,42 @@
         </div>
     </div>
 
-    <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+    <!-- MODAL EMERGENTE: LOGIN SEGURO ADMINISTRADOR -->
+    <div class="admin-modal-overlay" id="modal-admin-login" style="display: none;">
+        <div class="admin-modal-box" style="max-width: 440px;">
+            <div class="admin-modal-head" style="background: linear-gradient(135deg, rgba(19,53,123,0.1), rgba(37,99,235,0.05));">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/logo-crest.png" alt="Insignia" style="width: 34px; height: auto;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.05rem;">Acceso Administrativo APSTI</h3>
+                        <p style="margin: 0; font-size: 0.76rem; color: var(--text-muted);">Autenticación de Seguridad de HercarIA</p>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-modal-body">
+                <form id="form-admin-login" onsubmit="event.preventDefault(); window.adminCtrl.submitLogin();">
+                    <div class="form-group">
+                        <label class="form-label" for="login-email">Correo Institucional o Usuario:</label>
+                        <input type="text" id="login-email" class="form-input" placeholder="admin@ieshercar.edu.pe" value="admin@ieshercar.edu.pe" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">Contraseña de Seguridad:</label>
+                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="hercar2026" required>
+                    </div>
+                    <div style="padding: 10px; background: rgba(37,99,235,0.06); border: 1px dashed rgba(37,99,235,0.25); border-radius: 8px; margin-top: 10px;">
+                        <span style="font-size: 0.78rem; color: var(--primary); font-weight: 700;">🔑 Credenciales de Sustentación APSTI:</span>
+                        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">
+                            Usuario: <code>admin@ieshercar.edu.pe</code> | Clave: <code>hercar2026</code>
+                        </div>
+                    </div>
+                    <div id="login-error-msg" style="display: none; color: #ef4444; font-size: 0.8rem; font-weight: 700; margin-top: 10px;"></div>
+                    <div class="admin-modal-foot" style="margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-color); justify-content: flex-end;">
+                        <button type="submit" class="btn-save-main" style="width: 100%; justify-content: center;">🔐 Iniciar Sesión Segura</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="admin-toast" id="admin-toast"></div>
 
     <!-- SCRIPTS -->
